@@ -11,43 +11,43 @@ import { SocialIcon } from "./SocialIcon";
 const spotlightTours = [
     {
         id: 1,
-        title: "Tea Plantations",
-        desc: "Lush green hills and world-famous Ceylon tea estates.",
+        title: "Tea of Sri Lanka",
+        desc: "Experience the heritage of world-renowned Ceylon tea amidst the mist-covered green hills.",
         price: "$45",
-        bg: "/images/ella.jpg",
+        bg: "/images/tea.png",
         link: "/destinations/hill-country"
     },
     {
         id: 2,
-        title: "Sigiriya Rock",
-        desc: "Ancient palace fortress located in the northern Matale District.",
+        title: "Buddha Statue",
+        desc: "Witness the spiritual serenity of majestic ancient stone carvings that stand as a testament to history.",
         price: "$60",
-        bg: "/images/sigiriya.jpg",
+        bg: "/images/buddha.png",
         link: "/destinations/cultural-triangle"
     },
     {
         id: 3,
-        title: "Beach Paradise",
-        desc: "Golden sunsets and pristine beaches with swaying palms.",
+        title: "Nature of Sri Lanka",
+        desc: "Journey through lush tropical landscapes and vibrant ecosystems unique to this paradise island.",
         price: "$30",
-        bg: "/images/mirissa-beach.jpg",
-        link: "/destinations/coastal"
+        bg: "/images/nature.jpg",
+        link: "/destinations/nature"
     },
     {
         id: 4,
-        title: "Galle Fort",
-        desc: "A historic colonial city with charming streets.",
+        title: "Sri Lanka Beach",
+        desc: "Unwind on pristine golden sands bordered by the crystal clear turquoise waters of the Indian Ocean.",
         price: "$50",
-        bg: "/images/galle.jpg",
-        link: "/destinations/galle"
+        bg: "/images/beach.jpg",
+        link: "/destinations/coastal"
     },
     {
         id: 5,
-        title: "Temple of Tooth",
-        desc: "Sri Lanka's most sacred Buddhist relic in the heart of Kandy.",
+        title: "Baby Elephant in Sri Lanka",
+        desc: "Encounter the gentle giants and playful calves in their natural sanctuary, a truly heart-warming experience.",
         price: "$15",
-        bg: "/images/templeoftooth",
-        link: "/destinations/kandy"
+        bg: "/images/baby-elephant.jpg",
+        link: "/destinations/wildlife"
     }
 ];
 
@@ -66,30 +66,24 @@ export const Hero = () => {
 
     return (
         <div className="relative h-screen w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-white" id="hero-section-main-image">
-            {/* Background Image with Crossfade */}
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={activeTour.bg}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
-                    className="absolute inset-0 w-full h-full"
-                >
+            {/* Static Background Image - Framed to match 80% zoom feel */}
+            <div className="absolute inset-0 w-full h-full p-2">
+                <div className="relative w-full h-full overflow-hidden rounded-[2rem]">
                     <Image
-                        src={activeTour.bg}
-                        alt={activeTour.title}
+                        src="/images/hero-couple.png"
+                        alt="Ceylon Hero"
                         fill
-                        className="object-cover"
+                        className="object-cover object-center"
                         priority
                         quality={100}
+                        sizes="100vw"
                     />
 
                     {/* Clean, subtle overlay for legibility without darkening the whole scene */}
                     <div className="absolute inset-0 bg-black/10" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </motion.div>
-            </AnimatePresence>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                </div>
+            </div>
 
             {/* Grid Layout */}
             <div className="relative z-10 w-full h-full grid grid-cols-12">

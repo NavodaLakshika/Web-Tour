@@ -33,7 +33,7 @@ export default function Home() {
       <GallerySection />
 
       {/* 3. INTRODUCTION / WELCOME SECTION */}
-      <section className="py-24 bg-white">
+      <section className="py-4 bg-white">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -41,12 +41,12 @@ export default function Home() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <span className="text-secondary font-bold uppercase tracking-[0.3em] text-sm block">Welcome to Paradise</span>
+            <span className="text-secondary font-art text-3xl tracking-normal block mb-2 capitalize">Welcome to Paradise</span>
             <h2 className="text-4xl md:text-6xl font-heading font-black text-primary leading-tight uppercase">
-              Discover the Soul of <br /> <span className="text-secondary italic font-serif lowercase tracking-normal">Sri Lanka</span>
+              Discover the Soul of <br /> <span className="text-secondary font-art lowercase tracking-normal text-5xl md:text-7xl">Sri Lanka</span>
             </h2>
-            <p className="text-gray-500 text-lg md:text-xl font-light leading-relaxed">
-              Sri Lanka is an island of endless diversity. From the emerald tea plantations of the central highlands to the sapphire waters of the southern coast, every corner tells a story of ancient kings, vibrant culture, and breathtaking nature.
+            <p className="text-gray-600 text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto italic opacity-90">
+              "Sri Lanka is an island of endless diversity. From the emerald tea plantations of the central highlands to the sapphire waters of the southern coast, every corner tells a story of ancient kings, vibrant culture, and breathtaking nature."
             </p>
             <div className="flex justify-center gap-4 pt-4">
               <div className="w-12 h-1 bg-secondary rounded-full" />

@@ -144,17 +144,20 @@ export const ChatBot = () => {
             </AnimatePresence>
 
             {/* Simple Toggle Button */}
-            <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-14 h-14 bg-primary rounded-full shadow-xl flex items-center justify-center text-white relative"
-            >
-                {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
-                {!isOpen && (
+            {!isOpen && (
+                <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="w-14 h-14 bg-primary rounded-full shadow-xl flex items-center justify-center text-white relative"
+                >
+                    <MessageSquare className="w-6 h-6" />
                     <span className="absolute top-0 right-0 h-4 w-4 bg-secondary border-2 border-white rounded-full"></span>
-                )}
-            </motion.button>
+                </motion.button>
+            )}
         </div>
     );
 };

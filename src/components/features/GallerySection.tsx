@@ -1,17 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const galleryImages = [
-    "/images/galle.jpg",
-    "/images/sigiriya.jpg",
-    "/images/ella.jpg",
-    "/images/train.jpg",
-    "/images/kandy.jpg",
-    "/images/mirissa.jpg",
+    "/images/buddha.png",
+    "/images/beach.jpg",
+    "/images/hero-couple.png",
+    "/images/nature.jpg",
+    "/images/tea.png",
+    "/images/baby-elephant.jpg",
     "/images/cooking.jpg",
     "/images/spa.jpg",
     "/images/yala.jpg",
@@ -25,6 +25,19 @@ const galleryImages = [
 ];
 
 export const GallerySection = () => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    const togglePlay = () => {
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause();
+            } else {
+                videoRef.current.play();
+            }
+            setIsPlaying(!isPlaying);
+        }
+    };
     return (
         <section className="bg-transparent pb-24 -mt-10 relative z-20 overflow-hidden" style={{ pointerEvents: 'none' }}>
             <div className="container mx-auto px-4" style={{ pointerEvents: 'auto' }}>
@@ -43,15 +56,15 @@ export const GallerySection = () => {
                         transition={{ duration: 0.6 }}
                         className="text-center z-20 mb-12 relative"
                     >
-                        <h2 className="font-heading font-black text-4xl md:text-6xl text-gray-900 uppercase tracking-tight leading-[0.9]">
+                        <h2 className="font-heading font-black text-3xl md:text-5xl text-gray-900 uppercase tracking-tight leading-[0.9]">
                             Create Memories <br />
-                            <span className="text-gray-400">With Ceylon Trips</span>
+                            <span className="text-gray-400 text-2xl md:text-4xl">With Ceylon Trips</span>
                         </h2>
                     </motion.div>
 
                     {/* The Grid of Images */}
                     <div className="w-full max-w-4xl relative z-0 mt-8">
-                        <div className="grid grid-cols-4 md:grid-cols-6 gap-4 opacity-60 mask-image-faded">
+                        <div className="grid grid-cols-4 md:grid-cols-6 gap-4 opacity-80 mask-image-faded">
                             {galleryImages.map((src, idx) => (
                                 <motion.div
                                     key={idx}
@@ -97,20 +110,38 @@ export const GallerySection = () => {
                                 </div>
                             </div>
 
-                            {/* Screen Content - A Video or Hero Image */}
-                            <div className="relative w-full h-full bg-gray-800">
-                                <Image
-                                    src="/images/mirissa-clear.jpg" // Using a nice clear vertical-ish image or fit cover
-                                    alt="Phone Display"
-                                    fill
-                                    className="object-cover"
+                            {/* Screen Content - A Functional Video Player */}
+                            <div className="relative w-full h-full bg-gray-800 cursor-pointer" onClick={togglePlay}>
+                                <video
+                                    ref={videoRef}
+                                    src="/video/slvideo.mp4"
+                                    className="object-cover w-full h-full"
+                                    loop
+                                    playsInline
+                                    onPlay={() => setIsPlaying(true)}
+                                    onPause={() => setIsPlaying(false)}
                                 />
-                                {/* Play Button Overlay */}
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
-                                        <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />
+
+                                {/* Play Button Overlay - Visible when paused */}
+                                {!isPlaying && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[2px] transition-all duration-300">
+                                        <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center border border-white/50 shadow-xl transform group-hover:scale-110 transition-transform">
+                                            <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />
+                                        </div>
                                     </div>
-                                </div>
+                                )}
+
+                                {/* Pause indicator on hover when playing (optional visual) */}
+                                {isPlaying && (
+                                    <div className="absolute inset-0 opacity-0 hover:opacity-100 flex items-center justify-center bg-black/10 transition-opacity duration-300">
+                                        <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-1.5 h-6 bg-white rounded-full" />
+                                                <div className="w-1.5 h-6 bg-white rounded-full" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* UI Overlay Bottom */}
                                 <div className="absolute bottom-6 left-0 w-full px-6 flex flex-col gap-2">

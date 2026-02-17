@@ -155,8 +155,8 @@ export const Navbar = () => {
             className={cn(
                 "fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out font-sans",
                 isGlass
-                    ? "bg-white/80 backdrop-blur-md py-3 border-b border-gray-200/50 shadow-sm" // Reduced py-4 to py-3
-                    : "bg-transparent py-4" // Reduced py-6 to py-4
+                    ? "bg-white/80 backdrop-blur-md py-10 border-b border-gray-200/50 shadow-sm"
+                    : "bg-transparent py-7"
             )}
         >
             <div className="container mx-auto px-6 h-full flex flex-col justify-center">
