@@ -30,10 +30,10 @@ export const GallerySection = () => {
             <div className="container mx-auto px-4" style={{ pointerEvents: 'auto' }}>
 
                 {/* The "Card" Container mimicking the reference style */}
-                <div className="relative w-full bg-[#F5F5F7] rounded-[3rem] overflow-hidden min-h-[800px] flex flex-col items-center pt-20 pb-40 px-6 shadow-2xl border-t border-white/50">
+                <div className="relative w-full bg-[#F5F5F7] rounded-[3rem] overflow-hidden min-h-[500px] flex flex-col items-center pt-20 pb-40 px-6 shadow-2xl border-t border-white/50">
 
                     {/* Background Soft Gradients */}
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white via-transparent to-white/50 pointer-events-none z-10" />
+                    <div className="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-white via-transparent to-white/50 pointer-events-none z-10" />
 
                     {/* Text Content */}
                     <motion.div
@@ -50,7 +50,7 @@ export const GallerySection = () => {
                     </motion.div>
 
                     {/* The Grid of Images */}
-                    <div className="w-full max-w-6xl relative z-0 mt-8">
+                    <div className="w-full max-w-4xl relative z-0 mt-8">
                         <div className="grid grid-cols-4 md:grid-cols-6 gap-4 opacity-60 mask-image-faded">
                             {galleryImages.map((src, idx) => (
                                 <motion.div
@@ -82,9 +82,9 @@ export const GallerySection = () => {
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 w-64 md:w-80"
+                        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 w-56 md:w-64"
                     >
-                        <div className="relative rounded-[3rem] border-[8px] border-gray-900 bg-black overflow-hidden shadow-2xl h-[550px] md:h-[650px] ring-1 ring-gray-900/50">
+                        <div className="relative rounded-[3rem] border-[8px] border-gray-900 bg-black overflow-hidden shadow-2xl h-[480px] md:h-[400px] ring-1 ring-gray-900/50 mb-20">
                             {/* Notch */}
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 h-7 w-32 bg-black rounded-b-2xl z-40"></div>
 
