@@ -164,13 +164,13 @@ export const Hero = () => {
                                             animate={{
                                                 opacity: position === 'center' ? 1 : 0.6,
                                                 scale: position === 'center' ? 1 : 0.85,
-                                                x: position === 'center' ? 0 : position === 'left' ? -240 : 240,
+                                                x: position === 'center' ? 0 : position === 'left' ? -200 : 200,
                                                 zIndex: position === 'center' ? 20 : 10,
                                                 filter: position === 'center' ? 'blur(0px)' : 'blur(2px)'
                                             }}
                                             exit={{ opacity: 0, scale: 0.5 }}
                                             transition={{ duration: 0.5, ease: "easeInOut" }}
-                                            className="absolute top-1/2 -translate-y-1/2 w-[260px] h-[380px] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                                            className="absolute top-1/2 -translate-y-1/2 w-[220px] h-[320px] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
                                         >
                                             <div className="relative h-3/5 w-full">
                                                 <Image
