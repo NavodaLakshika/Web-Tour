@@ -77,7 +77,7 @@ export const ChatBot = () => {
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="mb-4 w-64 md:w-72 h-[420px] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
+                        className="mb-4 w-74 md:w-82 h-[400px] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
                     >
                         {/* Simple Header */}
                         <div className="bg-primary p-5 text-white flex items-center justify-between">

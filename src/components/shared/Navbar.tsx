@@ -29,7 +29,7 @@ type NavItem = {
 
 const navLinks: NavItem[] = [
     { name: "HOME", href: "/" },
-    { name: "ABOUT US", href: "/about" },
+    { name: "ABOUT", href: "/about" },
     {
         name: "DESTINATIONS",
         href: "/destinations",
@@ -121,7 +121,7 @@ const navLinks: NavItem[] = [
         },
     },
     { name: "PLAN YOUR VISIT", href: "/plan" },
-    { name: "CONTACT US", href: "/contact" },
+    { name: "CONTACT", href: "/contact" },
 ];
 
 export const Navbar = () => {
