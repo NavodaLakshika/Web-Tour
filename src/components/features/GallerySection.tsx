@@ -84,7 +84,7 @@ export const GallerySection = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 w-56 md:w-64"
                     >
-                        <div className="relative rounded-[3rem] border-[8px] border-gray-900 bg-black overflow-hidden shadow-2xl h-[480px] md:h-[400px] ring-1 ring-gray-900/50 mb-20">
+                        <div className="relative rounded-[3rem] border-[8px] border-gray-900 bg-black overflow-hidden shadow-2xl h-[400px] md:h-[450px] ring-1 ring-gray-900/50 mb-20">
                             {/* Notch */}
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 h-7 w-32 bg-black rounded-b-2xl z-40"></div>
 
