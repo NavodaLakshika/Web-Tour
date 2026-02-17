@@ -29,11 +29,11 @@ export default function Home() {
       {/* 1. HERO SECTION (Kept as requested) */}
       <Hero />
 
-      {/* 2. GALLERY SECTION - "Create Memories With Ceylon Trips" (Kept as requested) */}
+      {/* 2. GALLERY SECTION - "Create Memories With Ceylon Trips" */}
       <GallerySection />
 
       {/* 3. INTRODUCTION / WELCOME SECTION */}
-      <section className="py-4 bg-white">
+      <section className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -55,10 +55,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. PROJECT SHOWCASE (Kept as requested) */}
+      {/* 4. ABOUT SECTION (Refined in ProjectShowcase) */}
       <ProjectShowcase />
 
-      {/* 5. FEATURED DESTINATIONS / REGIONS */}
+      {/* 5. FEATURED DESTINATIONS */}
       <section className="py-24 bg-[#FDFBF7]">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 text-center md:text-left">
@@ -89,7 +89,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. EXPERIENCES / ACTIVITIES HIGHLIGHTS */}
+      {/* 6. EXPERIENCES */}
       <section className="py-24 bg-white relative overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 space-y-4">
@@ -137,64 +137,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. SUGGESTED ITINERARIES Section */}
-      <section className="py-24 bg-secondary text-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8">
-              <span className="text-sand font-bold uppercase tracking-widest text-sm block">Travel Smarter</span>
-              <h2 className="text-4xl md:text-6xl font-heading font-black leading-tight uppercase">Ready-Made <br /> <span className="text-sand italic font-serif lowercase tracking-normal">Itineraries</span></h2>
-              <p className="text-white/60 text-lg font-light leading-relaxed">
-                Don't know where to start? We've designed three perfect loops to help you see the best of the island, whether you have a weekend or a whole week.
-              </p>
-
-              <div className="space-y-6 pt-4">
-                {[
-                  { days: "3 Days", title: "Cultural Triangle", icon: <Landmark className="w-5 h-5" /> },
-                  { days: "7 Days", title: "The Southern Loop", icon: <Compass className="w-5 h-5" /> },
-                  { days: "10 Days", title: "The Ultimate Adventure", icon: <Palmtree className="w-5 h-5" /> }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
-                    <div className="w-12 h-12 rounded-full bg-sand text-primary flex items-center justify-center font-bold">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold text-sand/60 block uppercase tracking-widest">{item.days}</span>
-                      <h4 className="text-xl font-bold">{item.title}</h4>
-                    </div>
-                    <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ArrowRight className="w-5 h-5 text-sand" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <Link href="/plan" className="inline-block mt-6">
-                <Button className="rounded-full bg-sand hover:bg-sand/90 text-primary font-bold px-10 py-7 text-lg shadow-2xl">
-                  Explore Full Plans
-                </Button>
-              </Link>
-            </div>
-
-            <div className="relative h-[650px] rounded-[4rem] overflow-hidden shadow-2xl border border-white/10">
-              <Image src="/images/sigiriya-vibrant.jpg" fill alt="Itinerary" className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-secondary via-transparent to-transparent" />
-              <div className="absolute bottom-12 left-12 right-12">
-                <div className="flex items-center gap-2 text-sand mb-2">
-                  <MapPin className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Interactive Maps</span>
-                </div>
-                <h4 className="text-3xl font-heading font-bold uppercase mb-4">Visualize Your Route</h4>
-                <div className="h-1.5 w-full bg-white/10 rounded-full">
-                  <div className="h-full w-1/3 bg-sand rounded-full" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. WHY VISIT SRI LANKA / UNIQUE SELLING POINTS */}
+      {/* 7. WHY VISIT SRI LANKA SECTION (Keep 4 icons as requested) */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
@@ -244,10 +187,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. TESTIMONIALS (Kept existing section as requested) */}
+      {/* 8. TESTIMONIALS */}
       <TestimonialSection />
 
-      {/* 10. LATEST UPDATES / BLOG SECTION */}
+      {/* 9. CALL TO ACTION SECTION (Strong CTA) */}
+      <section className="py-24 bg-secondary text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <Image src="/images/sigiriya-vibrant.jpg" fill alt="CTA BG" className="object-cover" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <h2 className="text-4xl md:text-6xl font-heading font-black mb-8 uppercase leading-tight">
+            Ready to Start Your <br />
+            <span className="text-sand font-art lowercase tracking-normal text-5xl md:text-8xl">Ceylon Adventure?</span>
+          </h2>
+          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-12 font-light italic">
+            "Our experts are ready to curate the perfect journey tailored specifically to your dreams."
+          </p>
+          <Link href="/contact">
+            <Button className="rounded-full bg-sand hover:bg-white text-primary font-bold px-12 py-8 text-xl shadow-2xl transition-all hover:scale-105">
+              Contact Us Today <ArrowRight className="ml-3 w-6 h-6" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+
+
+      {/* 10. LATEST UPDATES / BLOG SECTION (Condensed to 2 posts) */}
       <section className="py-24 bg-[#FDFBF7]">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
@@ -265,15 +231,15 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {[
               {
-                title: "The Ultimate Guide to Kandy Perahera 2024",
-                date: "Aug 12, 2024",
+                title: "The Ultimate Guide to Kandy Perahera 2026",
+                date: "Aug 12, 2025",
                 img: "/images/kandy.jpg",
                 tag: "Festival"
               },
               {
                 title: "Finding Serenity: Top 5 Silent Beaches in Trincomalee",
-                date: "July 28, 2024",
-                img: "/images/mirissa-clear.jpg",
+                date: "July 28, 2025",
+                img: "/images/beach.jpg",
                 tag: "Beaches"
               }
             ].map((blog, i) => (
@@ -299,34 +265,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 11. QUICK LINKS / NAVIGATION HIGHLIGHTS */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-heading font-black text-primary uppercase mb-16">Quick <span className="text-secondary italic font-serif lowercase tracking-normal">Navigation</span></h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {[
-              { label: "Plan Trip", path: "/plan", icon: <Calendar className="w-5 h-5" /> },
-              { label: "Destinations", path: "/destinations", icon: <MapPin className="w-5 h-5" /> },
-              { label: "Experiences", path: "/experiences", icon: <Compass className="w-5 h-5" /> },
-              { label: "About Us", path: "/about", icon: <Users className="w-5 h-5" /> },
-              { label: "Contact", path: "/contact", icon: <Navigation className="w-5 h-5" /> }
-            ].map((link, i) => (
-              <Link key={i} href={link.path}>
-                <div className="p-8 rounded-[2rem] bg-[#FDFBF7] border border-sand hover:bg-primary hover:text-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
-                  <div className="mb-4 text-secondary group-hover:text-sand transition-colors flex justify-center">{link.icon}</div>
-                  <span className="text-xs font-bold uppercase tracking-[0.2em]">{link.label}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Decorative Lifestyle (Kept existing section as requested) */}
-      <GeometricGallery />
-
-      {/* 12. FOOTER (Kept existing section as requested) */}
+      {/* 11. FOOTER */}
       <Footer />
       <ChatBot />
     </main>

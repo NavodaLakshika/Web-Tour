@@ -12,16 +12,8 @@ const galleryImages = [
     "/images/nature.jpg",
     "/images/tea.png",
     "/images/baby-elephant.jpg",
-    "/images/cooking.jpg",
-    "/images/spa.jpg",
     "/images/yala.jpg",
-    "/images/nine-arch-bridge.jpg",
-    "/images/moody-mountains.jpg",
     "/images/sigiriya-vibrant.jpg",
-    "/images/mirissa-clear.jpg",
-    "/images/galle.jpg", // Repeat some to fill grid
-    "/images/sigiriya.jpg",
-    "/images/ella.jpg",
 ];
 
 export const GallerySection = () => {
@@ -58,13 +50,13 @@ export const GallerySection = () => {
                     >
                         <h2 className="font-heading font-black text-3xl md:text-5xl text-gray-900 uppercase tracking-tight leading-[0.9]">
                             Create Memories <br />
-                            <span className="text-gray-400 text-2xl md:text-4xl">With Ceylon Trips</span>
+                            <span className="text-gray-400 text-2xl md:text-4xl italic font-art capitalize tracking-normal">With Ceylon Trips</span>
                         </h2>
                     </motion.div>
 
                     {/* The Grid of Images */}
                     <div className="w-full max-w-4xl relative z-0 mt-8">
-                        <div className="grid grid-cols-4 md:grid-cols-6 gap-4 opacity-80 mask-image-faded">
+                        <div className="grid grid-cols-4 md:grid-cols-4 gap-4 opacity-100 mask-image-faded">
                             {galleryImages.map((src, idx) => (
                                 <motion.div
                                     key={idx}
@@ -76,7 +68,7 @@ export const GallerySection = () => {
                                 >
                                     <Image
                                         src={src}
-                                        alt={`Gallery ${idx}`}
+                                        alt="Sri Lanka Travel Memory"
                                         fill
                                         className="object-cover hover:scale-110 transition-transform duration-500"
                                     />

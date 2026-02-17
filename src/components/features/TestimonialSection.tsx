@@ -8,24 +8,24 @@ import { Quote, Star, Sparkles } from 'lucide-react';
 export const TestimonialSection = () => {
     const testimonials = [
         {
-            name: "Mehwish",
-            role: "Verified Traveler",
-            text: "Compliment interested discretion estimating on stimulated apartments oh.",
-            initials: "M",
+            name: "Sarah Mitchell",
+            role: "Adventure Enthusiast",
+            text: "The personalized attention to detail was incredible. Our trip to Sigiriya and the Hill Country was seamlessly organized and truly unforgettable.",
+            initials: "S",
             color: "bg-blue-100 text-blue-600"
         },
         {
-            name: "Elizabeth Jeff",
-            role: "Travel Enthusiast",
-            text: "Dear so sing when in find read of call. As distrusts behaviour abilities defective is.",
-            initials: "E",
+            name: "James Wilson",
+            role: "Family Traveler",
+            text: "Ceylon Trips provided our family with an authentic taste of Sri Lanka. From tea plantation tours to wild safaris, every moment was perfectly curated.",
+            initials: "J",
             color: "bg-pink-100 text-pink-600",
             highlight: true
         },
         {
-            name: "Emily Thomas",
-            role: "Adventure Seeker",
-            text: "Never at water me might. On formed merits hunted unable merely by mr whence or.",
+            name: "Elena Rodriguez",
+            role: "Cultural Explorer",
+            text: "Exploring the ancient temples with their expert guides opened my eyes to the rich history of this beautiful island. Highly recommend their bespoke services.",
             initials: "E",
             color: "bg-orange-100 text-orange-600"
         }
@@ -51,15 +51,11 @@ export const TestimonialSection = () => {
                     </div>
 
                     <h2 className="text-4xl md:text-5xl font-bold font-heading text-slate-900 mb-6 leading-tight">
-                        What Our <br /> Customers Says
+                        What Our <br /> Travelers Say
                     </h2>
                     <p className="text-slate-500 mb-8 leading-relaxed text-lg">
-                        Relation so in confined smallest children unpacked delicate. Why sir end believe uncivil respect. Always get adieus nature day course for common.
+                        Hear from our community of global explorers who have experienced the magic of Sri Lanka through our curated journeys.
                     </p>
-
-                    <button className="px-8 py-3 bg-gradient-to-r from-purple-500 to-orange-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all w-fit mx-auto lg:mx-0">
-                        View More
-                    </button>
                 </div>
 
                 {/* Right Content: Vertical Cards */}
