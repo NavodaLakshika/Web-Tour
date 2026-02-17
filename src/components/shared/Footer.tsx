@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-
 import React from "react";
 import Image from "next/image";
 import { Facebook, Instagram, Youtube, Phone, ArrowUpRight, Globe } from "lucide-react";
+import { SocialIcon } from "./SocialIcon";
 
 export const Footer = () => {
     return (
-        <footer className="relative w-full bg-gray-900 text-white overflow-hidden py-24 border-t border-gray-800">
+        <footer className="relative w-full bg-gray-900 text-white overflow-hidden py-12 border-t border-gray-800">
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/images/footer-bg.jpg"
+                    src="/images/sigiriya.jpg"
                     alt="Misty Sri Lanka Landscape"
                     fill
                     className="object-cover opacity-60 mix-blend-overlay"
@@ -23,28 +23,28 @@ export const Footer = () => {
             <div className="relative z-10 container mx-auto px-4 flex flex-col items-center text-center">
 
                 {/* Newsletter Signup */}
-                <div className="w-full max-w-2xl mb-20">
-                    <h3 className="text-sm font-bold tracking-[0.2em] uppercase text-gray-400 mb-8">Sign Up For Updates</h3>
+                <div className="w-full max-w-2xl mb-12">
+                    <h3 className="text-sm font-bold tracking-[0.2em] uppercase text-gray-400 mb-6">Sign Up For Updates</h3>
                     <div className="relative">
                         <input
                             type="email"
                             placeholder="ENTER YOUR EMAIL ADDRESS"
-                            className="w-full h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-8 text-center text-white placeholder:text-white/40 mb-4 focus:outline-none focus:bg-white/20 transition-all font-bold tracking-widest text-xs uppercase"
+                            className="w-full h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-8 text-center text-white placeholder:text-white/40 mb-4 focus:outline-none focus:bg-white/20 transition-all font-bold tracking-widest text-xs uppercase"
                         />
-                        <button className="absolute right-2 top-2 h-12 w-12 bg-black rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
+                        <button className="absolute right-2 top-1.5 h-11 w-11 bg-black rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
                             <ArrowUpRight className="h-5 w-5 rotate-45" />
                         </button>
                     </div>
                 </div>
 
                 {/* Navigation Links */}
-                <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-20">
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-12">
                     {[
                         { name: "HOME", href: "/" },
                         { name: "ABOUT US", href: "/about" },
                         { name: "DESTINATIONS", href: "/destinations" },
                         { name: "EXPERIENCES", href: "/experiences" },
-                        { name: "PLAN YOUR VISIT TO SRI LANKA", href: "/plan" }, // Matching the request "PLAN YOUR VISIT..."
+                        { name: "PLAN YOUR VISIT TO SRI LANKA", href: "/plan" },
                         { name: "CONTACT US", href: "/contact" },
                     ].map((link) => (
                         <Link
@@ -58,17 +58,16 @@ export const Footer = () => {
                 </div>
 
                 {/* Contact Grid */}
-                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-16">
+                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-12">
 
-                    {/* Socials */}
-                    <div className="flex flex-col items-center md:items-start">
+                    {/* Socials - UPDATED WITH SocialIcon */}
+                    <div className="flex flex-col items-center md:items-start text-center md:text-left">
                         <h4 className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-6">Connect With Us</h4>
-                        <div className="flex gap-4">
-                            {[Facebook, Instagram, Youtube, Globe].map((Icon, idx) => (
-                                <a key={idx} href="#" className="h-10 w-10 border border-white/30 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                                    <Icon className="h-4 w-4" />
-                                </a>
-                            ))}
+                        <div className="flex gap-4 justify-center md:justify-start">
+                            <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" />
+                            <SocialIcon icon={Instagram} label="Instagram" color="#E1306C" href="#" />
+                            <SocialIcon icon={Youtube} label="YouTube" color="#FF0000" href="#" />
+                            <SocialIcon icon={Globe} label="Website" color="#D4AF37" href="#" />
                         </div>
                     </div>
 
@@ -84,13 +83,13 @@ export const Footer = () => {
                     </div>
 
                     {/* Direct Contact */}
-                    <div className="flex flex-col items-center md:items-end justify-center h-full">
-                        <div className="flex flex-col gap-2 text-right">
-                            <a href="tel:+94777183746" className="text-lg font-heading font-bold tracking-wider hover:text-primary transition-colors flex items-center justify-end gap-2">
+                    <div className="flex flex-col items-center md:items-end justify-center h-full text-center md:text-right">
+                        <div className="flex flex-col gap-2">
+                            <a href="tel:+94777183746" className="text-lg font-heading font-bold tracking-wider hover:text-primary transition-colors flex items-center justify-center md:justify-end gap-2 text-white">
                                 <Phone className="h-4 w-4 text-primary" />
                                 +94 77 718 3746
                             </a>
-                            <a href="mailto:hello@ceylontrips.com" className="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors">
+                            <a href="mailto:hello@ceylontrips.com" className="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-white">
                                 hello@ceylontrips.com
                             </a>
                         </div>
@@ -99,7 +98,7 @@ export const Footer = () => {
                 </div>
 
                 {/* Copyright */}
-                <div className="mt-20 pt-8 border-t border-white/5 w-full">
+                <div className="mt-12 pt-8 border-t border-white/5 w-full">
                     <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase">
                         Concept and Design by Antyra Solutions <br />
                         Copyrights 2026 - Ceylon Trips (Private) Limited

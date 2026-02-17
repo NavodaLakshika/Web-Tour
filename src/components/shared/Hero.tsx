@@ -1,44 +1,75 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Facebook, Instagram, Twitter, ArrowRight } from "lucide-react";
+import { Facebook, Instagram, Twitter, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { SocialIcon } from "./SocialIcon";
 
+// Updated data with local images
 const spotlightTours = [
     {
         id: 1,
         title: "Tea Plantations",
         desc: "Lush green hills and world-famous Ceylon tea estates.",
         price: "$45",
-        bg: "https://images.unsplash.com/photo-1564594985645-4427056e22e2?q=80&w=2832&auto=format&fit=crop"
+        bg: "/images/ella.jpg",
+        link: "/destinations/hill-country"
     },
     {
         id: 2,
         title: "Sigiriya Rock",
         desc: "Ancient palace fortress located in the northern Matale District.",
         price: "$60",
-        bg: "https://images.unsplash.com/photo-1588258524675-c6379f649de9?q=80&w=2832&auto=format&fit=crop"
+        bg: "/images/sigiriya.jpg",
+        link: "/destinations/cultural-triangle"
     },
     {
         id: 3,
         title: "Beach Paradise",
         desc: "Golden sunsets and pristine beaches with swaying palms.",
         price: "$30",
-        bg: "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?q=80&w=2832&auto=format&fit=crop"
+        bg: "/images/mirissa-beach.jpg",
+        link: "/destinations/coastal"
+    },
+    {
+        id: 4,
+        title: "Galle Fort",
+        desc: "A historic colonial city with charming streets.",
+        price: "$50",
+        bg: "/images/galle.jpg",
+        link: "/destinations/galle"
+    },
+    {
+        id: 5,
+        title: "Temple of Tooth",
+        desc: "Sri Lanka's most sacred Buddhist relic in the heart of Kandy.",
+        price: "$15",
+        bg: "/images/templeoftooth",
+        link: "/destinations/kandy"
     }
 ];
 
 export const Hero = () => {
-    const [activeImageDetails, setActiveImageDetails] = useState(spotlightTours[1]); // Default to Sigiriya
+    const [activeIndex, setActiveIndex] = useState(1); // Default to Sigiriya
+
+    const handleNext = () => {
+        setActiveIndex((prev) => (prev + 1) % spotlightTours.length);
+    };
+
+    const handlePrev = () => {
+        setActiveIndex((prev) => (prev - 1 + spotlightTours.length) % spotlightTours.length);
+    };
+
+    const activeTour = spotlightTours[activeIndex];
 
     return (
         <div className="relative h-screen w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-white" id="hero-section-main-image">
             {/* Background Image with Crossfade */}
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={activeImageDetails.bg}
+                    key={activeTour.bg}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -46,33 +77,34 @@ export const Hero = () => {
                     className="absolute inset-0 w-full h-full"
                 >
                     <Image
-                        src={activeImageDetails.bg}
-                        alt={activeImageDetails.title}
+                        src={activeTour.bg}
+                        alt={activeTour.title}
                         fill
                         className="object-cover"
                         priority
                         quality={100}
                     />
-                    {/* Minimal Gradient Overlay for Text Readability Only */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+                    {/* Clean, subtle overlay for legibility without darkening the whole scene */}
+                    <div className="absolute inset-0 bg-black/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </motion.div>
             </AnimatePresence>
 
             {/* Grid Layout */}
             <div className="relative z-10 w-full h-full grid grid-cols-12">
 
-                {/* Left Vertical Bar (Socials) */}
+                {/* Left Vertical Bar (Socials) - RESTORED & STYLED */}
                 <div className="hidden lg:flex col-span-1 border-r border-white/20 flex-col justify-end items-center pb-12 gap-8 z-20 bg-black/10 backdrop-blur-[2px]">
                     <Link href="#" className="transform -rotate-90 text-xs font-bold tracking-widest text-white hover:text-primary transition-colors mb-8 whitespace-nowrap">FOLLOW US</Link>
-                    <div className="flex flex-col gap-6">
-                        <Link href="#" className="text-white hover:text-primary transition-colors"><Instagram className="h-5 w-5" /></Link>
-                        <Link href="#" className="text-white hover:text-primary transition-colors"><Twitter className="h-5 w-5" /></Link>
-                        <Link href="#" className="text-white hover:text-primary transition-colors"><Facebook className="h-5 w-5" /></Link>
+                    <div className="flex flex-col gap-6 items-center">
+                        <SocialIcon icon={Instagram} label="Instagram" color="#E1306C" href="#" tooltipPosition="right" />
+                        <SocialIcon icon={Twitter} label="Twitter" color="#000000" href="#" tooltipPosition="right" />
+                        <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" tooltipPosition="right" />
                     </div>
                 </div>
 
-                {/* Main Content Area */}
+                {/* Main Content Area - RESTORED ORIGINAL FONTS & STYLES */}
                 <div className="col-span-12 lg:col-span-6 flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-20">
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
@@ -98,38 +130,103 @@ export const Hero = () => {
                     </motion.div>
                 </div>
 
-                {/* Right Side Cards */}
-                <div className="hidden lg:flex col-span-5 flex-col justify-center gap-6 px-12 pr-20">
-                    {spotlightTours.map((tour, index) => (
-                        <motion.div
-                            key={tour.id}
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.4 + index * 0.2 }}
-                            className="relative group cursor-pointer overflow-hidden rounded-3xl shadow-2xl"
-                            onClick={() => setActiveImageDetails(tour)}
-                        >
-                            {/* Glass Card Background */}
-                            <div className={`absolute inset-0 backdrop-blur-md border transition-all duration-300 z-0 rounded-3xl ${activeImageDetails.id === tour.id ? 'bg-white/20 border-white/40' : 'bg-black/40 border-white/10 hover:bg-black/60'}`} />
+                {/* Right Side Cards - NEW SLIDER DESIGN */}
+                <div className="hidden lg:flex col-span-5 flex-col justify-center relative h-full">
+                    {/* Carousel Container */}
+                    <div className="relative w-full h-[450px] flex items-center justify-center perspective-1000">
+                        {/* We render 3 items: Prev, Active, Next */}
+                        <AnimatePresence mode="popLayout">
+                            {(() => {
+                                const visibleTours = [];
+                                const N = spotlightTours.length;
+                                // Get indices for prev, current, next
+                                const prevIndex = (activeIndex - 1 + N) % N;
+                                const nextIndex = (activeIndex + 1) % N;
 
-                            <div className="relative z-10 flex p-4 gap-6 items-center">
-                                {/* Thumbnail */}
-                                <div className="relative h-24 w-32 shrink-0 rounded-2xl overflow-hidden shadow-lg border border-white/10">
-                                    <Image src={tour.bg} alt={tour.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                                </div>
+                                // Order matters for z-index in standard flow, but we control it with motion
+                                // Let's map them explicitly
+                                const indices = [prevIndex, activeIndex, nextIndex];
 
-                                {/* Info */}
-                                <div className="flex-1 min-w-0 py-2">
-                                    <h3 className="text-xl font-bold text-white mb-1 truncate drop-shadow-md">{tour.title}</h3>
-                                    <p className="text-xs text-gray-200 line-clamp-2 mb-3 leading-relaxed font-medium drop-shadow-sm">{tour.desc}</p>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-primary-300 font-bold drop-shadow-md">{tour.price} <span className="text-[10px] text-gray-200 font-normal ml-1 uppercase">/ Person</span></span>
-                                        <ArrowRight className={`h-4 w-4 transition-all ${activeImageDetails.id === tour.id ? 'text-white translate-x-1' : 'text-white/70 group-hover:text-white group-hover:translate-x-1'}`} />
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
+                                return indices.map((idx, mapIndex) => {
+                                    const tour = spotlightTours[idx];
+                                    // position logic: 0=left, 1=center, 2=right
+                                    const position = mapIndex === 1 ? 'center' : mapIndex === 0 ? 'left' : 'right';
+
+                                    return (
+                                        <motion.div
+                                            key={tour.id}
+                                            layout
+                                            initial={{
+                                                opacity: 0,
+                                                scale: 0.8,
+                                                x: position === 'left' ? -100 : position === 'right' ? 100 : 0
+                                            }}
+                                            animate={{
+                                                opacity: position === 'center' ? 1 : 0.6,
+                                                scale: position === 'center' ? 1 : 0.85,
+                                                x: position === 'center' ? 0 : position === 'left' ? -240 : 240,
+                                                zIndex: position === 'center' ? 20 : 10,
+                                                filter: position === 'center' ? 'blur(0px)' : 'blur(2px)'
+                                            }}
+                                            exit={{ opacity: 0, scale: 0.5 }}
+                                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                                            className="absolute top-1/2 -translate-y-1/2 w-[260px] h-[380px] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                                        >
+                                            <div className="relative h-3/5 w-full">
+                                                <Image
+                                                    src={tour.bg}
+                                                    alt={tour.title}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                                {/* Overlay for non-active cards */}
+                                                {position !== 'center' && <div className="absolute inset-0 bg-black/40" />}
+
+                                                {/* Active Badge */}
+                                                {position === 'center' && (
+                                                    <div className="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider shadow-lg">
+                                                        Popular
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="flex-1 p-5 flex flex-col justify-between bg-white text-black relative">
+                                                <div>
+                                                    <h3 className="font-heading text-lg font-bold mb-2 text-black line-clamp-1">{tour.title}</h3>
+                                                    <p className="text-[11px] text-gray-500 line-clamp-3 leading-relaxed">
+                                                        {tour.desc}
+                                                    </p>
+                                                </div>
+
+                                                <Link href={tour.link || "#"} className="flex items-center gap-2 group/btn mt-2">
+                                                    <span className="text-xs font-bold text-black group-hover/btn:text-primary transition-colors">Read More</span>
+                                                    <div className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center group-hover/btn:bg-primary transition-colors">
+                                                        <ArrowRight className="w-3 h-3" />
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                });
+                            })()}
+                        </AnimatePresence>
+
+                        {/* Navigation Buttons for Slider */}
+                        <div className="absolute bottom-[-50px] left-1/2 -translate-x-1/2 flex gap-4 z-30">
+                            <button
+                                onClick={handlePrev}
+                                className="w-10 h-10 rounded-full border border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={handleNext}
+                                className="w-10 h-10 rounded-full border border-white/20 bg-primary flex items-center justify-center text-white hover:bg-primary-light transition-all shadow-lg shadow-primary/30"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
