@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Hero } from "@/components/shared/Hero";
 import { Navbar } from "@/components/shared/Navbar";
 import { Footer } from "@/components/shared/Footer";
@@ -17,11 +18,34 @@ import {
   ArrowRight, MapPin, Compass,
   Calendar, Heart, Sparkles,
   ShieldCheck, Palmtree, Users,
-  Newspaper, Navigation, Landmark
+  Newspaper, Navigation, Landmark,
+  ChevronLeft, ChevronRight
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeCategory, setActiveCategory] = useState('All Wonders');
+
+  // Mapping categories to filtering logic
+  const filteredDestinations = destinations.filter(dest => {
+    if (activeCategory === 'All Wonders') return true;
+    if (activeCategory === 'Cultural Triangle') return dest.interest === 'Cultural';
+    if (activeCategory === 'Southern Coast') return dest.region === 'South';
+    if (activeCategory === 'Hill Country') return dest.region === 'Central' && dest.interest === 'Nature';
+    if (activeCategory === 'Wildlife Safari') return dest.interest === 'Wildlife';
+    if (activeCategory === 'Eastern Beaches') return dest.region === 'East';
+    if (activeCategory === 'Central Heritage') return dest.region === 'Central';
+    return true;
+  });
+
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage);
+  const paginatedDestinations = filteredDestinations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <main className="min-h-screen bg-[#FDFBF7] font-sans selection:bg-primary selection:text-white">
       <Navbar />
@@ -33,61 +57,245 @@ export default function Home() {
       <GallerySection />
 
       {/* 3. INTRODUCTION / WELCOME SECTION */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="space-y-6"
-          >
-            <span className="text-secondary font-art text-3xl tracking-normal block mb-2 capitalize">Welcome to Paradise</span>
-            <h2 className="text-4xl md:text-6xl font-heading font-black text-primary leading-tight uppercase">
-              Discover the Soul of <br /> <span className="text-secondary font-art lowercase tracking-normal text-5xl md:text-7xl">Sri Lanka</span>
-            </h2>
-            <p className="text-gray-600 text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto italic opacity-90">
-              "Sri Lanka is an island of endless diversity. From the emerald tea plantations of the central highlands to the sapphire waters of the southern coast, every corner tells a story of ancient kings, vibrant culture, and breathtaking nature."
-            </p>
-            <div className="flex justify-center gap-4 pt-4">
-              <div className="w-12 h-1 bg-secondary rounded-full" />
+      <section className="py-24 bg-white relative">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+
+            {/* Left Content Section - Widened to ensure 3-line fitting */}
+            <div className="w-full lg:w-[50%] space-y-12 relative z-50">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="space-y-10"
+              >
+                <div className="space-y-6">
+                  <div className="pt-4 flex flex-col items-start translate-x-[-10px]">
+                    <span className="font-heading font-black text-3xl md:text-5xl text-gray-900 uppercase tracking-tight leading-[1.1] md:leading-[0.9] mb-6 block whitespace-nowrap">
+                      &ldquo;Discover Tales of Ceylon&rdquo;
+                    </span>
+
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <p className="text-gray-600 font-art capitalize tracking-tight text-sm md:text-2xl leading-relaxed max-w-none">
+                    <span className="lg:whitespace-nowrap block">Discover 2,500 years of sacred heritage through the monarchic eras of the Cultural</span>
+                    <span className="lg:whitespace-nowrap block">Triangle and the coastal colonial forts of the south. Journey from the misty tea</span>
+                    <span className="lg:whitespace-nowrap block">highlands to the leopard-ruled wilds of Yala, exploring ancient myths that breathe</span>
+                    <span className="lg:whitespace-nowrap block">life into this pearl of the ocean. Our curated tales narrate a land of vibrant</span>
+                    <span className="lg:whitespace-nowrap block">festivals, architectural marvels, and timeless hospitality in legendary Ceylon.</span>
+                  </p>
+                </div>
+
+                <div className="pt-4">
+                  <Link
+                    href="/about"
+                    className="group inline-flex items-center gap-6 text-[12px] md:text-sm font-art capitalize tracking-widest bg-black text-white px-12 py-6 rounded-none hover:bg-secondary hover:text-primary transition-all shadow-2xl"
+                  >
+                    Discover Our Story
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+                  </Link>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
+
+            {/* Right Image Section - Maximum Size with Top & Bottom Overlap */}
+            <motion.div
+              initial={{ opacity: 0, x: 80 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="w-full lg:w-[85%] relative z-30 lg:-mt-64 lg:-mb-64 lg:-mr-64 xl:-mr-80"
+            >
+              <div className="relative">
+                <Image
+                  src="/images/about-srilanka.png"
+                  alt="Beautiful Sri Lanka"
+                  width={2000}
+                  height={2400}
+                  className="w-full h-auto scale-125 transition-transform duration-1000 group-hover:scale-135 "
+                  priority
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* 4. ABOUT SECTION (Refined in ProjectShowcase) */}
-      <ProjectShowcase />
+      {/* 5. SIGNATURE DESTINATIONS - Luxury Nusa Style */}
+      <section className="py-32 bg-[#FDFBF7] overflow-hidden">
+        <div className="container mx-auto px-4 lg:px-16">
 
-      {/* 5. FEATURED DESTINATIONS */}
-      <section className="py-24 bg-[#FDFBF7]">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 text-center md:text-left">
-            <div>
-              <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 block">Our Top Destinations</span>
-              <h2 className="text-4xl md:text-5xl font-heading font-black text-secondary uppercase">Explore the <span className="text-primary-700">Must-Sees</span></h2>
+          <div className="flex flex-col items-center text-center mb-16 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="space-y-4"
+            >
+              <h2 className="text-5xl md:text-6xl font-heading font-black text-black uppercase tracking-tight">Signature Destinations <br /><span className="text-gray-400 italic font-serif lowercase tracking-normal">of Sri Lanka</span></h2>
+              <p className="text-secondary font-bold text-xs uppercase tracking-[0.4em]">Where heritage, nature, and luxury meet.</p>
+              <p className="text-gray-500 text-sm max-w-2xl mx-auto font-light leading-relaxed">Explore handpicked destinations across the island — from ancient wonders to tropical beaches and wildlife safaris.</p>
+            </motion.div>
+
+            {/* Sharp Professional Categories */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="flex flex-wrap justify-center gap-3 mt-4"
+            >
+              {[
+                'All Wonders', 'Cultural Triangle', 'Southern Coast', 'Hill Country', 'Wildlife Safari', 'Eastern Beaches', 'Central Heritage'
+              ].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setCurrentPage(1);
+                  }}
+                  className={`px-6 py-3 rounded-none text-[10px] font-black uppercase tracking-widest border transition-all ${activeCategory === cat ? 'bg-black text-white border-black shadow-xl scale-105' : 'bg-transparent text-black border-black/10 hover:border-black'
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-2 auto-rows-[250px]">
+
+            {/* Left Stack */}
+            <div className="md:col-span-3 grid grid-rows-2 gap-2 row-span-2">
+              {paginatedDestinations.slice(0, 2).map((dest, i) => (
+                <motion.div
+                  key={dest.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative group rounded-none overflow-hidden"
+                >
+                  <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute top-4 left-4 h-9 w-9 rounded-full bg-white flex items-center justify-center text-[9px] font-black text-black">{dest.rating}</div>
+                  <div className="absolute bottom-6 left-6 text-white pr-4">
+                    <span className="text-xl font-black block leading-none mb-1">SL</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest block">{dest.name}</span>
+                  </div>
+                </motion.div>
+              ))}
+              {/* Fallback empty cards if data < 2 */}
+              {paginatedDestinations.length < 1 && <div className="bg-gray-50 border border-dashed border-gray-200" />}
             </div>
+
+            {/* Middle Pillar */}
+            <div className="md:col-span-3 row-span-2">
+              {paginatedDestinations[2] ? (
+                <motion.div
+                  key={paginatedDestinations[2].id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative group rounded-none overflow-hidden h-full"
+                >
+                  <Image src={paginatedDestinations[2].image} alt={paginatedDestinations[2].name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  <div className="absolute top-6 left-6 h-10 w-10 rounded-full bg-white flex items-center justify-center text-[10px] font-black text-black">{paginatedDestinations[2].rating}</div>
+                  <div className="absolute bottom-10 left-10 text-white pr-6">
+                    <span className="text-4xl font-black block leading-none mb-2">SL</span>
+                    <span className="text-xs font-bold uppercase tracking-widest block">{paginatedDestinations[2].name}</span>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="h-full bg-gray-50 border border-dashed border-gray-200" />
+              )}
+            </div>
+
+            {/* Right Group */}
+            <div className="md:col-span-6 grid grid-rows-2 gap-2 row-span-2">
+              {paginatedDestinations[3] ? (
+                <motion.div
+                  key={paginatedDestinations[3].id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="relative group rounded-none overflow-hidden"
+                >
+                  <Image src={paginatedDestinations[3].image} alt={paginatedDestinations[3].name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute top-4 left-4 h-9 w-9 rounded-full bg-white flex items-center justify-center text-[9px] font-black text-black">{paginatedDestinations[3].rating}</div>
+                  <div className="absolute bottom-6 left-6 text-white flex flex-col">
+                    <span className="text-2xl font-black block leading-none mb-1">SL</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest">{paginatedDestinations[3].name}</span>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="bg-gray-50 border border-dashed border-gray-200" />
+              )}
+
+              <div className="grid grid-cols-2 gap-2">
+                {paginatedDestinations.slice(4, 6).map((dest, i) => (
+                  <motion.div
+                    key={dest.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
+                    className="relative group rounded-none overflow-hidden"
+                  >
+                    <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute top-4 left-4 h-8 w-8 rounded-full bg-white flex items-center justify-center text-[8px] font-black text-black">{dest.rating}</div>
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <span className="text-sm font-black block leading-none mb-1">SL</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest block">{dest.name}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Professional Pagination - Light Style */}
+          <div className="mt-16 flex flex-wrap justify-center items-center gap-1">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-6 py-3 rounded-none bg-white border border-gray-200 text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:bg-gray-50 disabled:opacity-30 transition-all"
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+              <button
+                key={num}
+                onClick={() => setCurrentPage(num)}
+                className={`w-12 h-12 rounded-none flex items-center justify-center font-bold text-xs transition-all border ${currentPage === num
+                  ? 'bg-black text-white border-black shadow-lg scale-110 z-10'
+                  : 'bg-white text-gray-400 border-gray-200 hover:bg-gray-50'
+                  }`}
+              >
+                {num}
+              </button>
+            ))}
+            {totalPages > 6 && <div className="w-12 h-12 flex items-center justify-center text-gray-400 text-xs">...</div>}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-6 py-3 rounded-none bg-white border border-gray-200 text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:bg-gray-50 disabled:opacity-30 transition-all"
+            >
+              Next
+            </button>
+          </div>
+
+          <div className="mt-20 text-center">
             <Link href="/destinations">
-              <Button className="rounded-full bg-primary hover:bg-primary-dark text-white px-10 py-6 mb-2">
-                View All Destinations
+              <Button variant="outline" className="rounded-none border-black text-black px-16 py-8 text-[11px] font-black uppercase tracking-[0.5em] hover:bg-black hover:text-white transition-all group">
+                Explore All Destinations
+                <ArrowRight className="ml-3 w-4 h-4 transition-transform group-hover:translate-x-2" />
               </Button>
             </Link>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {destinations.slice(0, 3).map((dest, idx) => (
-              <motion.div
-                key={dest.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                <DestinationCard {...dest} />
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
+
 
       {/* 6. EXPERIENCES */}
       <section className="py-24 bg-white relative overflow-hidden">
@@ -137,35 +345,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. WHY VISIT SRI LANKA SECTION (Keep 4 icons as requested) */}
+      {/* 7. WHY CHOOSE CEYLON TRIPS SECTION (Focus on Brand Value) */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <span className="text-primary font-bold uppercase tracking-widest text-sm block mb-2">The Wonder of Asia</span>
-            <h2 className="text-4xl md:text-5xl font-heading font-black text-secondary uppercase">Why Choose <span className="text-primary italic font-serif lowercase tracking-normal">Sri Lanka?</span></h2>
+            <span className="text-primary font-bold uppercase tracking-widest text-sm block mb-2">The Ceylon Trips Difference</span>
+            <h2 className="text-4xl md:text-5xl font-heading font-black text-secondary uppercase">Why Choose <span className="text-primary italic font-serif lowercase tracking-normal">Ceylon Trips?</span></h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
               {
                 icon: <Landmark className="w-8 h-8" />,
-                title: "Rich Heritage",
-                desc: "8 UNESCO World Heritage sites including ancient kingdoms and colonial forts."
+                title: "Local Expertise",
+                desc: "Deep-rooted knowledge of hidden gems and authentic cultural connections across the island."
               },
               {
-                icon: <Palmtree className="w-8 h-8" />,
-                title: "Breathtaking Nature",
-                desc: "From golden beaches and misty mountains to dense tropical jungles."
+                icon: <Navigation className="w-8 h-8" />,
+                title: "Private Chauffeur Guides",
+                desc: "Travel in comfort with our certified, multi-lingual guides who double as your private drivers."
+              },
+              {
+                icon: <Calendar className="w-8 h-8" />,
+                title: "Custom Itineraries",
+                desc: "100% personalized travel plans designed around your pace, interests, and budget requirements."
               },
               {
                 icon: <Sparkles className="w-8 h-8" />,
-                title: "Wildlife Safaris",
-                desc: "One of the best places in the world to see leopards, elephants, and blue whales."
-              },
-              {
-                icon: <Users className="w-8 h-8" />,
-                title: "Warm Hospitality",
-                desc: "Experience the genuine smiles and legendary warmth of the Sri Lankan people."
+                title: "Luxury Partnerships",
+                desc: "Exclusive access to Sri Lanka's finest boutique villas, heritage hotels, and premium resorts."
               }
             ].map((usp, i) => (
               <motion.div
@@ -190,30 +398,8 @@ export default function Home() {
       {/* 8. TESTIMONIALS */}
       <TestimonialSection />
 
-      {/* 9. CALL TO ACTION SECTION (Strong CTA) */}
-      <section className="py-24 bg-secondary text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image src="/images/sigiriya-vibrant.jpg" fill alt="CTA BG" className="object-cover" />
-        </div>
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-6xl font-heading font-black mb-8 uppercase leading-tight">
-            Ready to Start Your <br />
-            <span className="text-sand font-art lowercase tracking-normal text-5xl md:text-8xl">Ceylon Adventure?</span>
-          </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-12 font-light italic">
-            "Our experts are ready to curate the perfect journey tailored specifically to your dreams."
-          </p>
-          <Link href="/contact">
-            <Button className="rounded-full bg-sand hover:bg-white text-primary font-bold px-12 py-8 text-xl shadow-2xl transition-all hover:scale-105">
-              Contact Us Today <ArrowRight className="ml-3 w-6 h-6" />
-            </Button>
-          </Link>
-        </div>
-      </section>
-
-
-
-      {/* 10. LATEST UPDATES / BLOG SECTION (Condensed to 2 posts) */}
+      {/* 9. LATEST UPDATES / BLOG SECTION (Hidden until content is ready) */}
+      {/*
       <section className="py-24 bg-[#FDFBF7]">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
@@ -264,6 +450,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      */}
 
       {/* 11. FOOTER */}
       <Footer />

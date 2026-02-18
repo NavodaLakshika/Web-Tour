@@ -109,7 +109,7 @@ export const Hero = () => {
                             Wild & <br /> <span className="text-white">Wonderful</span>
                         </h1>
 
-                        <p className="text-white text-lg md:text-xl max-w-md leading-relaxed mb-8 border-l-4 border-primary pl-6 drop-shadow-lg font-medium text-shadow-sm">
+                        <p className="text-white/90 text-xl md:text-2xl max-w-lg leading-relaxed mb-8 border-l-4 border-primary pl-6 drop-shadow-lg font-art capitalize tracking-tight text-shadow-sm">
                             Explore the vivid colors of Sri Lanka. From golden beaches to lush green mountains, discover paradise on your terms.
                         </p>
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Great+Vibes&family=Ms+Madi&family=Dancing+Script&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -19,7 +19,7 @@
   /* Fonts */
   --font-serif: "Playfair Display", serif;
   --font-sans: "Montserrat", sans-serif;
-  --font-art: "Great Vibes", cursive;
+  --font-art: "Ms Madi", cursive;
 }
 
 @theme inline {
@@ -34,7 +34,7 @@
 
   --font-sans: "Montserrat", sans-serif;
   --font-heading: "Playfair Display", serif;
-  --font-art: "Great Vibes", cursive;
+  --font-art: var(--font-art);
 }
 
 @media (prefers-color-scheme: dark) {
