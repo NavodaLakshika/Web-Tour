@@ -19,9 +19,9 @@ import {
   Calendar, Heart, Sparkles,
   ShieldCheck, Palmtree, Users,
   Newspaper, Navigation, Landmark,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, PlusCircle
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,12 +39,40 @@ export default function Home() {
     return true;
   });
 
-  const itemsPerPage = 6;
+  const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage);
-  const paginatedDestinations = filteredDestinations.slice(
+
+  // Always get exactly 10 items for the current page, using placeholders if needed
+  const rawPaginated = filteredDestinations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const paginatedDestinations = [
+    ...rawPaginated,
+    ...Array(Math.max(0, 10 - rawPaginated.length)).fill({ isPlaceholder: true })
+  ];
+
+  // EXPERIENCE SECTION LOGIC
+  const [expPage, setExpPage] = useState(1);
+  const [expCategory, setExpCategory] = useState('All');
+  const expItemsPerPage = 6;
+
+  const filteredExperiences = experiences.filter(exp => {
+    if (expCategory === 'All') return true;
+    return exp.category === expCategory;
+  });
+
+  const totalExpPages = Math.ceil(filteredExperiences.length / expItemsPerPage);
+  const paginatedExperiences = filteredExperiences.slice(
+    (expPage - 1) * expItemsPerPage,
+    expPage * expItemsPerPage
+  );
+
+  const finalExperiences = [
+    ...paginatedExperiences,
+    ...Array(Math.max(0, 6 - paginatedExperiences.length)).fill({ isPlaceholder: true })
+  ];
 
   return (
     <main className="min-h-screen bg-[#FDFBF7] font-sans selection:bg-primary selection:text-white">
@@ -100,12 +128,12 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Right Image Section - Maximum Size with Top & Bottom Overlap */}
+            {/* Right Image Section - Refined Size */}
             <motion.div
               initial={{ opacity: 0, x: 80 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="w-full lg:w-[85%] relative z-30 lg:-mt-64 lg:-mb-64 lg:-mr-64 xl:-mr-80"
+              className="w-full lg:w-[65%] relative z-30 lg:mt-0 lg:mb-0 lg:-mr-32 xl:-mr-40"
             >
               <div className="relative">
                 <Image
@@ -113,7 +141,7 @@ export default function Home() {
                   alt="Beautiful Sri Lanka"
                   width={2000}
                   height={2400}
-                  className="w-full h-auto scale-125 transition-transform duration-1000 group-hover:scale-135 "
+                  className="w-full h-auto transition-transform duration-1000 group-hover:scale-105"
                   priority
                 />
               </div>
@@ -133,8 +161,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="space-y-4"
             >
-              <h2 className="text-5xl md:text-6xl font-heading font-black text-black uppercase tracking-tight">Signature Destinations <br /><span className="text-gray-400 italic font-serif lowercase tracking-normal">of Sri Lanka</span></h2>
-              <p className="text-secondary font-bold text-xs uppercase tracking-[0.4em]">Where heritage, nature, and luxury meet.</p>
+              <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tight">Signature Destinations <br /><span className="text-gray-600 italic font-art lowercase tracking-normal">of Sri Lanka</span></h2>
               <p className="text-gray-500 text-sm max-w-2xl mx-auto font-light leading-relaxed">Explore handpicked destinations across the island — from ancient wonders to tropical beaches and wildlife safaris.</p>
             </motion.div>
 
@@ -164,94 +191,227 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-2 auto-rows-[250px]">
+          <div className="relative min-h-[500px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory + currentPage}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={{
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[280px]"
+              >
+                {/* Left Stack - Fly in from Left */}
+                <div className="md:col-span-4 lg:col-span-3 grid grid-rows-2 gap-4">
+                  {paginatedDestinations.slice(0, 2).map((dest, i) => (
+                    <motion.div
+                      key={dest.isPlaceholder ? `placeholder-left-${i}` : dest.id}
+                      variants={{
+                        hidden: { opacity: 0, x: -100, scale: 0.9 },
+                        visible: {
+                          opacity: 1,
+                          x: 0,
+                          scale: 1,
+                          transition: { type: "spring", damping: 20, stiffness: 100 }
+                        },
+                        exit: { opacity: 0, x: -50, scale: 0.9 }
+                      }}
+                      className={`relative group rounded-2xl overflow-hidden shadow-sm transition-all duration-500 ${dest.isPlaceholder ? 'bg-black/5 border border-dashed border-black/10 flex items-center justify-center' : 'hover:shadow-2xl'}`}
+                    >
+                      {!dest.isPlaceholder ? (
+                        <>
+                          <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute top-4 right-4 h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-[11px] font-black text-black z-10">{dest.rating}</div>
+                          <div className="absolute bottom-6 left-6 text-white pr-4">
+                            <span className="text-xl font-black block leading-none mb-1 tracking-tighter opacity-60">SL</span>
+                            <span className="text-lg font-black uppercase tracking-tight block">{dest.name}</span>
+                            <div className="h-1 w-8 bg-white mt-2 transition-all duration-500 group-hover:w-16" />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center p-8 opacity-20">
+                          <PlusCircle className="w-8 h-8 mx-auto mb-2" />
+                          <span className="text-[10px] font-black uppercase tracking-widest block">Exploring More...</span>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
 
-            {/* Left Stack */}
-            <div className="md:col-span-3 grid grid-rows-2 gap-2 row-span-2">
-              {paginatedDestinations.slice(0, 2).map((dest, i) => (
-                <motion.div
-                  key={dest.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="relative group rounded-none overflow-hidden"
-                >
-                  <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute top-4 left-4 h-9 w-9 rounded-full bg-white flex items-center justify-center text-[9px] font-black text-black">{dest.rating}</div>
-                  <div className="absolute bottom-6 left-6 text-white pr-4">
-                    <span className="text-xl font-black block leading-none mb-1">SL</span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest block">{dest.name}</span>
-                  </div>
-                </motion.div>
-              ))}
-              {/* Fallback empty cards if data < 2 */}
-              {paginatedDestinations.length < 1 && <div className="bg-gray-50 border border-dashed border-gray-200" />}
-            </div>
-
-            {/* Middle Pillar */}
-            <div className="md:col-span-3 row-span-2">
-              {paginatedDestinations[2] ? (
-                <motion.div
-                  key={paginatedDestinations[2].id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="relative group rounded-none overflow-hidden h-full"
-                >
-                  <Image src={paginatedDestinations[2].image} alt={paginatedDestinations[2].name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                  <div className="absolute top-6 left-6 h-10 w-10 rounded-full bg-white flex items-center justify-center text-[10px] font-black text-black">{paginatedDestinations[2].rating}</div>
-                  <div className="absolute bottom-10 left-10 text-white pr-6">
-                    <span className="text-4xl font-black block leading-none mb-2">SL</span>
-                    <span className="text-xs font-bold uppercase tracking-widest block">{paginatedDestinations[2].name}</span>
-                  </div>
-                </motion.div>
-              ) : (
-                <div className="h-full bg-gray-50 border border-dashed border-gray-200" />
-              )}
-            </div>
-
-            {/* Right Group */}
-            <div className="md:col-span-6 grid grid-rows-2 gap-2 row-span-2">
-              {paginatedDestinations[3] ? (
-                <motion.div
-                  key={paginatedDestinations[3].id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="relative group rounded-none overflow-hidden"
-                >
-                  <Image src={paginatedDestinations[3].image} alt={paginatedDestinations[3].name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute top-4 left-4 h-9 w-9 rounded-full bg-white flex items-center justify-center text-[9px] font-black text-black">{paginatedDestinations[3].rating}</div>
-                  <div className="absolute bottom-6 left-6 text-white flex flex-col">
-                    <span className="text-2xl font-black block leading-none mb-1">SL</span>
-                    <span className="text-[11px] font-bold uppercase tracking-widest">{paginatedDestinations[3].name}</span>
-                  </div>
-                </motion.div>
-              ) : (
-                <div className="bg-gray-50 border border-dashed border-gray-200" />
-              )}
-
-              <div className="grid grid-cols-2 gap-2">
-                {paginatedDestinations.slice(4, 6).map((dest, i) => (
-                  <motion.div
-                    key={dest.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + (i * 0.1) }}
-                    className="relative group rounded-none overflow-hidden"
-                  >
-                    <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute top-4 left-4 h-8 w-8 rounded-full bg-white flex items-center justify-center text-[8px] font-black text-black">{dest.rating}</div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <span className="text-sm font-black block leading-none mb-1">SL</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest block">{dest.name}</span>
+                {/* Middle Pillar - Fly in from Bottom */}
+                <div className="md:col-span-4 lg:col-span-4">
+                  {!paginatedDestinations[2].isPlaceholder ? (
+                    <motion.div
+                      key={paginatedDestinations[2].id}
+                      variants={{
+                        hidden: { opacity: 0, y: 150, scale: 0.9 },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          transition: { type: "spring", damping: 20, stiffness: 100 }
+                        },
+                        exit: { opacity: 0, y: 50, scale: 0.9 }
+                      }}
+                      className="relative group rounded-3xl overflow-hidden h-full shadow-md hover:shadow-2xl transition-all duration-500"
+                    >
+                      <Image src={paginatedDestinations[2].image} alt={paginatedDestinations[2].name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                      <div className="absolute top-6 right-6 h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center text-sm font-black text-black z-10">{paginatedDestinations[2].rating}</div>
+                      <div className="absolute bottom-10 left-10 text-white pr-6">
+                        <span className="text-4xl font-black block leading-none mb-2 tracking-tighter opacity-50">SL</span>
+                        <span className="text-2xl font-black uppercase tracking-tight block">{paginatedDestinations[2].name}</span>
+                        <p className="text-white/70 text-xs mt-3 max-w-xs font-light line-clamp-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                          Experience the timeless beauty of {paginatedDestinations[2].name}, a signature destination of Ceylon.
+                        </p>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <div className="h-full bg-black/5 rounded-3xl border border-dashed border-black/10 flex items-center justify-center">
+                      <div className="text-center opacity-20">
+                        <Compass className="w-12 h-12 mx-auto mb-4 animate-spin-slow" />
+                        <span className="text-sm font-black uppercase tracking-[0.3em]">New Discovery Coming Soon</span>
+                      </div>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+                  )}
+                </div>
+
+                {/* Right Stack - Fly in from Right */}
+                <div className="md:col-span-4 lg:col-span-5 grid grid-rows-2 gap-4">
+                  {!paginatedDestinations[3].isPlaceholder ? (
+                    <motion.div
+                      key={paginatedDestinations[3].id}
+                      variants={{
+                        hidden: { opacity: 0, x: 100, scale: 0.9 },
+                        visible: {
+                          opacity: 1,
+                          x: 0,
+                          scale: 1,
+                          transition: { type: "spring", damping: 20, stiffness: 100 }
+                        },
+                        exit: { opacity: 0, x: 50, scale: 0.9 }
+                      }}
+                      className="relative group rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500"
+                    >
+                      <Image src={paginatedDestinations[3].image} alt={paginatedDestinations[3].name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <div className="absolute top-4 right-4 h-10 w-10 rounded-full bg-white/90 shadow-lg flex items-center justify-center text-[11px] font-black text-black z-10">{paginatedDestinations[3].rating}</div>
+                      <div className="absolute bottom-6 left-6 text-white flex flex-col">
+                        <span className="text-2xl font-black block leading-none mb-1 tracking-tighter opacity-60">SL</span>
+                        <span className="text-lg font-black uppercase tracking-tight">{paginatedDestinations[3].name}</span>
+                        <div className="h-1 w-8 bg-white mt-2 transition-all duration-500 group-hover:w-16" />
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <div className="bg-black/5 rounded-2xl border border-dashed border-black/10 flex items-center justify-center">
+                      <div className="text-center opacity-20">
+                        <Sparkles className="w-6 h-6 mx-auto mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest block">Coming Soon</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {paginatedDestinations.slice(4, 6).map((dest, i) => (
+                      <motion.div
+                        key={dest.isPlaceholder ? `placeholder-right-bottom-${i}` : dest.id}
+                        variants={{
+                          hidden: { opacity: 0, y: 50, scale: 0.9 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            transition: { type: "spring", damping: 20, stiffness: 100 }
+                          },
+                          exit: { opacity: 0, y: 30, scale: 0.9 }
+                        }}
+                        className={`relative group rounded-2xl overflow-hidden shadow-sm transition-all duration-500 ${dest.isPlaceholder ? 'bg-black/5 border border-dashed border-black/10 flex items-center justify-center' : 'hover:shadow-2xl'}`}
+                      >
+                        {!dest.isPlaceholder ? (
+                          <>
+                            <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            <div className="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center text-[10px] font-black text-black z-10">{dest.rating}</div>
+                            <div className="absolute bottom-4 left-4 text-white">
+                              <span className="text-sm font-black block leading-none mb-1 tracking-tighter opacity-60">SL</span>
+                              <span className="text-xs font-black uppercase tracking-tight block">{dest.name}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-center opacity-10">
+                            <MapPin className="w-4 h-4 mx-auto" />
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Secondary Row for More Destinations (Items 7-10) */}
+              {paginatedDestinations.length > 6 && (
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={{
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.1
+                      }
+                    }
+                  }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+                >
+                  {paginatedDestinations.slice(6, 10).map((dest, i) => (
+                    <motion.div
+                      key={dest.isPlaceholder ? `placeholder-bottom-${i}` : dest.id}
+                      variants={{
+                        hidden: { opacity: 0, y: 30, scale: 0.95 },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          transition: { type: "spring", damping: 25, stiffness: 120 }
+                        },
+                        exit: { opacity: 0, y: 20, scale: 0.95 }
+                      }}
+                      className={`relative group rounded-xl overflow-hidden shadow-sm transition-all duration-500 h-[220px] ${dest.isPlaceholder ? 'bg-black/5 border border-dashed border-black/10 flex items-center justify-center' : 'hover:shadow-xl'}`}
+                    >
+                      {!dest.isPlaceholder ? (
+                        <>
+                          <Image src={dest.image} alt={dest.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <span className="text-[10px] font-black block leading-none mb-1 tracking-tighter opacity-70">SL</span>
+                            <span className="text-sm font-black uppercase tracking-tight block">{dest.name}</span>
+                            <div className="flex items-center gap-1 mt-1">
+                              <div className="h-[2px] w-4 bg-primary" />
+                              <span className="text-[10px] font-bold text-white/80">{dest.category}</span>
+                            </div>
+                          </div>
+                          <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[9px] font-black px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {dest.rating} Rating
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center opacity-10">
+                          <Heart className="w-5 h-5 mx-auto mb-2" />
+                          <span className="text-[8px] font-black uppercase tracking-[0.2em] block">Your Next Favorite</span>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Professional Pagination - Light Style */}
@@ -297,81 +457,192 @@ export default function Home() {
       </section>
 
 
-      {/* 6. EXPERIENCES */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16 space-y-4">
-            <span className="text-secondary font-bold uppercase tracking-widest text-sm block">Feel the Energy</span>
-            <h2 className="text-4xl md:text-5xl font-heading font-black text-primary uppercase">Curated <span className="text-secondary italic font-serif lowercase tracking-normal">Experiences</span></h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg font-light">
-              Go beyond the ordinary with our unique activities designed to immerse you in local life.
-            </p>
+      {/* 6. EXPERIENCES - Vertical Strip Slider (Reference Inspired) */}
+      <section className="py-32 bg-[#FDFBF7] relative overflow-hidden">
+        <div className="container mx-auto px-4 lg:px-16">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-4"
+            >
+              <span className="text-secondary font-bold text-[10px] uppercase tracking-[0.5em] block">Curated Series</span>              <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tighter leading-tight">
+                Experience the <span className="text-gray-600 italic font-art lowercase tracking-normal">Eternal Legend</span>
+              </h2>
+            </motion.div>
+
+            {/* Experience Categories - Light Theme */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex flex-wrap gap-2"
+            >
+              {['All', 'Adventure', 'Culinary', 'Wildlife', 'Heritage'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setExpCategory(cat);
+                    setExpPage(1);
+                  }}
+                  className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${expCategory === cat ? 'bg-black text-white border-black shadow-xl' : 'bg-transparent text-black border-black/10 hover:border-black'
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {experiences.slice(0, 3).map((exp, idx) => (
+          <div className="relative h-[650px] overflow-hidden group/container bg-white shadow-2xl rounded-3xl">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={exp.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="group bg-[#FDFBF7] rounded-[2.5rem] overflow-hidden border border-sand hover:bg-white hover:shadow-2xl transition-all"
+                key={expCategory}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col md:flex-row h-full gap-0 md:gap-[2px]"
               >
-                <div className="relative h-64 overflow-hidden">
-                  <Image src={exp.image} alt={exp.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute top-6 left-6 bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    {exp.category}
-                  </div>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold font-heading text-primary mb-3">{exp.title}</h3>
-                  <p className="text-gray-500 text-sm font-light mb-6 line-clamp-2">{exp.description}</p>
-                  <Link href="/experiences" className="text-xs font-bold uppercase tracking-widest text-secondary flex items-center gap-2 group-hover:gap-4 transition-all">
-                    Learn More <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+                {filteredExperiences.slice(0, 6).map((exp, i) => (
+                  <motion.div
+                    key={exp.id}
+                    initial={{ flex: 1 }}
+                    whileHover={{ flex: 2 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative h-full overflow-hidden cursor-pointer border-r border-white/5"
+                  >
+                    {/* Background Image */}
+                    <div className="absolute inset-0 transition-transform duration-1000 scale-105 group-hover:scale-110">
+                      <Image
+                        src={exp.image}
+                        alt={exp.title}
+                        fill
+                        className="object-cover transition-all duration-700 brightness-[0.7] group-hover:brightness-100"
+                      />
+                    </div>
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
+
+                    {/* Content Section */}
+                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                      <div className="space-y-2">
+                        <span className="text-[12px] font-black opacity-60 block leading-none tracking-tighter drop-shadow-lg">
+                          {String(i + 1).padStart(2, '0')}.
+                        </span>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight leading-none drop-shadow-xl max-w-[200px]">
+                          {exp.title}
+                        </h3>
+                        <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-secondary">
+                          {exp.category}
+                        </span>
+                      </div>
+
+                      {/* Detail revealed on hover or fixed on desktop */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="mt-6 pt-6 border-t border-white/10 hidden md:block overflow-hidden"
+                      >
+                        <p className="text-[11px] font-medium text-white/50 leading-relaxed max-w-[250px] line-clamp-2">
+                          {exp.description}
+                        </p>
+                      </motion.div>
+                    </div>
+
+                    {/* Side Label (Vertical) */}
+                    <div className="absolute top-12 left-8 md:origin-left md:-rotate-90 md:translate-y-24">
+                      <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/50 whitespace-nowrap">
+                        Tales of Ceylon
+                      </span>
+                    </div>
+
+                    {/* Hover Glow */}
+                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
+            </AnimatePresence>
           </div>
 
-          <div className="text-center mt-16">
-            <Link href="/experiences">
-              <Button variant="outline" className="rounded-full border-primary text-primary px-12 py-7 text-lg hover:bg-primary hover:text-white transition-all">
-                View All Experiences
-              </Button>
-            </Link>
+          <div className="mt-12 flex justify-between items-center text-gray-400">
+            <span className="text-[10px] font-bold tracking-widest uppercase">Select an experience to explore more</span>
+            <div className="flex gap-4">
+              <div className="h-[2px] w-24 bg-black/5 relative overflow-hidden">
+                <motion.div
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '0%' }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute inset-0 bg-black/20"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 7. WHY CHOOSE CEYLON TRIPS SECTION (Focus on Brand Value) */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold uppercase tracking-widest text-sm block mb-2">The Ceylon Trips Difference</span>
-            <h2 className="text-4xl md:text-5xl font-heading font-black text-secondary uppercase">Why Choose <span className="text-primary italic font-serif lowercase tracking-normal">Ceylon Trips?</span></h2>
+      {/* 7. WHY CHOOSE CEYLON TRIPS SECTION (Premium Redesign) */}
+      <section className="py-32 bg-[#FDFBF7] relative overflow-hidden">
+        {/* Subtle decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+
+        <div className="container mx-auto px-4 lg:px-16 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-20 gap-8">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="max-w-xl"
+            >
+              <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block mb-4">The Ceylon Trips Difference</span>
+              <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tighter leading-none mb-6">
+                Redefining <br /><span className="text-primary italic font-art lowercase tracking-normal">your journey</span>
+              </h2>
+              <p className="text-gray-500 text-sm font-light leading-relaxed max-w-sm">
+                We believe travel should be more than just visiting places; it should be about creating legends and stories that last a lifetime.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-[45%] relative"
+            >
+              <div className="relative">
+                <Image
+                  src="/images/about-srilanka.png"
+                  alt="Ceylon Experience"
+                  width={1200}
+                  height={1500}
+                  className="w-full h-auto transition-transform duration-1000 group-hover:scale-105"
+                />
+              </div>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                icon: <Landmark className="w-8 h-8" />,
+                icon: <Landmark className="w-6 h-6" />,
                 title: "Local Expertise",
                 desc: "Deep-rooted knowledge of hidden gems and authentic cultural connections across the island."
               },
               {
-                icon: <Navigation className="w-8 h-8" />,
+                icon: <Navigation className="w-6 h-6" />,
                 title: "Private Chauffeur Guides",
                 desc: "Travel in comfort with our certified, multi-lingual guides who double as your private drivers."
               },
               {
-                icon: <Calendar className="w-8 h-8" />,
+                icon: <Calendar className="w-6 h-6" />,
                 title: "Custom Itineraries",
                 desc: "100% personalized travel plans designed around your pace, interests, and budget requirements."
               },
               {
-                icon: <Sparkles className="w-8 h-8" />,
+                icon: <Sparkles className="w-6 h-6" />,
                 title: "Luxury Partnerships",
                 desc: "Exclusive access to Sri Lanka's finest boutique villas, heritage hotels, and premium resorts."
               }
@@ -381,14 +652,26 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center group"
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                whileHover={{ y: -10 }}
+                className="group relative bg-white p-10 rounded-[2.5rem] shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden"
               >
-                <div className="w-20 h-20 mx-auto bg-sand/20 rounded-3xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-300 transform group-hover:-translate-y-2">
-                  {usp.icon}
+                {/* Decorative Number */}
+                <span className="absolute -top-4 -right-2 text-8xl font-black text-black/[0.03] select-none group-hover:text-primary/[0.05] transition-colors duration-500">
+                  0{i + 1}
+                </span>
+
+                <div className="relative z-10">
+                  <div className="w-14 h-14 bg-[#FDFBF7] rounded-2xl flex items-center justify-center text-primary mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500 transform group-hover:rotate-[10deg] shadow-inner">
+                    {usp.icon}
+                  </div>
+                  <h3 className="text-lg font-black text-black uppercase tracking-tight mb-4 group-hover:text-primary transition-colors duration-500">{usp.title}</h3>
+                  <div className="h-[2px] w-8 bg-primary/20 mb-6 group-hover:w-16 transition-all duration-500" />
+                  <p className="text-gray-500 font-light text-[13px] leading-relaxed group-hover:text-gray-700 transition-colors duration-500">{usp.desc}</p>
                 </div>
-                <h3 className="text-xl font-bold text-secondary mb-3">{usp.title}</h3>
-                <p className="text-gray-500 font-light text-sm leading-relaxed">{usp.desc}</p>
+
+                {/* Bottom Highlight */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700" />
               </motion.div>
             ))}
           </div>
