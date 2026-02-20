@@ -483,7 +483,7 @@ export const experiences = [
         duration: "Half Day",
         difficulty: "Moderate",
         bestTime: "Feb – June",
-        description: "A thrilling jeep safari in the park with the highest density of leopards in the world.",
+        description: "Sri Lanka is an island filled with exotic beauty and lush greenery, complemented by many interesting species of endemic wildlife. Nature reserves, such as the Yala National Park, Minneriya National Park, Udawalawe National Park offer thrilling safari encounters with leopards, elephants and rare birds.",
         highlights: ["Leopard Spotting", "Elephant Encounters", "Rugged Terrain"]
     },
     {
@@ -496,7 +496,7 @@ export const experiences = [
         duration: "2 Hours",
         difficulty: "Moderate",
         bestTime: "May – Sept",
-        description: "Ride the epic waves of one of the world's top surfing destinations. Perfect for both beginners and pros.",
+        description: "With perfect beaches for fun in the sun, the island has become a hotspot for travellers looking to experience some exhilarating water sports. Surfing in Sri Lanka is just one of those experiences that have become popular among travellers looking for point breaks and consistent swells.",
         highlights: ["Main Point Break", "Sunset Surf", "Chilled Vibes"]
     },
     {
@@ -509,7 +509,7 @@ export const experiences = [
         duration: "Full Day",
         difficulty: "Relaxing",
         bestTime: "Dec – April",
-        description: "Detoxify your body and mind with ancient Ayurvedic oil massages and herbal steam baths.",
+        description: "Ayurveda is not just a wellness trend; it is a type of alternative medicine that has historic roots in the Indian subcontinent, and dates back at least 5,000 years. centres around the country provide therapies based on ancient Ayurvedic practices and healing methods.",
         highlights: ["Herbal Remedies", "Meditation Sessions", "Holistic Healing"]
     },
     {
@@ -535,7 +535,7 @@ export const experiences = [
         duration: "4 Hours",
         difficulty: "Moderate",
         bestTime: "Nov – April",
-        description: "Embark on a maritime adventure to see blue whales, sperm whales, and dolphins in their natural habitat.",
+        description: "Sri Lanka is an island that is blessed with an eclectic mix of exotic beauty, culture and history. The waters that surround the island contain such a diverse marine ecosystem, making it one of the best places in the world to observe blue whales and sperm whales in their natural habitat.",
         highlights: ["Blue Whales", "Eco-friendly Boats", "Ocean Breeze"]
     },
     {
@@ -602,5 +602,18 @@ export const experiences = [
         bestTime: "Year-round",
         description: "Visit a working tea factory and learn the art of picking and processing Ceylon's finest tea.",
         highlights: ["Tea Tasting", "Estate Walks", "Factory Tour"]
+    },
+    {
+        id: 13,
+        title: "Diving and Snorkelling",
+        category: "Adventure",
+        location: "Coastal Waters",
+        image: "/images/mirissa-beach.jpg",
+        price: "$60",
+        duration: "3 Hours",
+        difficulty: "Moderate",
+        bestTime: "Nov – April",
+        description: "The island of Sri Lanka is surrounded by a number of sites that are great for scuba diving and snorkelling. From historic shipwrecks to vibrant coral reefs, PADI diving centres can assist you in making the most of your underwater adventures.",
+        highlights: ["Shipwreck Diving", "Coral Reefs", "Marine Life"]
     }
 ];

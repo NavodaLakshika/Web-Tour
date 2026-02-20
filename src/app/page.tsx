@@ -85,7 +85,7 @@ export default function Home() {
       <GallerySection />
 
       {/* 3. INTRODUCTION / WELCOME SECTION */}
-      <section className="py-24 bg-white relative">
+      <section className="bg-white relative">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 
@@ -137,7 +137,7 @@ export default function Home() {
             >
               <div className="relative">
                 <Image
-                  src="/images/about-srilanka.png"
+                  src="/images/DaladaMaligawa.jpg"
                   alt="Beautiful Sri Lanka"
                   width={2000}
                   height={2400}
@@ -151,7 +151,7 @@ export default function Home() {
       </section>
 
       {/* 5. SIGNATURE DESTINATIONS - Luxury Nusa Style */}
-      <section className="py-32 bg-[#FDFBF7] overflow-hidden">
+      <section className="py-22 bg-[#FDFBF7] overflow-hidden">
         <div className="container mx-auto px-4 lg:px-16">
 
           <div className="flex flex-col items-center text-center mb-16 space-y-6">
@@ -414,36 +414,47 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* Professional Pagination - Light Style */}
-          <div className="mt-16 flex flex-wrap justify-center items-center gap-1">
-            <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-6 py-3 rounded-none bg-white border border-gray-200 text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:bg-gray-50 disabled:opacity-30 transition-all"
-            >
-              Prev
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+          {/* Premium Pagination - Destinations Style */}
+          {totalPages > 1 && (
+            <div className="mt-20 flex justify-center items-center gap-4">
               <button
-                key={num}
-                onClick={() => setCurrentPage(num)}
-                className={`w-12 h-12 rounded-none flex items-center justify-center font-bold text-xs transition-all border ${currentPage === num
-                  ? 'bg-black text-white border-black shadow-lg scale-110 z-10'
-                  : 'bg-white text-gray-400 border-gray-200 hover:bg-gray-50'
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${currentPage === 1
+                  ? 'border-black/5 text-black/20 cursor-not-allowed'
+                  : 'border-black/10 text-black hover:border-black hover:bg-black hover:text-white'
                   }`}
               >
-                {num}
+                <ChevronRight className="w-5 h-5 rotate-180" />
               </button>
-            ))}
-            {totalPages > 6 && <div className="w-12 h-12 flex items-center justify-center text-gray-400 text-xs">...</div>}
-            <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="px-6 py-3 rounded-none bg-white border border-gray-200 text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:bg-gray-50 disabled:opacity-30 transition-all"
-            >
-              Next
-            </button>
-          </div>
+
+              <div className="flex items-center gap-2">
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`w-10 h-10 text-[11px] font-black transition-all ${currentPage === i + 1
+                      ? 'text-black border-b-2 border-secondary'
+                      : 'text-black/30 hover:text-black'
+                      }`}
+                  >
+                    {(i + 1).toString().padStart(2, '0')}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${currentPage === totalPages
+                  ? 'border-black/5 text-black/20 cursor-not-allowed'
+                  : 'border-black/10 text-black hover:border-black hover:bg-black hover:text-white'
+                  }`}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
 
           <div className="mt-20 text-center">
             <Link href="/destinations">
@@ -458,7 +469,7 @@ export default function Home() {
 
 
       {/* 6. EXPERIENCES - Vertical Strip Slider (Reference Inspired) */}
-      <section className="py-32 bg-[#FDFBF7] relative overflow-hidden">
+      <section className="pt-18 pb-12 bg-[#FDFBF7] relative overflow-hidden">
         <div className="container mx-auto px-4 lg:px-16">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <motion.div
@@ -583,7 +594,7 @@ export default function Home() {
       </section>
 
       {/* 7. WHY CHOOSE CEYLON TRIPS SECTION (Premium Redesign) */}
-      <section className="py-32 bg-[#FDFBF7] relative overflow-hidden">
+      <section className="pt-12 pb-32 bg-[#FDFBF7] relative overflow-hidden">
         {/* Subtle decorative elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
@@ -594,14 +605,15 @@ export default function Home() {
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="max-w-xl"
+              className="max-w-4xl"
             >
               <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block mb-4">The Ceylon Trips Difference</span>
               <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tighter leading-none mb-6">
-                Redefining <br /><span className="text-primary italic font-art lowercase tracking-normal">your journey</span>
+                Redefining <br /><span className="text-gray-600 italic font-art lowercase tracking-normal">your journey</span>
               </h2>
-              <p className="text-gray-500 text-sm font-light leading-relaxed max-w-sm">
-                We believe travel should be more than just visiting places; it should be about creating legends and stories that last a lifetime.
+              <p className="text-gray-600 text-sm md:text-2xl font-art leading-relaxed max-w-none">
+                <span className="lg:whitespace-nowrap block">We believe travel should be more than just visiting places;</span>
+                <span className="lg:whitespace-nowrap block">it should be about creating legends and stories that last a lifetime.</span>
               </p>
             </motion.div>
 
@@ -614,11 +626,11 @@ export default function Home() {
             >
               <div className="relative">
                 <Image
-                  src="/images/about-srilanka.png"
+                  src="/images/travelsec.png"
                   alt="Ceylon Experience"
                   width={1200}
                   height={1500}
-                  className="w-full h-auto transition-transform duration-1000 group-hover:scale-105"
+                  className="w-full h-auto transition-transform duration-1000 group-hover:scale-105 mix-blend-multiply"
                 />
               </div>
             </motion.div>
@@ -657,7 +669,7 @@ export default function Home() {
                 className="group relative bg-white p-10 rounded-[2.5rem] shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden"
               >
                 {/* Decorative Number */}
-                <span className="absolute -top-4 -right-2 text-8xl font-black text-black/[0.03] select-none group-hover:text-primary/[0.05] transition-colors duration-500">
+                <span className="absolute -top-3 -right-1 text-5xl font-black text-black/[0.03] select-none group-hover:text-primary/[0.05] transition-colors duration-500">
                   0{i + 1}
                 </span>
 

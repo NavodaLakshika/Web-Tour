@@ -29,7 +29,6 @@ type NavItem = {
 
 const navLinks: NavItem[] = [
     { name: "HOME", href: "/" },
-    { name: "ABOUT", href: "/about" },
     {
         name: "DESTINATIONS",
         href: "/destinations",

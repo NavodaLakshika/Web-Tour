@@ -66,9 +66,9 @@ export const Hero = () => {
 
     return (
         <div className="relative h-screen w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-white" id="hero-section-main-image">
-            {/* Static Background Image - Framed to match 80% zoom feel */}
-            <div className="absolute inset-0 w-full h-full p-2">
-                <div className="relative w-full h-full overflow-hidden rounded-[2rem]">
+            {/* Full Bleed Background Image */}
+            <div className="absolute inset-0 w-full h-full">
+                <div className="relative w-full h-full overflow-hidden">
                     <Image
                         src="/images/hero-couple.png"
                         alt="Ceylon Hero"
@@ -105,7 +105,7 @@ export const Hero = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h1 className="font-sans text-6xl md:text-8xl font-bold uppercase tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl text-shadow-lg">
+                        <h1 className="font-sans text-6xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl text-shadow-lg">
                             Wild & <br /> <span className="text-white">Wonderful</span>
                         </h1>
 

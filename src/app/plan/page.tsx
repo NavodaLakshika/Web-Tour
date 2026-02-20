@@ -99,49 +99,166 @@ export default function PlanPage() {
         <main className="min-h-screen bg-[#FDFBF7] font-sans selection:bg-primary selection:text-white">
             <Navbar />
 
-            {/* 1. HERO & INTRODUCTION */}
-            <section className="relative h-[85vh] w-full overflow-hidden flex items-center justify-center">
-                <div className="absolute inset-0 z-0">
-                    <Image
-                        src="/images/mirissa-clear.jpg"
-                        alt="Plan Your Visit"
-                        fill
-                        className="object-cover object-center scale-105"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-black/40" />
+            {/* 1. PREMIUM HERO SECTION */}
+            <section className="relative h-screen w-full overflow-hidden bg-white text-foreground selection:bg-primary selection:text-white">
+                {/* Full Bleed Background Image */}
+                <div className="absolute inset-0 w-full h-full">
+                    <div className="relative w-full h-full overflow-hidden">
+                        <Image
+                            src="/images/plane-travel.jpg"
+                            alt="Plan Your Adventure"
+                            fill
+                            className="object-cover"
+                            priority
+                            quality={100}
+                        />
+
+                        {/* Atmospheric Overlay */}
+                        <div className="absolute inset-0 bg-black/20" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+                    </div>
                 </div>
 
-                <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                    >
-                        <span className="inline-block py-1 px-3 border border-white/30 rounded-full text-xs font-bold tracking-[0.3em] uppercase mb-6 backdrop-blur-sm bg-white/10">
-                            The Ultimate Guide
-                        </span>
-                        <h1 className="font-heading font-black text-6xl md:text-8xl mb-8 leading-tight drop-shadow-2xl">
-                            PLAN YOUR <br />
-                            <span className="text-secondary italic font-serif lowercase tracking-normal">adventure</span>
-                        </h1>
-                        <p className="text-lg md:text-xl font-light tracking-wide max-w-3xl mx-auto text-white/90 mb-10 leading-relaxed">
-                            Sri Lanka is a land of vibrant contrasts. Whether you seek the mist-covered peaks of the central highlands or the sun-drenched shores of the south, our comprehensive guide helps you craft the perfect journey.
-                        </p>
+                <div className="relative z-10 w-full h-full flex items-center">
+                    <div className="container mx-auto px-6 lg:px-16 pt-20">
+                        <div className="max-w-4xl">
+                            <motion.div
+                                initial={{ opacity: 0, x: -50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 1, delay: 0.2 }}
+                                className="space-y-8"
+                            >
+                                <div className="flex items-center gap-4 text-white/60 text-[10px] font-black uppercase tracking-[0.3em] mb-4">
+                                    <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                                    <span>/</span>
+                                    <span className="hover:text-white transition-colors cursor-default">Plan</span>
+                                </div>
 
-                        <div className="flex flex-wrap justify-center gap-4">
-                            <Button className="rounded-full bg-secondary hover:bg-secondary-dark text-primary font-bold px-8 py-6">
-                                Start Planning
-                            </Button>
-                            <Button variant="outline" className="rounded-full border-white text-white hover:bg-white/10 px-8 py-6">
-                                View Map
-                            </Button>
+                                <h1 className="font-heading text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85]">
+                                    Plan Your <br />
+                                    <span className="text-white text-3xl md:text-5xl italic font-art lowercase tracking-normal">Adventure</span>
+                                </h1>
+
+                                <div className="flex flex-col gap-6 mt-12">
+                                    <p className="text-white/95 text-sm md:text-lg font-art leading-relaxed max-w-2xl">
+                                        Sri Lanka is a land of vibrant contrasts. Whether you seek the mist-covered peaks of the central highlands or the sun-drenched shores of the south, our comprehensive guide helps you craft the perfect journey.
+                                    </p>
+
+                                    <div className="flex flex-wrap gap-6 pt-4">
+                                        <div className="flex flex-col">
+                                            <span className="text-white font-black text-3xl tracking-tighter">04+</span>
+                                            <span className="text-white/40 text-[10px] uppercase font-black tracking-widest">Main Regions</span>
+                                        </div>
+                                        <div className="h-12 w-px bg-white/20 hidden md:block" />
+                                        <div className="flex flex-col">
+                                            <span className="text-white font-black text-3xl tracking-tighter">All</span>
+                                            <span className="text-white/40 text-[10px] uppercase font-black tracking-widest">Seasons covered</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
-            {/* 2. SUGGESTED ITINERARIES Section */}
+            {/* 2. HOW TO PLAN YOUR ADVENTURE */}
+            <section className="py-24 bg-white border-b border-gray-100">
+                <div className="container mx-auto px-6 lg:px-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div className="space-y-8">
+                            <div className="space-y-4">
+                                <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block">
+                                    A Simple Guide
+                                </span>
+                                <h2 className="font-heading text-4xl md:text-5xl font-black text-black uppercase tracking-tighter leading-[0.9]">
+                                    How to Plan <br /> Your Journey
+                                </h2>
+                                <p className="text-gray-500 text-lg font-art leading-relaxed max-w-lg">
+                                    Planning a trip to Sri Lanka is an exciting process. Here's how we recommend scheduling your island gateway.
+                                </p>
+                            </div>
+
+                            <div className="space-y-12 pt-8">
+                                {[
+                                    { step: "01", title: "Select Your Season", desc: "Choose December to March for the South/West or May to September for the East Coast." },
+                                    { step: "02", title: "Apply for Visa (ETA)", desc: "Quick online process via eta.gov.lk. Most citizens get approval within 48 hours." },
+                                    { step: "03", title: "Identify Your Hubs", desc: "Decide if you want a mix of hills (Ella/Kandy) and beach (Galle/Mirissa) or focus on one." },
+                                    { step: "04", title: "Book Key Transport", desc: "The Kandy-Ella train is a highlight—book your tickets at least 30 days in advance." }
+                                ].map((step, idx) => (
+                                    <div key={idx} className="flex gap-8 group">
+                                        <span className="text-3xl font-heading font-black text-secondary/30 group-hover:text-secondary transition-colors duration-500">{step.step}</span>
+                                        <div className="space-y-2">
+                                            <h4 className="font-heading text-xl font-black text-black uppercase tracking-tight">{step.title}</h4>
+                                            <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="relative p-8 bg-[#FDFBF7] border border-black/[0.03] rounded-[3rem]">
+                            <div className="relative aspect-square overflow-hidden rounded-[2.5rem] shadow-2xl">
+                                <Image
+                                    src="/images/moody-mountains.jpg"
+                                    alt="Planning View"
+                                    fill
+                                    className="object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                <div className="absolute bottom-10 left-10 right-10">
+                                    <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl">
+                                        <span className="text-white/60 text-[10px] uppercase font-black tracking-widest block mb-2">Pro Tip</span>
+                                        <p className="text-white text-sm italic font-art leading-relaxed">
+                                            "Don't try to see the whole island in one week. Focus on 2-3 regions to truly soak in the culture and the pace of island life."
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 3. LOCATION EXPLORER (MAP) */}
+            <section className="py-24 bg-gray-50/50">
+                <div className="container mx-auto px-6 lg:px-16">
+                    <div className="text-center space-y-4 mb-16">
+                        <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block">
+                            Discover the Geography
+                        </span>
+                        <h2 className="font-heading text-4xl md:text-5xl font-black text-black uppercase tracking-tighter">
+                            Island <span className="text-secondary italic font-art lowercase tracking-normal">Explorer</span>
+                        </h2>
+                    </div>
+
+                    <div className="w-full h-[600px] bg-white rounded-[3rem] overflow-hidden shadow-2xl border border-black/5 relative grayscale hover:grayscale-0 transition-all duration-1000">
+                        {/* Placeholder for Google Map - I'll use a real iframe if provided, or a high-quality stylized embed */}
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4047231.841578!2d78.4617!3d7.8731!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2593cf65a1e9d%3A0xe1348b930b0363b!2sSri%20Lanka!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            className="opacity-80 hover:opacity-100 transition-opacity duration-1000"
+                        ></iframe>
+
+                        <div className="absolute top-10 right-10 p-6 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-black/5 max-w-xs pointer-events-none">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-black">Live Exploration</span>
+                            </div>
+                            <p className="text-gray-500 text-xs italic font-art">
+                                Zoom in to explore the hidden gems across the Cultural Triangle, the Hill Country, and our pristine Southern beaches.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 4. SUGGESTED ITINERARIES Section */}
             <section className="py-24 bg-white">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col lg:flex-row justify-between items-end mb-16 gap-8">
@@ -362,213 +479,86 @@ export default function PlanPage() {
                 </div>
             </section>
 
-            {/* 6. ACCOMMODATION Section */}
-            <section className="py-24 bg-primary text-white">
-                <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <span className="text-secondary font-bold uppercase tracking-widest text-sm mb-2 block">WHERE TO STAY</span>
-                        <h2 className="text-4xl md:text-5xl font-heading font-bold">Accommodation Styles</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { title: "Boutique Hotels", desc: "Converted tea bungalows and colonial villas offering high-end luxury.", icon: <Hotel className="w-8 h-8" />, color: "bg-white/5" },
-                            { title: "Guesthouses", desc: "Authentic, family-run stays. Best way to experience local hospitality.", icon: <HeartPulse className="w-8 h-8" />, color: "bg-white/10" },
-                            { title: "Eco-Resorts", desc: "Sustainable stays near national parks or hidden in deep jungles.", icon: <Sun className="w-8 h-8" />, color: "bg-white/5" }
-                        ].map((item, i) => (
-                            <div key={i} className={`p-10 rounded-[2.5rem] ${item.color} border border-white/10 hover:border-white/30 transition-all group`}>
-                                <div className="text-secondary mb-6 group-hover:scale-110 transition-transform inline-block">{item.icon}</div>
-                                <h4 className="text-2xl font-heading font-bold mb-4">{item.title}</h4>
-                                <p className="text-gray-300 leading-relaxed font-light">{item.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* 7. ACTIVITIES & ATTRACTIONS (The Poster Grid Refined) */}
-            <section className="py-24 bg-white overflow-hidden">
-                <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 block">MUST-SEE DESTINATIONS</span>
-                        <h2 className="text-4xl md:text-5xl font-heading font-bold text-secondary">Top Attractions</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {PLACES.map((place, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="relative aspect-[4/5] group overflow-hidden cursor-pointer rounded-[3rem] shadow-xl"
-                            >
-                                <Image src={place.image} alt={place.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                                <div className="absolute top-8 right-8 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 text-white text-[10px] font-bold uppercase tracking-widest">
-                                    {place.tag}
-                                </div>
-
-                                <div className="absolute bottom-8 left-8 text-white">
-                                    <h3 className="text-4xl font-heading font-black uppercase leading-none mb-1">{place.title}</h3>
-                                    <p className="text-white/80 font-medium text-sm mb-4">{place.subtitle}</p>
-                                    <div className="flex items-center gap-2 text-xs font-bold text-secondary uppercase bg-primary/40 backdrop-blur-sm w-fit px-3 py-1 rounded-full">
-                                        <Clock className="w-3 h-3" />
-                                        <span>Est. {place.time}</span>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* 8. TRAVEL TIPS & LOCAL CUSTOMS */}
-            <section className="py-24 bg-[#FDFBF7]">
-                <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        <div className="lg:col-span-1">
-                            <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 block">ESSENTIAL GUIDE</span>
-                            <h2 className="text-4xl font-heading font-bold text-secondary mb-6">Local Wisdom</h2>
-                            <p className="text-gray-500 mb-8">Respect the culture, stay safe, and navigate the island like a pro with these essential tips.</p>
-                            <div className="p-6 bg-white rounded-3xl border border-sand shadow-sm">
-                                <h5 className="font-bold text-primary mb-4 flex items-center gap-2"><Languages className="w-5 h-5 text-secondary" /> Language Basics</h5>
-                                <div className="space-y-2 text-sm text-gray-600">
-                                    <p><span className="font-bold">Ayubowan:</span> Hello / Long Life</p>
-                                    <p><span className="font-bold">Isthuthi:</span> Thank You</p>
-                                    <p><span className="font-bold">Kohomada:</span> How are you?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-sm flex gap-6">
-                                <Utensils className="w-10 h-10 text-secondary flex-shrink-0" />
-                                <div>
-                                    <h4 className="font-bold text-primary text-xl mb-2">Dining Etiquette</h4>
-                                    <p className="text-gray-500 text-sm leading-relaxed">It's common to eat with your right hand. Tap water is generally not for drinking; stick to bottled or filtered water.</p>
-                                </div>
-                            </div>
-                            <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-sm flex gap-6">
-                                <ShieldCheck className="w-10 h-10 text-secondary flex-shrink-0" />
-                                <div>
-                                    <h4 className="font-bold text-primary text-xl mb-2">Temple Dress Code</h4>
-                                    <p className="text-gray-500 text-sm leading-relaxed">Always cover your shoulders and knees. Remove shoes and hats before entering sacred grounds.</p>
-                                </div>
-                            </div>
-                            <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-sm flex gap-6">
-                                <Wallet className="w-10 h-10 text-secondary flex-shrink-0" />
-                                <div>
-                                    <h4 className="font-bold text-primary text-xl mb-2">Money & Paying</h4>
-                                    <p className="text-gray-500 text-sm leading-relaxed">Sri Lankan Rupee (LKR). Cards are accepted in major hotels and malls, but carry cash for smaller shops and tuk-tuks.</p>
-                                </div>
-                            </div>
-                            <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-sm flex gap-6">
-                                <HeartPulse className="w-10 h-10 text-secondary flex-shrink-0" />
-                                <div>
-                                    <h4 className="font-bold text-primary text-xl mb-2">Emergency Numbers</h4>
-                                    <p className="text-gray-500 text-sm leading-relaxed">Tourist Police: 1912. General Emergency: 119. Ambulance: 1990. Keep these saved in your phone.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 9 & 10. INTERACTIVE TOOLS & RESOURCES */}
+            {/* 6. PLAN YOUR VISIT (INTERACTIVE FORM) */}
             <section className="py-24 bg-white">
-                <div className="container mx-auto px-4">
-                    <div className="bg-secondary rounded-[4rem] p-12 lg:p-20 text-white relative overflow-hidden">
-                        {/* Decorative Background */}
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="container mx-auto px-6 lg:px-16">
+                    <div className="bg-black/95 rounded-[4rem] p-12 lg:p-24 relative overflow-hidden shadow-2xl">
+                        {/* Decorative Background Blur */}
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
-                            <div>
-                                <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">Tools for the Perfect Trip</h2>
-                                <p className="text-gray-300 text-lg mb-10 leading-relaxed">
-                                    Download our expert-crafted resources to help you stay organized on the go. From packing lists to festival calendars.
-                                </p>
+                            <div className="space-y-10">
                                 <div className="space-y-4">
-                                    <button className="w-full flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
-                                        <div className="flex items-center gap-4">
-                                            <Download className="w-6 h-6 text-secondary" />
-                                            <span className="font-bold">Sri Lanka Travel Guide PDF</span>
+                                    <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block">
+                                        Personalized Journey
+                                    </span>
+                                    <h2 className="font-heading text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
+                                        Plan Your <br /> <span className="text-secondary italic font-art lowercase tracking-normal">Visit</span>
+                                    </h2>
+                                    <p className="text-gray-400 text-lg font-art leading-relaxed max-w-lg">
+                                        Tell us your dream island escape, and our local experts will craft a journey that resonates with your soul.
+                                    </p>
+                                </div>
+
+                                <div className="space-y-6">
+                                    {[
+                                        { icon: <MapPin className="w-5 h-5" />, label: "Tailor-made Routes", desc: "No two journeys are the same. We build from scratch." },
+                                        { icon: <Clock className="w-5 h-5" />, label: "24/7 Local Support", desc: "Always here to guide you during your island stay." },
+                                        { icon: <Compass className="w-5 h-5" />, label: "Secret Locations", desc: "Access spots that don't appear in guidebooks." }
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex gap-6 items-start">
+                                            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-secondary">
+                                                {item.icon}
+                                            </div>
+                                            <div className="space-y-1">
+                                                <h4 className="text-white font-black uppercase text-xs tracking-widest">{item.label}</h4>
+                                                <p className="text-gray-500 text-xs font-art">{item.desc}</p>
+                                            </div>
                                         </div>
-                                        <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all" />
-                                    </button>
-                                    <button className="w-full flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
-                                        <div className="flex items-center gap-4">
-                                            <Calendar className="w-6 h-6 text-secondary" />
-                                            <span className="font-bold">2024 Festival Calendar</span>
-                                        </div>
-                                        <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all" />
-                                    </button>
-                                    <button className="w-full flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
-                                        <div className="flex items-center gap-4">
-                                            <CheckCircle2 className="w-6 h-6 text-secondary" />
-                                            <span className="font-bold">Essential Packing Checklist</span>
-                                        </div>
-                                        <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all" />
-                                    </button>
+                                    ))}
                                 </div>
                             </div>
 
-                            <div className="bg-white rounded-[3rem] p-10 text-primary shadow-2xl relative">
-                                <div className="absolute -top-6 -right-6 w-20 h-20 bg-secondary rounded-full flex items-center justify-center text-white shadow-lg animate-bounce">
-                                    <MapPin className="w-8 h-8" />
+                            <div className="bg-white/5 backdrop-blur-3xl p-10 lg:p-14 rounded-[3rem] border border-white/10 shadow-2xl space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Your Focus</label>
+                                        <select className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm outline-none focus:border-secondary transition-all appearance-none">
+                                            <option className="bg-black">Adventure</option>
+                                            <option className="bg-black">Wellness</option>
+                                            <option className="bg-black">Heritage</option>
+                                            <option className="bg-black">Wildlife</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Duration</label>
+                                        <select className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm outline-none focus:border-secondary transition-all appearance-none">
+                                            <option className="bg-black">1-7 Days</option>
+                                            <option className="bg-black">8-14 Days</option>
+                                            <option className="bg-black">15-30 Days</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <h3 className="text-3xl font-heading font-bold mb-6">Quick Trip Planner</h3>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">Interest</label>
-                                        <select className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-secondary transition-all">
-                                            <option>Beach & Relaxation</option>
-                                            <option>Wildlife & Safari</option>
-                                            <option>Cultural Heritage</option>
-                                            <option>Adventure & Hiking</option>
-                                        </select>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Accommodation Preferred</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {["Boutique", "Resort", "Guesthouse"].map(type => (
+                                            <button key={type} className="px-4 py-2 rounded-xl text-[10px] font-black border border-white/10 text-white/60 hover:border-secondary hover:text-white transition-all uppercase">
+                                                {type}
+                                            </button>
+                                        ))}
                                     </div>
-                                    <div>
-                                        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">Duration</label>
-                                        <select className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-secondary transition-all">
-                                            <option>1-3 Days</option>
-                                            <option>4-7 Days</option>
-                                            <option>8-14 Days</option>
-                                            <option>14+ Days</option>
-                                        </select>
-                                    </div>
-                                    <Button className="w-full py-8 rounded-2xl bg-primary text-white text-lg font-bold shadow-lg mt-4">Personalize My Trip</Button>
-                                    <p className="text-[10px] text-center text-gray-400 uppercase tracking-widest mt-4">Get a customized itinerary in seconds</p>
+                                </div>
+
+                                <div className="space-y-2 pt-4">
+                                    <button className="w-full py-6 bg-secondary hover:bg-white text-black font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.2)]">
+                                        Start Your Journey
+                                    </button>
+                                    <p className="text-center text-[9px] text-white/30 uppercase tracking-[0.2em]">Response within 12 hours guaranteed</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 11. FINAL CALL TO ACTION */}
-            <section className="py-24 bg-white">
-                <div className="container mx-auto px-4 text-center">
-                    <div className="max-w-4xl mx-auto">
-                        <span className="text-secondary font-bold uppercase tracking-[0.3em] text-sm mb-6 block">Ready for the Journey?</span>
-                        <h2 className="text-5xl md:text-7xl font-heading font-bold text-primary mb-10">Start your Tales of Ceylon today.</h2>
-                        <div className="flex flex-wrap justify-center gap-6">
-                            <Button className="bg-primary hover:bg-primary-dark text-white rounded-full px-12 py-8 text-xl shadow-xl transition-all hover:scale-105">Book a Tour</Button>
-                            <Button variant="outline" className="border-primary text-primary rounded-full px-12 py-8 text-xl hover:bg-primary/5 transition-all">Contact Expert</Button>
-                        </div>
-                        <div className="mt-16 flex items-center justify-center gap-8 text-gray-400">
-                            {[
-                                { label: "SAFE TRAVELS", val: "100%" },
-                                { label: "LOCAL EXPERTS", val: "50+" },
-                                { label: "HAPPY TRAVELERS", val: "10K+" }
-                            ].map((stat, i) => (
-                                <div key={i} className="text-center px-8 border-r last:border-0 border-gray-100">
-                                    <span className="block font-black text-2xl text-secondary">{stat.val}</span>
-                                    <span className="text-[10px] font-bold tracking-widest uppercase">{stat.label}</span>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 </div>
