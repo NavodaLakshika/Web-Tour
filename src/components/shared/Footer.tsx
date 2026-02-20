@@ -3,59 +3,44 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { Facebook, Instagram, Youtube, Phone, ArrowRight, Twitter } from "lucide-react";
+import { Facebook, Instagram, Youtube, Phone, ArrowRight, Twitter, Mail, MapPin } from "lucide-react";
 import { SocialIcon } from "./SocialIcon";
 
 export const Footer = () => {
     return (
-        <footer className="relative w-full overflow-hidden bg-black flex items-end">
+        <footer className="relative w-full overflow-hidden flex items-end">
+            {/* 1. Background Image with Minimal Overlays for Maximum Visibility */}
+            <div className="absolute inset-0 z-0">
+                <Image
+                    src="/images/ceylon-footer-bg.png"
+                    alt="Tales of Ceylon Background"
+                    fill
+                    className="object-cover"
+                    priority
+                />
+                {/* Subtle dark gradient at bottom for text contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            </div>
 
+            <div className="relative z-10 w-full pt-32 pb-16">
+                <div className="container mx-auto px-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
 
-            <div className="relative z-10 w-full pt-12 pb-6">
-                <div className="container mx-auto px-6 flex flex-col items-center">
-
-                    {/* 1. Newsletter Section */}
-                    <div className="w-full max-w-xl mb-10 text-center space-y-3">
-                        <span className="text-[10px] font-bold tracking-[0.4em] text-white/60 uppercase">Sign Up For Updates</span>
-                        <div className="relative max-w-xl mx-auto">
-                            <input
-                                type="email"
-                                placeholder="ENTER YOUR EMAIL ADDRESS"
-                                className="w-full h-12 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-8 text-center text-[10px] font-bold tracking-widest text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 transition-all"
-                            />
-                            <button className="absolute right-1 top-1 h-10 w-10 bg-white rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform group">
-                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* 2. Navigation Horizontal Links */}
-                    <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-10">
-                        {[
-                            { name: "HOME", href: "/" },
-                            { name: "ABOUT US", href: "/about" },
-                            { name: "DESTINATIONS", href: "/destinations" },
-                            { name: "EXPERIENCES", href: "/experiences" },
-                            { name: "PLAN YOUR VISIT", href: "/plan" },
-                            { name: "CONTACT US", href: "/contact" },
-                        ].map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-[10px] font-bold tracking-[0.2em] text-white/80 hover:text-white transition-colors uppercase"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                    </div>
-
-                    {/* 3. Three-Column Grid */}
-                    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-start mb-10 border-t border-white/10 pt-10">
-
-                        {/* Connect */}
-                        <div className="flex flex-col items-center space-y-6">
-                            <span className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">Connect With Us</span>
-                            <div className="flex gap-4">
+                        {/* Column 1: Brand & Story */}
+                        <div className="space-y-8">
+                            <div className="space-y-3">
+                                <Link href="/" className="inline-block group">
+                                    <span className="font-art text-5xl text-accent block transition-transform group-hover:scale-105 duration-500">Tales of Ceylon</span>
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-px w-8 bg-accent/30" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60">Luxury Expeditions</span>
+                                    </div>
+                                </Link>
+                            </div>
+                            <p className="text-[11px] font-medium leading-relaxed text-white/80 max-w-xs uppercase tracking-widest shadow-sm">
+                                Curating extraordinary journeys through the legendary landscapes of Sri Lanka. From ancient myths to pristine shores, we bring the island's richest stories to life.
+                            </p>
+                            <div className="flex gap-4 pt-2">
                                 <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" tooltipPosition="top" />
                                 <SocialIcon icon={Instagram} label="Instagram" color="#E1306C" href="#" tooltipPosition="top" />
                                 <SocialIcon icon={Twitter} label="Twitter" color="#1DA1F2" href="#" tooltipPosition="top" />
@@ -63,38 +48,84 @@ export const Footer = () => {
                             </div>
                         </div>
 
-                        {/* Contact Info */}
-                        <div className="flex flex-col items-center text-center space-y-4">
-                            <span className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">Contact Us</span>
-                            <div className="text-[10px] font-bold tracking-[0.1em] text-white space-y-1 uppercase leading-relaxed max-w-[200px]">
-                                <p>Ceylon Trips (Pvt) Ltd</p>
-                                <p className="text-white/60">419, Battaramulla, Pannipitiya Rd, 12138</p>
-                                <p className="text-white/60">Sri Lanka</p>
+                        {/* Column 2: Quick Navigation */}
+                        <div className="space-y-8">
+                            <h4 className="text-[12px] font-black uppercase tracking-[0.4em] text-accent">Navigation</h4>
+                            <ul className="space-y-4">
+                                {[
+                                    { name: "Home", href: "/" },
+                                    { name: "About Ceylon", href: "/about" },
+                                    { name: "Destinations", href: "/destinations" },
+                                    { name: "Experiences", href: "/experiences" },
+                                    { name: "Plan Your Visit", href: "/plan" },
+                                    { name: "Contact Us", href: "/contact" },
+                                ].map((link) => (
+                                    <li key={link.name}>
+                                        <Link
+                                            href={link.href}
+                                            className="text-[11px] font-bold tracking-[0.2em] text-white/70 hover:text-accent transition-all duration-300 flex items-center group/nav"
+                                        >
+                                            <div className="w-0 h-px bg-accent group-hover/nav:w-4 transition-all mr-0 group-hover/nav:mr-3" />
+                                            {link.name.toUpperCase()}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Column 3: Contact Details */}
+                        <div className="space-y-8">
+                            <h4 className="text-[12px] font-black uppercase tracking-[0.4em] text-accent">Contact Details</h4>
+                            <div className="space-y-6">
+                                <div className="flex items-start gap-4">
+                                    <MapPin className="w-4 h-4 text-accent/80 mt-0.5" />
+                                    <div className="text-[11px] font-bold text-white/70 leading-relaxed uppercase tracking-wider">
+                                        419, Battaramulla,<br />
+                                        Pannipitiya Rd, 12138<br />
+                                        Sri Lanka
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <Phone className="w-4 h-4 text-accent/80" />
+                                    <span className="text-[11px] font-bold text-white/70 tracking-wider">+94 77 718 3746</span>
+                                </div>
+                                <div className="flex items-center gap-4 group/mail">
+                                    <Mail className="w-4 h-4 text-accent/80" />
+                                    <a href="mailto:hello@ceylontrips.com" className="text-[11px] font-bold text-white/70 group-hover/mail:text-accent transition-colors tracking-wider">
+                                        HELLO@CEYLONTRIPS.COM
+                                    </a>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Direct Contact */}
-                        <div className="flex flex-col items-center text-center space-y-4">
-                            <div className="flex items-center gap-2 text-white">
-                                <Phone className="w-3.5 h-3.5 text-white/40" />
-                                <span className="text-[11px] font-bold tracking-[0.2em]">+94 77 718 3746</span>
+                        {/* Column 4: Newsletter */}
+                        <div className="space-y-8">
+                            <h4 className="text-[12px] font-black uppercase tracking-[0.4em] text-accent">Newsletter</h4>
+                            <p className="text-[11px] font-medium text-white/60 leading-relaxed uppercase tracking-widest">
+                                Join our inner circle for seasonal stories and exclusive updates.
+                            </p>
+                            <div className="relative pt-2">
+                                <input
+                                    type="email"
+                                    placeholder="YOUR EMAIL ADDRESS"
+                                    className="w-full h-12 bg-white/10 border border-white/20 rounded-none px-4 text-[10px] font-bold tracking-[0.2em] text-white placeholder:text-white/40 focus:outline-none focus:border-accent/60 transition-all shadow-lg"
+                                />
+                                <button className="absolute right-0 top-2 h-12 w-12 flex items-center justify-center text-accent hover:text-white transition-colors group/btn">
+                                    <ArrowRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" />
+                                </button>
                             </div>
-                            <a href="mailto:hello@ceylontrips.com" className="text-[10px] font-bold tracking-[0.2em] text-white/60 hover:text-white transition-colors uppercase">
-                                hello@ceylontrips.com
-                            </a>
                         </div>
                     </div>
 
-                    {/* 4. Copyright Bar */}
-                    <div className="w-full text-center space-y-2 pb-4">
-                        <p className="text-[8px] font-light tracking-[0.3em] text-white/20 uppercase">
-                            Concept and Design by Navoda Lakshika
-                        </p>
-                        <p className="text-[8px] font-light tracking-[0.3em] text-white/20 uppercase">
-                            © 2026 Ceylon Trips (Private) Limited. All rights reserved.
-                        </p>
+                    {/* Bottom Bar */}
+                    <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8">
+                        <div className="text-[9px] font-bold tracking-[0.3em] text-white/30 uppercase">
+                            © 2026 CEYLON TRIPS (PVT) LTD. ALL RIGHTS RESERVED.
+                        </div>
+                        <div className="text-[9px] font-bold tracking-[0.3em] text-white/30 uppercase">
+                            CONCEPT BY <span className="text-white/50 hover:text-accent cursor-pointer transition-colors">NAVODA LAKSHIKA</span>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </footer>
