@@ -136,41 +136,48 @@ export default function ContactPage() {
                         {/* Right: Contact Form */}
                         <div className="lg:col-span-1" /> {/* Spacer */}
 
-                        <div className="lg:col-span-6">
-                            <div className="bg-[#FDFBF7] p-10 lg:p-14 rounded-[3rem] border border-black/[0.03] shadow-sm space-y-8">
+                        <div className="lg:col-span-6 relative">
+                            {/* Decorative Background Element for Glass Visibility */}
+                            <div className="absolute -top-10 -right-10 w-64 h-64 bg-secondary/10 rounded-full blur-3xl -z-10 animate-pulse" />
+                            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl -z-10" />
+
+                            <div className="bg-white/40 backdrop-blur-xl p-10 lg:p-14 rounded-[3rem] border border-white/40 shadow-xl space-y-8 relative overflow-hidden">
+                                {/* Subtle Inner Glow */}
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+
                                 <div className="space-y-2">
                                     <h3 className="font-heading text-2xl font-black text-black uppercase tracking-tight flex items-center gap-3">
                                         <MessageSquare className="w-6 h-6 text-secondary" />
                                         Send a Message
                                     </h3>
-                                    <p className="text-gray-400 text-sm font-art">Leave your details and message below.</p>
+                                    <p className="text-gray-500 text-sm font-art">Leave your details and message below.</p>
                                 </div>
 
                                 <form className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/30 ml-1">Full Name</label>
-                                            <Input className="bg-white border-black/5 rounded-2xl px-6 py-4 h-auto text-sm outline-none focus:border-secondary transition-all" placeholder="John Doe" />
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 ml-1">Full Name</label>
+                                            <Input className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-4 h-auto text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all placeholder:text-black/30" placeholder="John Doe" />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/30 ml-1">Email Address</label>
-                                            <Input className="bg-white border-black/5 rounded-2xl px-6 py-4 h-auto text-sm outline-none focus:border-secondary transition-all" placeholder="john@example.com" />
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 ml-1">Email Address</label>
+                                            <Input className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-4 h-auto text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all placeholder:text-black/30" placeholder="john@example.com" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/30 ml-1">Message</label>
-                                        <Textarea className="bg-white border-black/5 rounded-2xl px-6 py-5 min-h-[160px] text-sm outline-none focus:border-secondary transition-all resize-none" placeholder="How can we help you plan your journey?" />
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 ml-1">Message</label>
+                                        <Textarea className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-5 min-h-[160px] text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all resize-none placeholder:text-black/30" placeholder="How can we help you plan your journey?" />
                                     </div>
 
                                     <div className="pt-4">
-                                        <button className="w-full py-6 bg-secondary hover:bg-black text-black hover:text-white font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.1)] flex items-center justify-center gap-4">
+                                        <button className="w-full py-6 bg-secondary hover:bg-black text-black hover:text-white font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.15)] flex items-center justify-center gap-4 focus:outline-none group">
                                             Send Message
-                                            <Send className="w-4 h-4" />
+                                            <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                                         </button>
-                                        <div className="flex items-center justify-center gap-4 mt-8 opacity-40">
-                                            <Clock className="w-3 h-3" />
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-black">Average response: 6 hours</span>
+                                        <div className="flex items-center justify-center gap-4 mt-8 opacity-60">
+                                            <Clock className="w-3 h-3 text-secondary" />
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-black/50">Average response: 6 hours</span>
                                         </div>
                                     </div>
                                 </form>

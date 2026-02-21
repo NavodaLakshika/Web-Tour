@@ -49,11 +49,30 @@ export const TestimonialSection = () => {
                         >
                             <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block">Testimonials</span>
                             <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tighter leading-[0.9]">
-                                What Our <br />
-                                <span className="text-gray-600 italic font-art lowercase tracking-normal">Travelers Say</span>
+                                <div className="overflow-hidden">
+                                    <motion.span
+                                        initial={{ y: "100%" }}
+                                        whileInView={{ y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                                        className="block"
+                                    >
+                                        What Our
+                                    </motion.span>
+                                </div>
+                                <div className="overflow-hidden">
+                                    <motion.span
+                                        initial={{ y: "100%" }}
+                                        whileInView={{ y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                                        className="text-gray-600 italic font-art lowercase tracking-normal block"
+                                    >
+                                        Travelers Say
+                                    </motion.span>
+                                </div>
                             </h2>
-                            <p className="text-gray-400 text-sm font-bold tracking-widest uppercase
- leading-relaxed max-w-sm">
+                            <p className="text-gray-400 text-sm font-bold tracking-widest uppercase leading-relaxed max-w-sm">
                                 Hear from our community of global explorers who have experienced the magic of Sri Lanka through our curated journeys.
                             </p>
 
@@ -81,8 +100,8 @@ export const TestimonialSection = () => {
                                             key={i}
                                             onClick={() => setActiveIndex(i)}
                                             className={`w-10 h-10 text-[11px] font-black transition-all ${activeIndex === i
-                                                    ? 'text-black border-b-2 border-secondary'
-                                                    : 'text-black/20 hover:text-black'
+                                                ? 'text-black border-b-2 border-secondary'
+                                                : 'text-black/20 hover:text-black'
                                                 }`}
                                         >
                                             {(i + 1).toString().padStart(2, '0')}

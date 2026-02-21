@@ -98,29 +98,64 @@ export const Hero = () => {
                     </div>
                 </div>
 
-                {/* Main Content Area - RESTORED ORIGINAL FONTS & STYLES */}
-                <div className="col-span-12 lg:col-span-6 flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-20">
+                {/* Main Content Area - RESPONSIVE & CENTERED ON MOBILE */}
+                <div className="col-span-12 lg:col-span-6 flex flex-col justify-center px-6 md:px-16 lg:px-24 pt-20 text-center lg:text-left">
                     <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h1 className="font-sans text-6xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl text-shadow-lg">
-                            Wild & <br /> <span className="text-white">Wonderful</span>
+                        <h1 className="font-sans text-4xl sm:text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] mb-6 md:mb-8 drop-shadow-2xl text-shadow-lg">
+                            <div className="overflow-hidden">
+                                <motion.span
+                                    initial={{ y: "100%" }}
+                                    animate={{ y: 0 }}
+                                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                                    className="block"
+                                >
+                                    Wild &
+                                </motion.span>
+                            </div>
+                            <div className="overflow-hidden">
+                                <motion.span
+                                    initial={{ y: "100%" }}
+                                    animate={{ y: 0 }}
+                                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+                                    className="block text-white"
+                                >
+                                    Wonderful
+                                </motion.span>
+                            </div>
                         </h1>
 
-                        <p className="text-white/90 text-xl md:text-2xl max-w-lg leading-relaxed mb-8 border-l-4 border-primary pl-6 drop-shadow-lg font-art capitalize tracking-tight text-shadow-sm">
-                            Explore the vivid colors of Sri Lanka. From golden beaches to lush green mountains, discover paradise on your terms.
-                        </p>
+                        <div className="overflow-hidden mb-8 pl-6 border-l-4 border-primary">
+                            <motion.p
+                                initial={{ y: "100%" }}
+                                animate={{ y: 0 }}
+                                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
+                                className="text-white/90 text-lg md:text-2xl max-w-lg mx-auto lg:mx-0 leading-relaxed drop-shadow-lg font-art capitalize tracking-tight text-shadow-sm"
+                            >
+                                Explore the vivid colors of Sri Lanka. From golden beaches to lush green mountains, discover paradise on your terms.
+                            </motion.p>
+                        </div>
 
-                        <Link href="/destinations" className="inline-flex items-center gap-4 group">
-                            <div className="h-14 px-8 bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center uppercase font-bold tracking-widest text-sm rounded-sm text-white shadow-lg">
-                                View All Tours
-                            </div>
-                            <div className="h-14 w-14 bg-primary flex items-center justify-center text-white group-hover:scale-110 transition-transform rounded-sm shadow-lg shadow-primary/20">
-                                <ArrowRight className="h-5 w-5" />
-                            </div>
-                        </Link>
+                        <div className="overflow-hidden">
+                            <motion.div
+                                initial={{ y: "120%" }}
+                                animate={{ y: 0 }}
+                                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
+                                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+                            >
+                                <Link href="/destinations" className="inline-flex items-center gap-4 group w-full sm:w-auto">
+                                    <div className="h-14 px-8 bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center uppercase font-bold tracking-widest text-sm rounded-sm text-white shadow-lg w-full">
+                                        View All Tours
+                                    </div>
+                                    <div className="hidden sm:flex h-14 w-14 bg-primary items-center justify-center text-white group-hover:scale-110 transition-transform rounded-sm shadow-lg shadow-primary/20">
+                                        <ArrowRight className="h-5 w-5" />
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        </div>
                     </motion.div>
                 </div>
 
@@ -206,7 +241,7 @@ export const Hero = () => {
                         </AnimatePresence>
 
                         {/* Navigation Buttons for Slider */}
-                        <div className="absolute bottom-[-50px] left-1/2 -translate-x-1/2 flex gap-4 z-30">
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-4 z-30">
                             <button
                                 onClick={handlePrev}
                                 className="w-10 h-10 rounded-full border border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"

@@ -29,96 +29,8 @@ type NavItem = {
 
 const navLinks: NavItem[] = [
     { name: "HOME", href: "/" },
-    {
-        name: "DESTINATIONS",
-        href: "/destinations",
-        megaMenu: {
-            categories: [
-                {
-                    title: "By Region",
-                    items: [
-                        { label: "Coastal Belt", href: "/destinations/coastal" },
-                        { label: "Hill Country", href: "/destinations/hill-country" },
-                        { label: "Cultural Triangle", href: "/destinations/cultural-triangle" },
-                        { label: "Northern Peninsula", href: "/destinations/north" },
-                    ],
-                },
-                {
-                    title: "Popular Cities",
-                    items: [
-                        { label: "Colombo", href: "/destinations/colombo" },
-                        { label: "Kandy", href: "/destinations/kandy" },
-                        { label: "Galle", href: "/destinations/galle" },
-                        { label: "Ella", href: "/destinations/ella" },
-                    ],
-                },
-            ],
-            featured: [
-                {
-                    title: "Galle Fort",
-                    description: "Historic charm meets coastal beauty.",
-                    image: "/images/galle.jpg",
-                    href: "/destinations/galle",
-                },
-                {
-                    title: "Sigiriya Rock",
-                    description: "Ancient fortress in the sky.",
-                    image: "/images/sigiriya.jpg",
-                    href: "/destinations/sigiriya",
-                },
-                {
-                    title: "Ella Gap",
-                    description: "Breathtaking mountain views.",
-                    image: "/images/ella.jpg",
-                    href: "/destinations/ella",
-                },
-            ],
-        },
-    },
-    {
-        name: "EXPERIENCES",
-        href: "/experiences",
-        megaMenu: {
-            categories: [
-                {
-                    title: "Adventure",
-                    items: [
-                        { label: "Surfing", href: "/experiences/surfing" },
-                        { label: "Hiking", href: "/experiences/hiking" },
-                        { label: "Wildlife Safari", href: "/experiences/safari" },
-                    ],
-                },
-                {
-                    title: "Culture & Relax",
-                    items: [
-                        { label: "Ayurveda Spa", href: "/experiences/spa" },
-                        { label: "Cooking Classes", href: "/experiences/cooking" },
-                        { label: "Tea Tasting", href: "/experiences/tea" },
-                    ],
-                },
-            ],
-            featured: [
-                {
-                    title: "Scenic Train",
-                    description: "One of the world's most beautiful rides.",
-                    image: "/images/train.jpg",
-                    href: "/experiences/train",
-                },
-                {
-                    title: "Wellness",
-                    description: "Rejuvenate your mind and body.",
-                    image: "/images/spa.jpg",
-                    href: "/experiences/wellness",
-                },
-                {
-                    title: "Cooking",
-                    description: "Traditional Sri Lankan flavors.",
-                    image: "/images/cooking.jpg",
-                    href: "/experiences/cooking",
-                },
-            ],
-        },
-    },
+    { name: "DESTINATIONS", href: "/destinations", },
+    { name: "EXPERIENCES", href: "/experiences", },
     { name: "PLAN YOUR VISIT", href: "/plan" },
     { name: "CONTACT", href: "/contact" },
 ];
@@ -160,41 +72,23 @@ export const Navbar = () => {
                 )}
             >
                 <div className="w-full px-6 md:px-12 flex items-center justify-between relative">
-                    {/* Left: Search Bar */}
+                    {/* Left: Login Button */}
                     <div className="hidden lg:flex items-center">
-                        <div className="relative flex items-center">
-                            <AnimatePresence>
-                                {isSearchOpen && (
-                                    <motion.div
-                                        initial={{ width: 0, opacity: 0 }}
-                                        animate={{ width: 240, opacity: 1 }}
-                                        exit={{ width: 0, opacity: 0 }}
-                                        className="overflow-hidden"
-                                    >
-                                        <input
-                                            type="text"
-                                            placeholder="Search destinations, tours..."
-                                            className={cn(
-                                                "w-full bg-transparent border-b-2 px-2 py-1 text-sm outline-none transition-colors mr-2 font-bold",
-                                                isGlass ? "border-[#1B362D]/20 focus:border-[#1B362D] text-[#1B362D]" : "border-white/20 focus:border-white text-white placeholder:text-white/70"
-                                            )}
-                                            autoFocus
-                                        />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                            <button
-                                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                                className={cn(
-                                    "transition-all duration-300 focus:outline-none flex items-center gap-2 group",
-                                    textColorClass,
-                                    isGlass ? "hover:text-[#1B362D]" : "hover:text-white"
-                                )}
-                            >
-                                <Search className={cn("w-5 h-5 transition-transform group-hover:scale-110", isSearchOpen && (isGlass ? "text-[#1B362D]" : "text-white"))} />
-                                {!isSearchOpen && <span className="text-[10px] font-black tracking-[0.2em] uppercase">Search</span>}
-                            </button>
-                        </div>
+                        <Link
+                            href="/login"
+                            className={cn(
+                                "group flex items-center gap-3 transition-all duration-300 focus:outline-none",
+                                textColorClass
+                            )}
+                        >
+                            <div className={cn(
+                                "w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:scale-110",
+                                isGlass ? "border-[#1B362D]/20 group-hover:bg-[#1B362D] group-hover:text-white" : "border-white/20 group-hover:bg-white group-hover:text-black"
+                            )}>
+                                <User className="w-4 h-4" />
+                            </div>
+                           
+                        </Link>
                     </div>
 
                     {/* Center: Logo */}
@@ -221,7 +115,7 @@ export const Navbar = () => {
                                     <Link
                                         href={link.href}
                                         className={cn(
-                                            "text-[12px] font-bold uppercase tracking-widest transition-colors py-2 block whitespace-nowrap",
+                                            "text-[13px] font-bold uppercase tracking-widest transition-colors py-2 block whitespace-nowrap",
                                             hoveredLink === link.name ? (isGlass ? "text-[#D4AF37]" : "text-[#D4AF37]") : textColorClass,
                                             isGlass ? "hover:text-[#D4AF37]" : "hover:text-[#D4AF37]"
                                         )}
@@ -431,7 +325,7 @@ export const Navbar = () => {
                                         transition={{ delay: 0.5 }}
                                         className="pt-8 flex justify-center items-center gap-4 border-t border-gray-200/50 mt-4 flex-wrap"
                                     >
-                                        <SocialIcon icon={Search} label="Search" color="#D4AF37" onClick={() => { setIsSearchOpen(true); setIsMobileMenuOpen(false); }} tooltipPosition="top" />
+                                        <SocialIcon icon={User} label="Login" color="#D4AF37" href="/login" onClick={() => setIsMobileMenuOpen(false)} tooltipPosition="top" />
                                         <SocialIcon icon={Phone} label="Call Us" color="#22c55e" href="tel:+94777183746" tooltipPosition="top" />
                                         <div className="w-px h-6 bg-gray-200/50 mx-2 hidden sm:block" />
                                         <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" tooltipPosition="top" />

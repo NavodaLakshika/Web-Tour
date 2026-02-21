@@ -98,11 +98,18 @@ export default function Home() {
                 className="space-y-10"
               >
                 <div className="space-y-6">
-                  <div className="pt-4 flex flex-col items-start translate-x-[-10px]">
-                    <span className="font-heading font-black text-3xl md:text-5xl text-gray-900 uppercase tracking-tight leading-[1.1] md:leading-[0.9] mb-6 block whitespace-nowrap">
-                      &ldquo;Discover Tales of Ceylon&rdquo;
-                    </span>
-
+                  <div className="flex flex-col items-start lg:translate-x-[-10px]">
+                    <div className="overflow-hidden">
+                      <motion.span
+                        initial={{ y: "100%" }}
+                        whileInView={{ y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                        className="font-heading font-black text-3xl md:text-5xl text-gray-900 uppercase tracking-tight leading-[1.1] mb-2 block"
+                      >
+                        &ldquo;Discover Tales of Ceylon&rdquo;
+                      </motion.span>
+                    </div>
                   </div>
                 </div>
 
@@ -161,7 +168,30 @@ export default function Home() {
               viewport={{ once: true }}
               className="space-y-4"
             >
-              <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tight">Signature Destinations <br /><span className="text-gray-600 italic font-art lowercase tracking-normal">of Sri Lanka</span></h2>
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tight">
+                <div className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="block"
+                  >
+                    Signature Destinations
+                  </motion.span>
+                </div>
+                <div className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                    className="text-gray-600 italic font-art lowercase tracking-normal block"
+                  >
+                    of Sri Lanka
+                  </motion.span>
+                </div>
+              </h2>
               <p className="text-gray-500 text-sm max-w-2xl mx-auto font-light leading-relaxed">Explore handpicked destinations across the island — from ancient wonders to tropical beaches and wildlife safaris.</p>
             </motion.div>
 
@@ -479,7 +509,28 @@ export default function Home() {
               className="space-y-4"
             >
               <span className="text-secondary font-bold text-[10px] uppercase tracking-[0.5em] block">Curated Series</span>              <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tighter leading-tight">
-                Experience the <span className="text-gray-600 italic font-art lowercase tracking-normal">Eternal Legend</span>
+                <div className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="block"
+                  >
+                    Experience the
+                  </motion.span>
+                </div>
+                <div className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                    className="text-gray-600 italic font-art lowercase tracking-normal block"
+                  >
+                    Eternal Legend
+                  </motion.span>
+                </div>
               </h2>
             </motion.div>
 
@@ -609,7 +660,28 @@ export default function Home() {
             >
               <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] block mb-4">The Ceylon Trips Difference</span>
               <h2 className="text-3xl md:text-5xl font-heading font-black text-black uppercase tracking-tighter leading-none mb-6">
-                Redefining <br /><span className="text-gray-600 italic font-art lowercase tracking-normal">your journey</span>
+                <div className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="block"
+                  >
+                    Redefining
+                  </motion.span>
+                </div>
+                <div className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                    className="text-gray-600 italic font-art lowercase tracking-normal block"
+                  >
+                    your journey
+                  </motion.span>
+                </div>
               </h2>
               <p className="text-gray-600 text-sm md:text-2xl font-art leading-relaxed max-w-none">
                 <span className="lg:whitespace-nowrap block">We believe travel should be more than just visiting places;</span>

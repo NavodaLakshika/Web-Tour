@@ -49,13 +49,33 @@ export const GallerySection = () => {
                         className="text-center z-40 mb-12 relative"
                     >
                         <h2 className="font-heading font-black text-3xl md:text-5xl text-gray-900 uppercase tracking-tight leading-[1.1] md:leading-[0.9]">
-                            Create Memories <br />
-                            <span className="text-gray-600 text-4xl md:text-4xl italic font-art capitalize tracking-normal block mt-2">With Ceylon Trips</span>
+                            <div className="overflow-hidden">
+                                <motion.span
+                                    initial={{ y: "100%" }}
+                                    whileInView={{ y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                                    className="block"
+                                >
+                                    Create Memories
+                                </motion.span>
+                            </div>
+                            <div className="overflow-hidden">
+                                <motion.span
+                                    initial={{ y: "100%" }}
+                                    whileInView={{ y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                                    className="text-gray-600 text-4xl md:text-4xl italic font-art capitalize tracking-normal block mt-2"
+                                >
+                                    With Ceylon Trips
+                                </motion.span>
+                            </div>
                         </h2>
                     </motion.div>
 
                     {/* The Grid of Images */}
-                    <div className="w-full max-w-4xl relative z-0 mt-8">
+                    <div className="w-full max-w-4xl relative z-0">
                         {/* Instagram Feed Header */}
                         <motion.div
                             initial={{ opacity: 0 }}
