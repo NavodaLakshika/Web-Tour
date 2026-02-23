@@ -33,6 +33,7 @@ export default function AdminDestinations() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -109,41 +110,89 @@ export default function AdminDestinations() {
             }
 
             const slug = formData.name.toLowerCase().replace(/\s+/g, '-');
+            const submissionData = {
+                ...formData,
+                image: imageUrl,
+                slug,
+                rating: parseFloat(formData.rating)
+            };
 
-            const { data, error } = await supabase
-                .from('destinations')
-                .insert([{
-                    ...formData,
-                    image: imageUrl,
-                    slug,
-                    rating: parseFloat(formData.rating)
-                }])
-                .select();
+            let error;
+            if (editingId) {
+                const { error: updateError } = await supabase
+                    .from('destinations')
+                    .update(submissionData)
+                    .eq('id', editingId);
+                error = updateError;
+            } else {
+                const { error: insertError } = await supabase
+                    .from('destinations')
+                    .insert([submissionData]);
+                error = insertError;
+            }
 
             if (error) throw error;
 
             setIsModalOpen(false);
-            // Reset form
-            setFormData({
-                name: "",
-                location: "",
-                region: "Central",
-                interest: "Cultural",
-                category: "Historical",
-                rating: "4.5",
-                image: "/images/sigiriya-vibrant.jpg",
-                description: "",
-                best_time: "January to April",
-                price: "$0"
-            });
-            setImageFile(null);
-            setImagePreview(null);
+            resetForm();
             fetchDestinations();
         } catch (error: any) {
-            alert("Error adding entry: " + error.message);
+            alert("Error saving entry: " + error.message);
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!window.confirm("Are you sure you want to delete this heritage site? This action cannot be undone.")) return;
+
+        try {
+            const { error } = await supabase
+                .from('destinations')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            fetchDestinations();
+        } catch (error: any) {
+            alert("Error deleting entry: " + error.message);
+        }
+    };
+
+    const handleEdit = (dest: any) => {
+        setEditingId(dest.id);
+        setFormData({
+            name: dest.name,
+            location: dest.location,
+            region: dest.region,
+            interest: dest.interest,
+            category: dest.category,
+            rating: dest.rating.toString(),
+            image: dest.image,
+            description: dest.description || "",
+            best_time: dest.best_time || "",
+            price: dest.price || "$0"
+        });
+        setImagePreview(dest.image);
+        setIsModalOpen(true);
+    };
+
+    const resetForm = () => {
+        setFormData({
+            name: "",
+            location: "",
+            region: "Central",
+            interest: "Cultural",
+            category: "Historical",
+            rating: "4.5",
+            image: "/images/sigiriya-vibrant.jpg",
+            description: "",
+            best_time: "January to April",
+            price: "$0"
+        });
+        setImageFile(null);
+        setImagePreview(null);
+        setEditingId(null);
     };
 
     // Use DB data if available, otherwise fallback to static for safety
@@ -159,36 +208,36 @@ export default function AdminDestinations() {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-heading font-black text-primary tracking-tight uppercase">Registry <span className="text-accent underline decoration-primary/10 underline-offset-8">Management</span></h1>
-                    <div className="flex items-center gap-3 mt-3">
-                        <div className="bg-primary/5 px-3 py-1.5 rounded-md border border-primary/5 flex items-center gap-2">
+                    <h1 className="text-4xl font-bold text-primary tracking-tight uppercase">Registry <span className="text-accent underline decoration-primary/10 underline-offset-[12px]">Management</span></h1>
+                    <div className="flex items-center gap-4 mt-4">
+                        <div className="bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 flex items-center gap-2">
                             <Compass size={14} className="text-accent" />
-                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Signature Portfolio</span>
+                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Signature Portfolio</span>
                         </div>
-                        <p className="text-primary/40 font-bold text-[11px] uppercase tracking-widest">Global Heritage Standards</p>
+                        <p className="text-primary/40 font-bold text-xs uppercase tracking-wider">Global Heritage Standards</p>
                     </div>
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-primary text-white px-8 py-3.5 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary/95 transition-all shadow-lg shadow-primary/20"
+                    onClick={() => { resetForm(); setIsModalOpen(true); }}
+                    className="bg-primary text-white px-8 py-4 rounded-[2px] font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:bg-black transition-all shadow-xl shadow-primary/20"
                 >
-                    <Plus size={18} className="text-accent" />
+                    <Plus size={20} className="text-accent" />
                     <span>Create Heritage Entry</span>
                 </button>
             </div>
 
             {/* Loading State */}
             {isLoading && (
-                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-xl border border-primary/5 animate-pulse">
+                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-[2px] border border-primary/5 animate-pulse">
                     <div className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-                    <span className="text-[10px] font-black text-primary/40 uppercase tracking-[0.2em]">Syncing with Supabase Registry...</span>
+                    <span className="text-xs font-bold text-primary/40 uppercase tracking-wider">Syncing with Supabase Registry...</span>
                 </div>
             )}
 
             {!isLoading && dbDestinations.length === 0 && (
-                <div className="flex items-center gap-3 p-4 bg-orange-50 rounded-xl border border-orange-100">
+                <div className="flex items-center gap-3 p-4 bg-orange-50 rounded-[2px] border border-orange-100">
                     <Globe size={16} className="text-orange-500" />
-                    <span className="text-[10px] font-black text-orange-600 uppercase tracking-[0.2em]">Running on Local Backup (No DB records found)</span>
+                    <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">Running on Local Backup (No DB records found)</span>
                 </div>
             )}
 
@@ -197,7 +246,7 @@ export default function AdminDestinations() {
                 {["ALL REGISTRY", "PENDING REVIEW", "ARCHIVED SITES", "DRAFTS"].map((tab, i) => (
                     <button
                         key={tab}
-                        className={`px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${i === 0 ? "text-primary" : "text-primary/30 hover:text-primary/60"}`}
+                        className={`px-8 py-4 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap ${i === 0 ? "text-primary" : "text-primary/30 hover:text-primary/60"}`}
                     >
                         {tab}
                         {i === 0 && <div className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent rounded-t-full shadow-[0_-4px_10px_rgba(212,175,55,0.4)]" />}
@@ -207,7 +256,7 @@ export default function AdminDestinations() {
 
             {/* Filters & Search */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <h3 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.3em]">{filteredDestinations.length} LOCATIONS VERIFIED</h3>
+                <h3 className="text-xs font-bold text-primary/40 uppercase tracking-widest">{filteredDestinations.length} LOCATIONS VERIFIED</h3>
                 <div className="flex items-center gap-4">
                     <div className="relative group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/20 group-focus-within:text-accent transition-colors" size={16} />
@@ -216,10 +265,10 @@ export default function AdminDestinations() {
                             placeholder="Find heritage site..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-white border border-primary/5 rounded-xl pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all w-72 shadow-sm"
+                            className="bg-white border border-primary/5 rounded-[2px] pl-10 pr-4 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all w-72 shadow-sm"
                         />
                     </div>
-                    <button className="flex items-center gap-2 px-5 py-3 bg-white border border-primary/5 rounded-xl text-primary/70 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-white transition-all shadow-sm group">
+                    <button className="flex items-center gap-2 px-5 py-3 bg-white border border-primary/5 rounded-[2px] text-primary/70 text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-all shadow-sm group">
                         <Filter size={16} className="text-accent group-hover:text-gold transition-colors" />
                         <span>Filter Sites</span>
                     </button>
@@ -229,54 +278,60 @@ export default function AdminDestinations() {
             {/* Destinations Grid - Using the premium card style */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pb-20">
                 {filteredDestinations.map((dest, i) => (
-                    <div key={i} className="bg-white rounded-[24px] border border-primary/5 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group relative">
+                    <div key={i} className="bg-white rounded-[2px] border border-primary/5 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group relative">
                         {/* Status Overlays */}
                         <div className="absolute top-4 right-4 z-10 flex gap-2">
-                            <div className="bg-primary/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-accent/20 flex items-center gap-1.5 shadow-xl">
+                            <div className="bg-primary/90 backdrop-blur-md px-3 py-1.5 rounded-[2px] border border-accent/20 flex items-center gap-1.5 shadow-xl">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                <span className="text-[9px] font-black text-white uppercase tracking-widest">Active</span>
+                                <span className="text-xs font-bold text-white uppercase tracking-wider">Active</span>
                             </div>
                         </div>
 
                         <div className="p-8">
                             <div className="flex items-start justify-between mb-8">
                                 <div className="flex items-center gap-4">
-                                    <div className="relative w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 border border-primary/5 bg-primary/5 group-hover:scale-110 transition-transform duration-500">
+                                    <div className="relative w-14 h-14 rounded-[2px] overflow-hidden flex-shrink-0 border border-primary/5 bg-primary/5 group-hover:scale-110 transition-transform duration-500">
                                         <Image src={dest.image} alt={dest.name} fill className="object-cover" />
                                     </div>
                                     <div>
-                                        <h4 className="text-[15px] font-heading font-black text-primary group-hover:text-accent transition-colors uppercase leading-tight tracking-tight">
+                                        <h4 className="text-[15px] font-bold text-primary group-hover:text-accent transition-colors uppercase leading-tight tracking-tight">
                                             {dest.name}
                                         </h4>
                                         <div className="flex items-center gap-2 mt-1.5">
                                             <div className="flex gap-0.5">
                                                 {[1, 2, 3, 4, 5].map(s => <Star key={s} size={10} className={`${s <= Math.floor(parseFloat(dest.rating)) ? 'fill-accent text-accent' : 'text-primary/10'}`} />)}
                                             </div>
-                                            <span className="text-[10px] font-black text-primary/40 uppercase tracking-widest">{dest.rating} (Verified)</span>
+                                            <span className="text-xs font-semibold text-primary/40 uppercase tracking-wider">{dest.rating} (Verified)</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex divide-x divide-primary/5 py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-xl px-4">
+                            <div className="flex divide-x divide-primary/5 py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-[2px] px-4">
                                 <div className="flex-1">
-                                    <p className="text-[10px] font-black text-primary leading-tight uppercase tracking-tight">{dest.location}</p>
-                                    <p className="text-[9px] font-black text-primary/20 mt-1 uppercase tracking-[0.2em]">PROVINCE</p>
+                                    <p className="text-xs font-bold text-primary leading-tight uppercase tracking-tight">{dest.location}</p>
+                                    <p className="text-[10px] font-bold text-primary/20 mt-1 uppercase tracking-widest">PROVINCE</p>
                                 </div>
                                 <div className="flex-1 pl-6">
-                                    <p className="text-[10px] font-black text-primary leading-tight uppercase">{dest.interest}</p>
-                                    <p className="text-[9px] font-black text-primary/20 mt-1 uppercase tracking-[0.2em]">CATEGORY</p>
+                                    <p className="text-xs font-bold text-primary leading-tight uppercase">{dest.interest}</p>
+                                    <p className="text-[10px] font-bold text-primary/20 mt-1 uppercase tracking-widest">CATEGORY</p>
                                 </div>
                             </div>
 
                             <div className="flex gap-4">
-                                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-4 border border-primary/10 rounded-xl text-primary/60 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary/5 transition-all">
+                                <button
+                                    onClick={() => handleEdit(dest)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 border border-primary/10 rounded-[2px] text-primary/60 text-xs font-bold uppercase tracking-wider hover:bg-primary/5 transition-all"
+                                >
                                     <Edit2 size={14} className="text-accent" />
                                     <span>Manage</span>
                                 </button>
-                                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary/95 transition-all shadow-lg shadow-primary/20">
+                                <button
+                                    onClick={() => handleDelete(dest.id)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-primary text-white rounded-[2px] text-xs font-bold uppercase tracking-wider hover:bg-primary/95 transition-all shadow-lg shadow-primary/20"
+                                >
                                     <Trash2 size={14} className="text-accent" />
-                                    <span>Archives</span>
+                                    <span>Delete</span>
                                 </button>
                             </div>
 
@@ -296,12 +351,12 @@ export default function AdminDestinations() {
 
             {/* Pagination */}
             <div className="flex items-center justify-between pt-4 pb-12">
-                <p className="text-[10px] text-primary/40 font-black uppercase tracking-[0.3em]">Signature Registry Pagination</p>
+                <p className="text-xs text-primary/40 font-bold uppercase tracking-wider">Signature Registry Pagination</p>
                 <div className="flex gap-3">
-                    <button className="p-3 border border-primary/5 bg-white rounded-xl text-primary/20 hover:bg-primary hover:text-white transition-all shadow-sm opacity-50 cursor-not-allowed">
+                    <button className="p-3 border border-primary/5 bg-white rounded-[2px] text-primary/20 hover:bg-primary hover:text-white transition-all shadow-sm opacity-50 cursor-not-allowed">
                         <ChevronLeft size={20} />
                     </button>
-                    <button className="p-3 border border-primary/5 bg-white rounded-xl text-primary/20 hover:bg-primary hover:text-white transition-all shadow-sm">
+                    <button className="p-3 border border-primary/5 bg-white rounded-[2px] text-primary/20 hover:bg-primary hover:text-white transition-all shadow-sm">
                         <ChevronRight size={20} />
                     </button>
                 </div>
@@ -314,22 +369,21 @@ export default function AdminDestinations() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setIsModalOpen(false)}
+                            onClick={() => { setIsModalOpen(false); setEditingId(null); }}
                             className="fixed inset-0 bg-primary/40 backdrop-blur-md z-[100]"
                         />
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="fixed inset-y-10 inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-[32px] shadow-2xl z-[110] overflow-hidden flex flex-col border border-primary/5"
+                            className="fixed inset-y-10 inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-[2px] shadow-2xl z-[110] overflow-hidden flex flex-col border border-primary/5"
                         >
-                            {/* Modal Header */}
                             <div className="p-8 border-b border-primary/5 flex items-center justify-between bg-[#FAF9F6]">
                                 <div>
-                                    <h2 className="text-2xl font-heading font-black text-primary uppercase tracking-tight">New <span className="text-accent">Heritage Entry</span></h2>
-                                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mt-1">Expanding the Signature Registry</p>
+                                    <h2 className="text-2xl font-bold text-primary uppercase tracking-tight">{editingId ? 'Edit' : 'New'} <span className="text-accent">Heritage Entry</span></h2>
+                                    <p className="text-xs font-semibold text-primary/30 uppercase tracking-wider mt-1">{editingId ? 'Refining Registry Records' : 'Expanding the Signature Registry'}</p>
                                 </div>
-                                <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary hover:bg-white transition-all">
+                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="w-10 h-10 rounded-full border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary hover:bg-white transition-all">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -346,7 +400,7 @@ export default function AdminDestinations() {
                                             onChange={handleImageChange}
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         />
-                                        <div className={`w-full h-48 rounded-[24px] border-2 border-dashed transition-all flex flex-col items-center justify-center gap-3 overflow-hidden ${imagePreview ? 'border-accent bg-accent/5' : 'border-primary/10 bg-[#FAF9F6] group-hover:border-accent/40'}`}>
+                                        <div className={`w-full h-48 rounded-[2px] border-2 border-dashed transition-all flex flex-col items-center justify-center gap-3 overflow-hidden ${imagePreview ? 'border-accent bg-accent/5' : 'border-primary/10 bg-[#FAF9F6] group-hover:border-accent/40'}`}>
                                             {imagePreview ? (
                                                 <Image src={imagePreview} alt="Preview" fill className="object-cover" />
                                             ) : (
@@ -378,7 +432,7 @@ export default function AdminDestinations() {
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             type="text"
                                             placeholder="e.g. Sigiriya Rock"
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -389,7 +443,7 @@ export default function AdminDestinations() {
                                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                                             type="text"
                                             placeholder="e.g. Matale District"
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
                                         />
                                     </div>
                                 </div>
@@ -400,7 +454,7 @@ export default function AdminDestinations() {
                                         <select
                                             value={formData.region}
                                             onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all appearance-none cursor-pointer"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all appearance-none cursor-pointer"
                                         >
                                             {["Central", "South", "North", "East", "West"].map(r => <option key={r} value={r}>{r}</option>)}
                                         </select>
@@ -410,7 +464,7 @@ export default function AdminDestinations() {
                                         <select
                                             value={formData.category}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all appearance-none cursor-pointer"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all appearance-none cursor-pointer"
                                         >
                                             {["Historical", "Nature", "Beach", "City", "Wildlife", "Adventure"].map(c => <option key={c} value={c}>{c}</option>)}
                                         </select>
@@ -425,7 +479,7 @@ export default function AdminDestinations() {
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         rows={4}
                                         placeholder="Describe the historical significance or natural beauty..."
-                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
+                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
                                     />
                                 </div>
 
@@ -436,7 +490,7 @@ export default function AdminDestinations() {
                                             value={formData.rating}
                                             onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
                                             type="number" step="0.1" max="5"
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -446,7 +500,7 @@ export default function AdminDestinations() {
                                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                             type="text"
                                             placeholder="$30 or Free"
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                 </div>
@@ -456,21 +510,21 @@ export default function AdminDestinations() {
                             <div className="p-8 border-t border-primary/5 bg-[#FAF9F6] flex gap-4">
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="flex-1 py-4 border border-primary/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-primary/40 hover:bg-white hover:text-primary transition-all"
+                                    className="flex-1 py-4 border border-primary/5 rounded-[2px] text-[10px] font-black uppercase tracking-widest text-primary/40 hover:bg-white hover:text-primary transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleSubmit}
                                     disabled={isSubmitting}
-                                    className="flex-[2] py-4 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group disabled:opacity-50"
+                                    className="flex-[2] py-4 bg-primary text-white rounded-[2px] text-[10px] font-black uppercase tracking-widest hover:bg-primary/95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group disabled:opacity-50"
                                 >
                                     {isSubmitting ? (
                                         <div className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin" />
                                     ) : (
                                         <>
                                             <Check size={16} className="text-accent" />
-                                            <span>Authorize Entry</span>
+                                            <span>{editingId ? 'Update Registry' : 'Authorize Entry'}</span>
                                         </>
                                     )}
                                 </button>

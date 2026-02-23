@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Facebook, Instagram, Twitter, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Facebook, Linkedin, MessageCircle, Mail, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { SocialIcon } from "./SocialIcon";
 
 // Updated data with local images
@@ -69,20 +69,31 @@ export const Hero = () => {
             {/* Full Bleed Background Image */}
             <div className="absolute inset-0 w-full h-full">
                 <div className="relative w-full h-full overflow-hidden">
+                    {/* Mobile Image */}
                     <Image
-                        src="/images/hero-couple.png"
-                        alt="Ceylon Hero"
+                        src="/images/buddha.png"
+                        alt="Ceylon Hero Mobile"
                         fill
-                        className="object-cover object-center"
+                        className="object-cover object-center md:hidden"
                         priority
                         quality={85}
                         sizes="100vw"
                     />
-
-                    {/* Clean, subtle overlay for legibility without darkening the whole scene */}
-                    <div className="absolute inset-0 bg-black/10" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                    {/* Desktop Image */}
+                    <Image
+                        src="/images/hero-couple.png"
+                        alt="Ceylon Hero"
+                        fill
+                        className="object-cover object-center hidden md:block"
+                        priority
+                        quality={85}
+                        sizes="100vw"
+                    />
                 </div>
+
+                {/* Clean, subtle overlay for legibility without darkening the whole scene */}
+                <div className="absolute inset-0 bg-black/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
 
             {/* Grid Layout */}
@@ -92,9 +103,10 @@ export const Hero = () => {
                 <div className="hidden lg:flex col-span-1 border-r border-white/20 flex-col justify-end items-center pb-12 gap-8 z-20 bg-black/10 backdrop-blur-[2px]">
                     <Link href="#" className="transform -rotate-90 text-xs font-bold tracking-widest text-white hover:text-primary transition-colors mb-8 whitespace-nowrap">FOLLOW US</Link>
                     <div className="flex flex-col gap-6 items-center">
-                        <SocialIcon icon={Instagram} label="Instagram" color="#E1306C" href="#" tooltipPosition="right" />
-                        <SocialIcon icon={Twitter} label="Twitter" color="#000000" href="#" tooltipPosition="right" />
+                        <SocialIcon icon={Linkedin} label="LinkedIn" color="#0077B5" href="#" tooltipPosition="right" />
+                        <SocialIcon icon={MessageCircle} label="WhatsApp" color="#25D366" href="#" tooltipPosition="right" />
                         <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" tooltipPosition="right" />
+                        <SocialIcon icon={Mail} label="Email" color="#EA4335" href="mailto:navoda991@gmail.com" tooltipPosition="right" />
                     </div>
                 </div>
 
