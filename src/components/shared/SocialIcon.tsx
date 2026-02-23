@@ -10,6 +10,7 @@ interface SocialIconProps {
     href?: string;
     onClick?: () => void;
     tooltipPosition?: "top" | "bottom" | "left" | "right";
+    className?: string; // Added className
 }
 
 export const SocialIcon: React.FC<SocialIconProps> = ({
@@ -18,7 +19,8 @@ export const SocialIcon: React.FC<SocialIconProps> = ({
     color,
     href,
     onClick,
-    tooltipPosition = "top"
+    tooltipPosition = "top",
+    className // Destructure className
 }) => {
 
     const positionClasses = {
@@ -76,7 +78,7 @@ export const SocialIcon: React.FC<SocialIconProps> = ({
         return (
             <button
                 onClick={onClick}
-                className="group relative flex items-center justify-center isolate focus:outline-none"
+                className={cn("group relative flex items-center justify-center isolate focus:outline-none", className)}
                 type="button"
             >
                 {InnerContent}
@@ -87,7 +89,7 @@ export const SocialIcon: React.FC<SocialIconProps> = ({
     return (
         <Link
             href={href || "#"}
-            className="group relative flex items-center justify-center isolate"
+            className={cn("group relative flex items-center justify-center isolate", className)}
         >
             {InnerContent}
         </Link>

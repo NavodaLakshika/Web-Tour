@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 // import { Playfair_Display, Montserrat } from "next/font/google"; // Disabled due to Turbopack issue
 import "./globals.css";
+import { ChatBot } from "@/components/features/ChatBot";
 
 /* 
 const playfair = Playfair_Display({
@@ -32,6 +33,7 @@ export default function RootLayout({
         style={{ fontFamily: "'Montserrat', sans-serif" }}
       >
         {children}
+        <ChatBot />
       </body>
     </html>
   );

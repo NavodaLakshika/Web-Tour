@@ -78,7 +78,7 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-[20px] border border-white/20 rounded-[24px] p-12 pt-24 pb-20 shadow-2xl relative overflow-hidden">
+                <div className="bg-white/10 backdrop-blur-[20px] border border-white/20 rounded-[24px] p-8 sm:p-12 pt-16 sm:pt-24 pb-12 sm:pb-20 shadow-2xl relative overflow-hidden">
 
                     {/* Return Link */}
                     <Link href="/" className="absolute top-8 left-8 text-white/30 hover:text-white transition-colors">
@@ -136,7 +136,7 @@ export default function LoginPage() {
                         </div>
 
                         {/* Action Button */}
-                        <div className="pt-6">
+                        <div className="pt-4 sm:pt-6">
                             <button
                                 type="submit"
                                 disabled={isLoading || status === 'success'}

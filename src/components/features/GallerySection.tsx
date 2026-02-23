@@ -148,6 +148,8 @@ export const GallerySection = () => {
                                     className="object-cover w-full h-full"
                                     loop
                                     playsInline
+                                    preload="none"
+                                    poster="/images/nature.jpg"
                                     onPlay={() => setIsPlaying(true)}
                                     onPause={() => setIsPlaying(false)}
                                 />

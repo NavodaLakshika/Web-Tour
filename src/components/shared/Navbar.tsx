@@ -77,15 +77,16 @@ export const Navbar = () => {
                         : "bg-transparent py-7"
                 )}
             >
-                <div className="w-full px-6 md:px-12 flex items-center justify-between relative">
-                    {/* Left: Login/Dashboard Icon */}
-                    <div className="hidden lg:flex items-center">
+                <div className="w-full px-4 sm:px-6 md:px-12 flex items-center justify-between relative">
+                    {/* Left: Login/Dashboard Icon - Always visible to ensure mobile accessibility */}
+                    <div className="flex items-center z-[1001]">
                         <SocialIcon
                             icon={isLoggedIn ? LayoutDashboard : User}
-                            label={isLoggedIn ? "Dashboard" : "Sign In"}
+                            label={isLoggedIn ? "Portal" : "Sign In"}
                             color="#D4AF37"
                             href={isLoggedIn ? "/admin" : "/login"}
                             tooltipPosition="bottom"
+                            className="scale-90 sm:scale-100"
                         />
                     </div>
 
@@ -101,7 +102,7 @@ export const Navbar = () => {
                     </Link>
 
                     {/* Right: Desktop Links & Mobile Toggle */}
-                    <div className="flex items-center gap-8 ml-auto">
+                    <div className="flex items-center gap-2 sm:gap-8 ml-auto">
                         {/* Desktop Navigation Links */}
                         <div className="hidden xl:flex items-center gap-8">
                             {navLinks.map((link) => (
@@ -132,22 +133,22 @@ export const Navbar = () => {
                         {/* Mobile Toggle Button */}
                         <button
                             className={cn(
-                                "group flex items-center gap-3 transition-colors focus:outline-none",
+                                "group flex items-center gap-3 transition-colors focus:outline-none z-[1001]",
                                 textColorClass,
                                 `hover:${hoverColorClass}`
                             )}
                             onClick={() => setIsMobileMenuOpen(true)}
+                            aria-label="Open Menu"
                         >
-
                             <div className={cn(
-                                "relative w-12 h-12 flex flex-col justify-center items-center gap-1.5 p-1 border rounded-full transition-all duration-300",
+                                "relative w-10 h-10 sm:w-12 sm:h-12 flex flex-col justify-center items-center gap-1.5 p-1 border rounded-full transition-all duration-300",
                                 isGlass
                                     ? "border-[#1B362D]/30 group-hover:border-[#D4AF37] group-hover:bg-[#1B362D]/5"
                                     : "border-white/30 group-hover:border-[#D4AF37] group-hover:bg-white/10"
                             )}>
-                                <span className={cn("w-6 h-0.5 block group-hover:w-4 transition-all bg-current")} />
-                                <span className={cn("w-4 h-0.5 block group-hover:w-6 transition-all bg-current")} />
-                                <span className={cn("w-6 h-0.5 block group-hover:w-4 transition-all bg-current")} />
+                                <span className={cn("w-5 sm:w-6 h-0.5 block group-hover:w-4 transition-all bg-current")} />
+                                <span className={cn("w-3 sm:w-4 h-0.5 block group-hover:w-6 transition-all bg-current")} />
+                                <span className={cn("w-5 sm:w-6 h-0.5 block group-hover:w-4 transition-all bg-current")} />
                             </div>
                         </button>
                     </div>
@@ -317,13 +318,39 @@ export const Navbar = () => {
                                         </motion.div>
                                     ))}
 
+                                    {/* Dedicated Account Link for Mobile */}
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.1 + navLinks.length * 0.1 }}
+                                        className="mt-6 pt-6 border-t border-gray-100"
+                                    >
+                                        <Link
+                                            href={isLoggedIn ? "/admin" : "/login"}
+                                            className="font-heading text-4xl md:text-6xl font-bold text-[#D4AF37] hover:text-[#1B362D] transition-all block"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                            {isLoggedIn ? "DASHBOARD" : "SIGN IN"}
+                                        </Link>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1B362D]/30 mt-2">
+                                            {isLoggedIn ? "Manage Heritage Assets" : "Access your account"}
+                                        </p>
+                                    </motion.div>
+
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ delay: 0.5 }}
                                         className="pt-8 flex justify-center items-center gap-4 border-t border-gray-200/50 mt-4 flex-wrap"
                                     >
-                                        <SocialIcon icon={User} label="Login" color="#D4AF37" href="/login" onClick={() => setIsMobileMenuOpen(false)} tooltipPosition="top" />
+                                        <SocialIcon
+                                            icon={isLoggedIn ? LayoutDashboard : User}
+                                            label={isLoggedIn ? "Dashboard" : "Login"}
+                                            color="#D4AF37"
+                                            href={isLoggedIn ? "/admin" : "/login"}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            tooltipPosition="top"
+                                        />
                                         <SocialIcon icon={Phone} label="Call Us" color="#22c55e" href="tel:+94777183746" tooltipPosition="top" />
                                         <div className="w-px h-6 bg-gray-200/50 mx-2 hidden sm:block" />
                                         <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" tooltipPosition="top" />

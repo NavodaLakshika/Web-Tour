@@ -9,7 +9,6 @@ import { DestinationCard } from "@/components/features/DestinationCard";
 import { GallerySection } from "@/components/features/GallerySection";
 import { GeometricGallery } from "@/components/features/GeometricGallery";
 import { TestimonialSection } from "@/components/features/TestimonialSection";
-import { ChatBot } from "@/components/features/ChatBot";
 import { destinations, experiences } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -173,7 +172,7 @@ export default function Home() {
                   width={2000}
                   height={2400}
                   className="w-full h-auto transition-transform duration-1000 group-hover:scale-105"
-                  priority
+                  loading="lazy"
                 />
               </div>
             </motion.div>
@@ -845,7 +844,6 @@ export default function Home() {
 
       {/* 11. FOOTER */}
       <Footer />
-      <ChatBot />
     </main>
   );
 }

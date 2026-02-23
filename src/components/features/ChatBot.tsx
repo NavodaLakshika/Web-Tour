@@ -71,14 +71,14 @@ export const ChatBot = () => {
     };
 
     return (
-        <div className="fixed bottom-8 right-8 z-[100] font-sans">
+        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[990] font-sans">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="mb-6 w-[350px] h-[500px] bg-white rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-gray-100 relative"
+                        className="mb-4 sm:mb-6 w-[calc(100vw-32px)] sm:w-[350px] h-[500px] max-h-[80vh] bg-white rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-gray-100 relative"
                     >
                         {/* Full-path Background Branding */}
                         <div className="absolute inset-0 opacity-[0.7] pointer-events-none z-0">
@@ -189,8 +189,8 @@ export const ChatBot = () => {
                     className="group relative"
                 >
                     <div className="relative">
-                        <div className="w-16 h-16 bg-[#1B362D] rounded-2xl shadow-2xl flex items-center justify-center text-white relative overflow-hidden">
-                            <Bot className="w-8 h-8" />
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#1B362D] rounded-2xl shadow-2xl flex items-center justify-center text-white relative overflow-hidden">
+                            <Bot className="w-7 h-7 sm:w-8 sm:h-8" />
                         </div>
 
                         {/* Unread indicator dot */}
