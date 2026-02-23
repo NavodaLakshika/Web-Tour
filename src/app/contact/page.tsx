@@ -163,8 +163,8 @@ export default function ContactPage() {
                                     </div>
                                     <div className="space-y-1">
                                         <span className="text-[10px] font-black uppercase tracking-widest text-black/40">Call Us</span>
-                                        <p className="text-xl font-heading font-black text-black">+94 11 234 5678</p>
-                                        <p className="text-sm text-gray-400 font-art">Mon - Fri: 9:00 AM - 6:00 PM</p>
+                                        <p className="text-xl font-heading font-black text-black">+94 72 122 0008</p>
+                                        <p className="text-sm text-gray-400 font-art">24/7 Support Available</p>
                                     </div>
                                 </div>
 
@@ -174,8 +174,8 @@ export default function ContactPage() {
                                     </div>
                                     <div className="space-y-1">
                                         <span className="text-[10px] font-black uppercase tracking-widest text-black/40">Email Us</span>
-                                        <p className="text-xl font-heading font-black text-black">hello@ceylontrips.com</p>
-                                        <p className="text-sm text-gray-400 font-art">We reply within 12 hours</p>
+                                        <p className="text-xl font-heading font-black text-black">navoda991@gmail.com</p>
+                                        <p className="text-sm text-gray-400 font-art">We reply within 6 hours</p>
                                     </div>
                                 </div>
 

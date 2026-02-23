@@ -99,11 +99,11 @@ export default function AdminSettings() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-heading font-black text-primary tracking-tight uppercase">Portal <span className="text-accent underline decoration-primary/10 underline-offset-8">Settings</span></h1>
-                    <div className="flex items-center gap-3 mt-3">
-                        <div className="bg-primary/5 px-3 py-1.5 rounded-md border border-primary/5 flex items-center gap-2">
+                    <h1 className="text-4xl font-bold text-primary tracking-tight uppercase">Portal <span className="text-accent underline decoration-primary/10 underline-offset-[12px]">Settings</span></h1>
+                    <div className="flex items-center gap-4 mt-4">
+                        <div className="bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 flex items-center gap-2">
                             <Settings size={14} className="text-accent" />
-                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">System Governance</span>
+                            <span className="text-xs font-bold text-primary uppercase tracking-wider">System Governance</span>
                         </div>
                     </div>
                 </div>
@@ -114,25 +114,25 @@ export default function AdminSettings() {
                 <div className="lg:col-span-3 space-y-2">
                     <button
                         onClick={() => setActiveTab('account')}
-                        className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${activeTab === 'account' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-white text-primary/40 hover:bg-primary/5 hover:text-primary border border-primary/5'}`}
+                        className={`w-full flex items-center gap-3 px-6 py-4 rounded-[2px] text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'account' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-white text-primary/40 hover:bg-primary/5 hover:text-primary border border-primary/5'}`}
                     >
                         <Shield size={18} className={activeTab === 'account' ? 'text-accent' : ''} />
                         <span>Security & Identity</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('users')}
-                        className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${activeTab === 'users' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-white text-primary/40 hover:bg-primary/5 hover:text-primary border border-primary/5'}`}
+                        className={`w-full flex items-center gap-3 px-6 py-4 rounded-[2px] text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'users' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-white text-primary/40 hover:bg-primary/5 hover:text-primary border border-primary/5'}`}
                     >
                         <UserPlus size={18} className={activeTab === 'users' ? 'text-accent' : ''} />
                         <span>Manager Registry</span>
                     </button>
 
-                    <div className="mt-10 p-6 bg-accent/5 border border-accent/10 rounded-[2rem] space-y-4">
+                    <div className="mt-10 p-6 bg-accent/5 border border-accent/10 rounded-[2px] space-y-4">
                         <div className="flex items-center gap-2 text-accent">
                             <ShieldAlert size={16} />
-                            <span className="text-[9px] font-black uppercase tracking-widest">Security Advisory</span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest">Security Advisory</span>
                         </div>
-                        <p className="text-[10px] font-bold text-primary/60 leading-relaxed uppercase tracking-wider">
+                        <p className="text-xs font-medium text-primary/60 leading-relaxed uppercase tracking-wider">
                             Changes to administrator credentials require immediate re-authentication.
                         </p>
                     </div>
@@ -140,7 +140,7 @@ export default function AdminSettings() {
 
                 {/* Main Content Area */}
                 <div className="lg:col-span-9">
-                    <div className="bg-white rounded-[2.5rem] border border-primary/5 shadow-sm overflow-hidden min-h-[500px]">
+                    <div className="bg-white rounded-[2px] border border-primary/5 shadow-sm overflow-hidden min-h-[500px]">
                         <AnimatePresence mode="wait">
                             {activeTab === 'account' ? (
                                 <motion.div
@@ -152,8 +152,8 @@ export default function AdminSettings() {
                                 >
                                     <div className="space-y-8 max-w-2xl">
                                         <div className="space-y-2">
-                                            <h3 className="text-xl font-heading font-black text-primary uppercase tracking-tight">Access Credentials</h3>
-                                            <p className="text-[11px] font-bold text-primary/30 uppercase tracking-widest leading-loose">Update your primary administrative identification</p>
+                                            <h3 className="text-2xl font-bold text-primary uppercase tracking-tight">Access Credentials</h3>
+                                            <p className="text-xs font-bold text-primary/30 uppercase tracking-widest leading-loose">Update your primary administrative identification</p>
                                         </div>
 
                                         <form onSubmit={handleUpdateAccount} className="space-y-8">
@@ -166,7 +166,7 @@ export default function AdminSettings() {
                                                             type="email"
                                                             value={email}
                                                             onChange={(e) => setEmail(e.target.value)}
-                                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all"
                                                         />
                                                     </div>
                                                 </div>
@@ -182,7 +182,7 @@ export default function AdminSettings() {
                                                             value={password}
                                                             onChange={(e) => setPassword(e.target.value)}
                                                             placeholder="Leave blank to keep current"
-                                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all placeholder:text-primary/10"
+                                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all placeholder:text-primary/10"
                                                         />
                                                     </div>
                                                 </div>
@@ -194,7 +194,7 @@ export default function AdminSettings() {
                                                             type="password"
                                                             value={confirmPassword}
                                                             onChange={(e) => setConfirmPassword(e.target.value)}
-                                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all"
                                                         />
                                                     </div>
                                                 </div>
@@ -220,7 +220,7 @@ export default function AdminSettings() {
                                                 <button
                                                     type="submit"
                                                     disabled={isLoading}
-                                                    className="bg-primary hover:bg-[#2A4D3F] text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center gap-3 disabled:opacity-50"
+                                                    className="bg-primary hover:bg-[#2A4D3F] text-white px-10 py-4 rounded-[2px] font-bold uppercase tracking-widest text-xs transition-all flex items-center gap-3 disabled:opacity-50"
                                                 >
                                                     {isLoading ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
                                                     <span>Commit Changes</span>
@@ -239,11 +239,11 @@ export default function AdminSettings() {
                                 >
                                     <div className="space-y-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-xl font-heading font-black text-primary uppercase tracking-tight">Provision New Access</h3>
-                                            <p className="text-[11px] font-bold text-primary/30 uppercase tracking-widest leading-loose">Invite additional Heritage Managers to the governance portal</p>
+                                            <h3 className="text-2xl font-bold text-primary uppercase tracking-tight">Provision New Access</h3>
+                                            <p className="text-xs font-bold text-primary/30 uppercase tracking-widest leading-loose">Invite additional Heritage Managers to the governance portal</p>
                                         </div>
 
-                                        <form onSubmit={handleAddUser} className="p-8 bg-[#FAF9F6] rounded-[2rem] border border-primary/5 space-y-8 max-w-2xl">
+                                        <form onSubmit={handleAddUser} className="p-8 bg-[#FAF9F6] rounded-[2px] border border-primary/5 space-y-8 max-w-2xl">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                 <div className="space-y-3 group">
                                                     <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 ml-2">Manager Email</label>
@@ -254,7 +254,7 @@ export default function AdminSettings() {
                                                             type="email"
                                                             value={newUserEmail}
                                                             onChange={(e) => setNewUserEmail(e.target.value)}
-                                                            className="w-full bg-white border border-primary/5 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                            className="w-full bg-white border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all"
                                                         />
                                                     </div>
                                                 </div>
@@ -267,7 +267,7 @@ export default function AdminSettings() {
                                                             type="password"
                                                             value={newUserPassword}
                                                             onChange={(e) => setNewUserPassword(e.target.value)}
-                                                            className="w-full bg-white border border-primary/5 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                            className="w-full bg-white border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all"
                                                         />
                                                     </div>
                                                 </div>
@@ -275,7 +275,7 @@ export default function AdminSettings() {
                                             <button
                                                 type="submit"
                                                 disabled={isLoading}
-                                                className="w-full bg-accent hover:bg-black text-primary hover:text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3 shadow-lg shadow-accent/10"
+                                                className="w-full bg-accent hover:bg-black text-primary hover:text-white py-5 rounded-[2px] font-bold uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-3 shadow-lg shadow-accent/10"
                                             >
                                                 {isLoading ? <Loader2 className="animate-spin" size={14} /> : <UserPlus size={14} />}
                                                 <span>Invite Manager</span>
@@ -288,7 +288,7 @@ export default function AdminSettings() {
                                                 <div className="h-[1px] flex-1 bg-primary/5" />
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="p-6 rounded-2xl border border-primary/5 flex items-center justify-between">
+                                                <div className="p-6 rounded-[2px] border border-primary/5 flex items-center justify-between">
                                                     <div className="flex items-center gap-4">
                                                         <div className="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary/30">
                                                             <User size={18} />

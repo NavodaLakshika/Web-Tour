@@ -52,16 +52,19 @@ export default function LoginPage() {
 
     return (
         <main className="relative min-h-screen w-full flex items-center justify-center overflow-hidden font-sans">
-            {/* Background Image - Green Jungle/Coastal Vibe */}
-            <div className="absolute inset-0 z-0">
-                <Image
-                    src="/images/nature.jpg" // Fixed: gallery-3.jpg was missing
-                    alt="Ceylon Nature"
-                    fill
-                    className="object-cover brightness-50"
-                    priority
-                />
-                <div className="absolute inset-0 bg-black/20" />
+            {/* Background Video */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                >
+                    <source src="/video/login-video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <div className="absolute inset-0 bg-black/40" />
             </div>
 
             {/* Glassmorphic Form Container */}
@@ -71,14 +74,14 @@ export default function LoginPage() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="relative z-10 w-full max-w-[380px] mx-4"
             >
-                {/* The "Login" Tab Pill at the top center */}
+                {/* The "Login" Tab Pill at the top center - Now Transparent */}
                 <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
-                    <div className="bg-[#D1D5D2] px-12 py-3 rounded-[20px] shadow-lg border border-white/50">
-                        <span className="text-black font-bold text-sm tracking-widest uppercase">Login</span>
+                    <div className="bg-transparent px-12 py-3 rounded-[20px] shadow-lg border border-white/30">
+                        <span className="text-white font-bold text-sm tracking-widest uppercase">Login</span>
                     </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-[20px] border border-white/20 rounded-[24px] p-8 sm:p-12 pt-16 sm:pt-24 pb-12 sm:pb-20 shadow-2xl relative overflow-hidden">
+                <div className="bg-transparent rounded-[24px] p-8 sm:p-12 pt-16 sm:pt-24 pb-12 sm:pb-20 relative overflow-hidden">
 
                     {/* Return Link */}
                     <Link href="/" className="absolute top-8 left-8 text-white/30 hover:text-white transition-colors">
@@ -140,7 +143,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading || status === 'success'}
-                                className="w-full bg-white text-black py-5 rounded-[10px] font-black uppercase tracking-[0.3em] text-[14px] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 shadow-[0_15px_40px_rgba(255,255,255,0.15)] hover:shadow-[0_20px_50px_rgba(255,255,255,0.25)] flex items-center justify-center gap-4 disabled:opacity-50"
+                                className="w-full bg-white/5 text-white py-5 rounded-[10px] font-black uppercase tracking-[0.3em] text-[14px] shadow-[0_15px_40px_rgba(255,255,255,0.1)] hover:shadow-[0_20px_50px_rgba(255,255,255,0.2)] flex items-center justify-center gap-4 disabled:opacity-50"
                             >
                                 {isLoading ? <Loader2 className="animate-spin" size={20} /> : <span>Login</span>}
                             </button>
@@ -163,6 +166,12 @@ export default function LoginPage() {
                                     <CheckCircle2 size={40} />
                                 </motion.div>
                                 <h3 className="text-white text-lg font-black uppercase tracking-widest mb-2">Authenticated</h3>
+                                <button
+                                    onClick={() => router.push('/admin')}
+                                    className="mt-4 bg-white/10 text-white py-2 px-4 rounded hover:bg-white/20"
+                                >
+                                    Go to Dashboard
+                                </button>
                                 <p className="text-white/40 text-[10px] uppercase font-black">Opening Heritage Registry...</p>
                             </motion.div>
                         )}

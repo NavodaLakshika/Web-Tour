@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Great+Vibes&family=Ms+Madi&family=Dancing+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:wght@400;500;700&family=Great+Vibes&family=Ms+Madi&family=Dancing+Script&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -82,4 +82,8 @@ h6 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+}
+
+.admin-font {
+  font-family: 'Inter', sans-serif !important;
 }

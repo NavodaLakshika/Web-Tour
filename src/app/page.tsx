@@ -149,10 +149,14 @@ export default function Home() {
                 <div className="pt-4">
                   <Link
                     href="/about"
-                    className="group inline-flex items-center gap-6 text-[12px] md:text-sm font-art capitalize tracking-widest bg-black text-white px-12 py-6 rounded-none hover:bg-secondary hover:text-primary transition-all shadow-2xl"
+                    className="group inline-flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.4em] bg-black text-white px-14 py-8 rounded-none hover:bg-secondary hover:text-primary transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.1)] relative overflow-hidden"
                   >
-                    Discover Our Story
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+                    <span className="relative z-10 flex items-center gap-4">
+                      Discover Our Story
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+                    </span>
+                    {/* Hover Glow Effect */}
+                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </Link>
                 </div>
               </motion.div>

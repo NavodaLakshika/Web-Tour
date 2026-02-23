@@ -51,6 +51,22 @@ export default function AdminRequests() {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        if (!window.confirm("Are you sure you want to delete this guest request?")) return;
+
+        try {
+            const { error } = await supabase
+                .from('trip_requests')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            fetchRequests();
+        } catch (error: any) {
+            alert("Error deleting request: " + error.message);
+        }
+    };
+
     const filteredRequests = requests.filter(req =>
         req.focus?.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -59,13 +75,13 @@ export default function AdminRequests() {
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-heading font-black text-primary tracking-tight uppercase">Guest <span className="text-accent underline decoration-primary/10 underline-offset-8">Requests</span></h1>
-                <div className="flex items-center gap-3 mt-3">
-                    <div className="bg-primary/5 px-3 py-1.5 rounded-md border border-primary/5 flex items-center gap-2">
+                <h1 className="text-4xl font-bold text-primary tracking-tight uppercase">Guest <span className="text-accent underline decoration-primary/10 underline-offset-[12px]">Requests</span></h1>
+                <div className="flex items-center gap-4 mt-4">
+                    <div className="bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 flex items-center gap-2">
                         <Clock size={14} className="text-accent" />
-                        <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Live Inquiries</span>
+                        <span className="text-xs font-bold text-primary uppercase tracking-wider">Live Inquiries</span>
                     </div>
-                    <p className="text-primary/40 font-bold text-[11px] uppercase tracking-widest">Global Service Response</p>
+                    <p className="text-primary/40 font-bold text-xs uppercase tracking-wider">Global Service Response</p>
                 </div>
             </div>
 
@@ -77,24 +93,24 @@ export default function AdminRequests() {
                     { label: "Responded", val: requests.filter(r => r.status === 'responded').length, color: "text-green-500" },
                     { label: "Total Volume", val: requests.length, color: "text-primary/40" }
                 ].map((stat, i) => (
-                    <div key={i} className="bg-white p-6 rounded-2xl border border-primary/5 shadow-sm">
-                        <p className="text-[9px] font-black text-primary/30 uppercase tracking-[0.2em] mb-2">{stat.label}</p>
-                        <p className={`text-2xl font-black ${stat.color}`}>{stat.val}</p>
+                    <div key={i} className="bg-white p-6 rounded-[2px] border border-primary/5 shadow-sm">
+                        <p className="text-[10px] font-bold text-primary/30 uppercase tracking-widest mb-2">{stat.label}</p>
+                        <p className={`text-2xl font-bold ${stat.color}`}>{stat.val}</p>
                     </div>
                 ))}
             </div>
 
             {/* List */}
-            <div className="bg-white rounded-[32px] border border-primary/5 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[2px] border border-primary/5 shadow-sm overflow-hidden">
                 <div className="p-8 border-b border-primary/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="relative group flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/20" size={16} />
                         <input
                             type="text"
-                            placeholder="Filter requests..."
+                            placeholder="FIND REQUESTS..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-xl pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest outline-none"
+                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-10 pr-4 py-3.5 text-xs font-bold uppercase tracking-wider outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent/40 transition-all shadow-sm"
                         />
                     </div>
                 </div>
@@ -103,11 +119,11 @@ export default function AdminRequests() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[#FAF9F6]">
-                                <th className="p-6 text-[10px] font-black text-primary/30 uppercase tracking-widest">Details</th>
-                                <th className="p-6 text-[10px] font-black text-primary/30 uppercase tracking-widest">Accommodation</th>
-                                <th className="p-6 text-[10px] font-black text-primary/30 uppercase tracking-widest">Date</th>
-                                <th className="p-6 text-[10px] font-black text-primary/30 uppercase tracking-widest">Status</th>
-                                <th className="p-6 text-[10px] font-black text-primary/30 uppercase tracking-widest text-right">Action</th>
+                                <th className="p-6 text-[10px] font-bold text-primary/30 uppercase tracking-widest">Details</th>
+                                <th className="p-6 text-[10px] font-bold text-primary/30 uppercase tracking-widest">Accommodation</th>
+                                <th className="p-6 text-[10px] font-bold text-primary/30 uppercase tracking-widest">Date</th>
+                                <th className="p-6 text-[10px] font-bold text-primary/30 uppercase tracking-widest">Status</th>
+                                <th className="p-6 text-[10px] font-bold text-primary/30 uppercase tracking-widest text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-primary/5">
@@ -131,18 +147,21 @@ export default function AdminRequests() {
                                     </td>
                                     <td className="p-6">
                                         <span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest ${req.status === 'pending' ? 'bg-orange-50 text-orange-600' :
-                                                req.status === 'reviewing' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
+                                            req.status === 'reviewing' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
                                             }`}>
                                             {req.status}
                                         </span>
                                     </td>
                                     <td className="p-6 text-right">
                                         <div className="flex items-center justify-end gap-3">
-                                            <button onClick={() => updateStatus(req.id, 'reviewing')} className="p-2 text-primary/20 hover:text-blue-500 transition-colors">
+                                            <button onClick={() => updateStatus(req.id, 'reviewing')} className="p-2 text-primary/20 hover:text-blue-500 transition-colors" title="Mark Reviewing">
                                                 <Eye size={18} />
                                             </button>
-                                            <button onClick={() => updateStatus(req.id, 'responded')} className="p-2 text-primary/20 hover:text-green-500 transition-colors">
+                                            <button onClick={() => updateStatus(req.id, 'responded')} className="p-2 text-primary/20 hover:text-green-500 transition-colors" title="Mark Responded">
                                                 <CheckCircle2 size={18} />
+                                            </button>
+                                            <button onClick={() => handleDelete(req.id)} className="p-2 text-primary/20 hover:text-red-500 transition-colors" title="Delete Permanent">
+                                                <XCircle size={18} />
                                             </button>
                                         </div>
                                     </td>

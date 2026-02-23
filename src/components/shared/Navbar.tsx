@@ -141,7 +141,7 @@ export const Navbar = () => {
                             aria-label="Open Menu"
                         >
                             <div className={cn(
-                                "relative w-10 h-10 sm:w-12 sm:h-12 flex flex-col justify-center items-center gap-1.5 p-1 border rounded-full transition-all duration-300",
+                                "relative w-12 h-12 sm:w-14 sm:h-14 flex flex-col justify-center items-center gap-1.5 p-1 border rounded-full transition-all duration-300",
                                 isGlass
                                     ? "border-[#1B362D]/30 group-hover:border-[#D4AF37] group-hover:bg-[#1B362D]/5"
                                     : "border-white/30 group-hover:border-[#D4AF37] group-hover:bg-white/10"
@@ -288,7 +288,7 @@ export const Navbar = () => {
                                         >
                                             <Link
                                                 href={link.href}
-                                                className="font-heading text-4xl md:text-6xl font-bold text-[#1B362D]/60 hover:text-[#1B362D] transition-all block mb-4"
+                                                className="font-heading text-2xl md:text-3xl font-bold text-[#1B362D]/60 hover:text-[#1B362D] transition-all block mb-4"
                                                 onClick={() => setIsMobileMenuOpen(false)}
                                             >
                                                 {link.name}

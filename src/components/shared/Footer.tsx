@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { Facebook, Instagram, Youtube, Phone, ArrowRight, Twitter, Mail, MapPin } from "lucide-react";
+import { Facebook, Linkedin, Youtube, Phone, ArrowRight, MessageCircle, Mail, MapPin } from "lucide-react";
 import { SocialIcon } from "./SocialIcon";
 
 export const Footer = () => {
@@ -42,8 +42,9 @@ export const Footer = () => {
                             </p>
                             <div className="flex gap-4 pt-2">
                                 <SocialIcon icon={Facebook} label="Facebook" color="#1877F2" href="#" tooltipPosition="top" />
-                                <SocialIcon icon={Instagram} label="Instagram" color="#E1306C" href="#" tooltipPosition="top" />
-                                <SocialIcon icon={Twitter} label="Twitter" color="#1DA1F2" href="#" tooltipPosition="top" />
+                                <SocialIcon icon={Linkedin} label="LinkedIn" color="#0077B5" href="#" tooltipPosition="top" />
+                                <SocialIcon icon={MessageCircle} label="WhatsApp" color="#25D366" href="#" tooltipPosition="top" />
+                                <SocialIcon icon={Mail} label="Email" color="#EA4335" href="mailto:navoda991@gmail.com" tooltipPosition="top" />
                                 <SocialIcon icon={Youtube} label="YouTube" color="#FF0000" href="#" tooltipPosition="top" />
                             </div>
                         </div>
@@ -87,12 +88,12 @@ export const Footer = () => {
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <Phone className="w-4 h-4 text-accent/80" />
-                                    <span className="text-[11px] font-bold text-white/70 tracking-wider">+94 77 718 3746</span>
+                                    <span className="text-[11px] font-bold text-white/70 tracking-wider">+94 72 122 0008</span>
                                 </div>
                                 <div className="flex items-center gap-4 group/mail">
                                     <Mail className="w-4 h-4 text-accent/80" />
-                                    <a href="mailto:hello@ceylontrips.com" className="text-[11px] font-bold text-white/70 group-hover/mail:text-accent transition-colors tracking-wider">
-                                        HELLO@CEYLONTRIPS.COM
+                                    <a href="mailto:navoda991@gmail.com" className="text-[11px] font-bold text-white/70 group-hover/mail:text-accent transition-colors tracking-wider">
+                                        NAVODA991@GMAIL.COM
                                     </a>
                                 </div>
                             </div>
