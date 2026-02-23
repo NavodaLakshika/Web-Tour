@@ -16,6 +16,7 @@ import {
     Play, Pause, Sparkles, Heart, Gauge
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 const CATEGORIES = ["All", "Adventure", "Wildlife", "Culinary", "Wellness", "Festivals", "Heritage"];
 
@@ -26,6 +27,29 @@ export default function ExperiencesPage() {
     const ITEMS_PER_PAGE = 8;
     const [isPlaying, setIsPlaying] = useState(true);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [liveExperiences, setLiveExperiences] = useState<any[]>([]);
+
+    React.useEffect(() => {
+        const fetchLiveExperiences = async () => {
+            const { data, error } = await supabase
+                .from('experiences')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (!error && data) {
+                // Filter out experiences that already exist in static data by title to avoid duplicates
+                const staticTitles = experiences.map(e => e.title);
+                const uniqueLive = data.filter(e => !staticTitles.includes(e.title));
+                setLiveExperiences(uniqueLive);
+            }
+        };
+
+        fetchLiveExperiences();
+    }, []);
+
+    const allExperiences = useMemo(() => {
+        return [...experiences, ...liveExperiences];
+    }, [liveExperiences]);
 
     const togglePlayback = () => {
         if (videoRef.current) {
@@ -39,14 +63,14 @@ export default function ExperiencesPage() {
     };
 
     const filteredExperiences = useMemo(() => {
-        return experiences.filter(exp => {
+        return allExperiences.filter(exp => {
             const categoryMatch = selectedCategory === "All" || exp.category === selectedCategory;
             const searchMatch = exp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 exp.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 exp.description.toLowerCase().includes(searchQuery.toLowerCase());
             return categoryMatch && searchMatch;
         });
-    }, [selectedCategory, searchQuery]);
+    }, [selectedCategory, searchQuery, allExperiences]);
 
     const totalPages = Math.ceil(filteredExperiences.length / ITEMS_PER_PAGE);
 
@@ -218,7 +242,7 @@ export default function ExperiencesPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {experiences
+                            {allExperiences
                                 .filter(exp => ![
                                     "Whale Watching",
                                     "Wildlife Safari",

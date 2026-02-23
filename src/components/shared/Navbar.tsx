@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ArrowRight, User, Search, Phone, Facebook, Instagram, Youtube } from "lucide-react"; // Added Social Icons
+import { Menu, X, ArrowRight, User, Search, Phone, Facebook, Instagram, Youtube, LayoutDashboard } from "lucide-react"; // Added Social Icons
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { SocialIcon } from "./SocialIcon";
@@ -35,13 +35,19 @@ const navLinks: NavItem[] = [
     { name: "CONTACT", href: "/contact" },
 ];
 
+import { supabase } from "@/lib/supabase";
+import Cookies from "js-cookie";
+
 export const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [hoveredLink, setHoveredLink] = useState<string | null>(null);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
+        setIsLoggedIn(Cookies.get('isLoggedIn') === 'true');
+
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
         };
@@ -72,23 +78,15 @@ export const Navbar = () => {
                 )}
             >
                 <div className="w-full px-6 md:px-12 flex items-center justify-between relative">
-                    {/* Left: Login Button */}
+                    {/* Left: Login/Dashboard Icon */}
                     <div className="hidden lg:flex items-center">
-                        <Link
-                            href="/login"
-                            className={cn(
-                                "group flex items-center gap-3 transition-all duration-300 focus:outline-none",
-                                textColorClass
-                            )}
-                        >
-                            <div className={cn(
-                                "w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:scale-110",
-                                isGlass ? "border-[#1B362D]/20 group-hover:bg-[#1B362D] group-hover:text-white" : "border-white/20 group-hover:bg-white group-hover:text-black"
-                            )}>
-                                <User className="w-4 h-4" />
-                            </div>
-                           
-                        </Link>
+                        <SocialIcon
+                            icon={isLoggedIn ? LayoutDashboard : User}
+                            label={isLoggedIn ? "Dashboard" : "Sign In"}
+                            color="#D4AF37"
+                            href={isLoggedIn ? "/admin" : "/login"}
+                            tooltipPosition="bottom"
+                        />
                     </div>
 
                     {/* Center: Logo */}

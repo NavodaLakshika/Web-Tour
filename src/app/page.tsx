@@ -22,13 +22,37 @@ import {
   ChevronLeft, ChevronRight, PlusCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabase";
+import { useEffect, useMemo } from "react";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeCategory, setActiveCategory] = useState('All Wonders');
+  const [liveDestinations, setLiveDestinations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchLiveDestinations = async () => {
+      const { data, error } = await supabase
+        .from('destinations')
+        .select('*');
+
+      if (!error && data) {
+        // Filter out destinations that already exist in static data by slug to avoid duplicates
+        const staticSlugs = destinations.map(d => d.slug);
+        const uniqueLive = data.filter(d => !staticSlugs.includes(d.slug));
+        setLiveDestinations(uniqueLive);
+      }
+    };
+
+    fetchLiveDestinations();
+  }, []);
+
+  const allDestinations = useMemo(() => {
+    return [...destinations, ...liveDestinations];
+  }, [liveDestinations]);
 
   // Mapping categories to filtering logic
-  const filteredDestinations = destinations.filter(dest => {
+  const filteredDestinations = allDestinations.filter(dest => {
     if (activeCategory === 'All Wonders') return true;
     if (activeCategory === 'Cultural Triangle') return dest.interest === 'Cultural';
     if (activeCategory === 'Southern Coast') return dest.region === 'South';

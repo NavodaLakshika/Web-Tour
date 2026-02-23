@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/shared/Navbar";
@@ -13,60 +13,83 @@ import {
     Languages, Download, MapPin, Clock, Camera, Compass, HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
+import emailjs from "@emailjs/browser";
 
 export default function PlanPage() {
     const [activeItinerary, setActiveItinerary] = useState(0);
+    const [dbItineraries, setDbItineraries] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const PLACES = [
-        {
-            title: "SIGIRIYA",
-            subtitle: "Ancient Rock Fortress",
-            time: "3-4 Hours",
-            tag: "UNESCO",
-            image: "/images/sigiriya.jpg",
-            delay: 0
-        },
-        {
-            title: "ELLA ROCK",
-            subtitle: "Scenic Mountain Hike",
-            time: "4-5 Hours",
-            tag: "ADVENTURE",
-            image: "/images/ella.jpg",
-            delay: 0.1
-        },
-        {
-            title: "GALLE FORT",
-            subtitle: "Dutch Colonial Heritage",
-            time: "Full Day",
-            tag: "HISTORY",
-            image: "/images/galle.jpg",
-            delay: 0.2
-        },
-        {
-            title: "NINE ARCH",
-            subtitle: "Railway Architecture",
-            time: "1-2 Hours",
-            tag: "ICONIC",
-            image: "/images/nine-arch-bridge.jpg",
-            delay: 0.3
-        },
-        {
-            title: "MIRISSA",
-            subtitle: "Beach & Whale Watching",
-            time: "2-3 Days",
-            tag: "COASTAL",
-            image: "/images/mirissa.jpg",
-            delay: 0.4
-        },
-        {
-            title: "KANDY",
-            subtitle: "Temple of the Tooth",
-            time: "1-2 Days",
-            tag: "SACRED",
-            image: "/images/kandy.jpg",
-            delay: 0.5
+    // Form state
+    const [tripForm, setTripForm] = useState({
+        focus: "Adventure",
+        duration: "1-7 Days",
+        accommodation: [] as string[]
+    });
+
+    React.useEffect(() => {
+        const fetchItineraries = async () => {
+            setIsLoading(true);
+            const { data, error } = await supabase
+                .from('itineraries')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (!error && data && data.length > 0) {
+                setDbItineraries(data);
+            }
+            setIsLoading(false);
+        };
+
+        fetchItineraries();
+    }, []);
+
+    const toggleAccommodation = (type: string) => {
+        setTripForm(prev => {
+            const current = [...prev.accommodation];
+            if (current.includes(type)) {
+                return { ...prev, accommodation: current.filter(t => t !== type) };
+            } else {
+                return { ...prev, accommodation: [...current, type] };
+            }
+        });
+    };
+
+    const handleTripSubmit = async () => {
+        setIsSubmitting(true);
+        try {
+            // 1. Save to Supabase (Admin Dashboard)
+            const { error } = await supabase
+                .from('trip_requests')
+                .insert([tripForm]);
+
+            if (error) throw error;
+
+            // 2. Send Email Alert via EmailJS
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+                {
+                    from_name: "Guest Interested in " + tripForm.focus,
+                    from_email: "Trip Planner Request",
+                    message: `Focus: ${tripForm.focus}\nDuration: ${tripForm.duration}\nAccommodation: ${tripForm.accommodation.join(', ')}`,
+                    to_email: "navoda991@gmail.com",
+                    subject: "New Trip Planning Request!"
+                },
+                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+            );
+
+            alert("Your journey request has been received! Our experts will contact you within 12 hours.");
+            setTripForm({ focus: "Adventure", duration: "1-7 Days", accommodation: [] });
+        } catch (error: any) {
+            console.error("EmailJS Error:", error);
+            alert("Request saved, but email notification failed. We will contact you soon!");
+        } finally {
+            setIsSubmitting(false);
         }
-    ];
+    };
 
     const ITINERARIES = [
         {
@@ -94,6 +117,10 @@ export default function PlanPage() {
             icon: <Plane className="w-5 h-5" />
         }
     ];
+
+    const allItineraries = useMemo(() => {
+        return [...ITINERARIES, ...dbItineraries];
+    }, [dbItineraries]);
 
     return (
         <main className="min-h-screen bg-[#FDFBF7] font-sans selection:bg-primary selection:text-white">
@@ -268,7 +295,7 @@ export default function PlanPage() {
                             <p className="text-gray-500 mt-4 text-lg">Choose a plan that fits your time and interests. From quick escapes to deep explorations.</p>
                         </div>
                         <div className="flex gap-2 bg-sand/20 p-1.5 rounded-full border border-sand">
-                            {ITINERARIES.map((item, idx) => (
+                            {allItineraries.map((item, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => setActiveItinerary(idx)}
@@ -291,17 +318,17 @@ export default function PlanPage() {
                                     className="space-y-6"
                                 >
                                     <div className="flex items-center gap-4 text-secondary">
-                                        {ITINERARIES[activeItinerary].icon}
-                                        <span className="font-bold tracking-widest uppercase text-sm">{ITINERARIES[activeItinerary].title}</span>
+                                        <Compass className="w-5 h-5" />
+                                        <span className="font-bold tracking-widest uppercase text-sm">{allItineraries[activeItinerary]?.title}</span>
                                     </div>
                                     <h3 className="text-3xl md:text-4xl font-heading font-bold text-primary">
-                                        {ITINERARIES[activeItinerary].route}
+                                        {allItineraries[activeItinerary]?.route}
                                     </h3>
                                     <p className="text-gray-600 text-lg leading-relaxed">
-                                        {ITINERARIES[activeItinerary].description}
+                                        {allItineraries[activeItinerary]?.description}
                                     </p>
                                     <ul className="space-y-4 pt-4">
-                                        {ITINERARIES[activeItinerary].activities.map((act, i) => (
+                                        {allItineraries[activeItinerary]?.activities?.map((act: string, i: number) => (
                                             <li key={i} className="flex items-center gap-3">
                                                 <CheckCircle2 className="w-5 h-5 text-secondary" />
                                                 <span className="font-medium text-gray-700">{act}</span>
@@ -315,7 +342,7 @@ export default function PlanPage() {
 
                         <div className="lg:col-span-7 relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
                             <Image
-                                src={`/images/${activeItinerary === 0 ? 'sigiriya' : activeItinerary === 1 ? 'train' : 'yala'}.jpg`}
+                                src={allItineraries[activeItinerary]?.image || "/images/sigiriya.jpg"}
                                 alt="Route Preview"
                                 fill
                                 className="object-cover transition-all duration-700"
@@ -324,7 +351,7 @@ export default function PlanPage() {
                             <div className="absolute bottom-10 left-10 text-white">
                                 <div className="flex items-center gap-3 mb-2">
                                     <MapPin className="w-5 h-5 text-secondary" />
-                                    <span className="uppercase tracking-[0.2em] font-bold text-xs text-white/80">Interactive Route</span>
+                                    <span className="uppercase tracking-[0.2em] font-bold text-xs text-white/80">Route Preview</span>
                                 </div>
                                 <div className="h-1 w-32 bg-secondary rounded-full" />
                             </div>
@@ -524,7 +551,11 @@ export default function PlanPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Your Focus</label>
-                                        <select className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm outline-none focus:border-secondary transition-all appearance-none">
+                                        <select
+                                            value={tripForm.focus}
+                                            onChange={(e) => setTripForm({ ...tripForm, focus: e.target.value })}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm outline-none focus:border-secondary transition-all appearance-none"
+                                        >
                                             <option className="bg-black">Adventure</option>
                                             <option className="bg-black">Wellness</option>
                                             <option className="bg-black">Heritage</option>
@@ -533,7 +564,11 @@ export default function PlanPage() {
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Duration</label>
-                                        <select className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm outline-none focus:border-secondary transition-all appearance-none">
+                                        <select
+                                            value={tripForm.duration}
+                                            onChange={(e) => setTripForm({ ...tripForm, duration: e.target.value })}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm outline-none focus:border-secondary transition-all appearance-none"
+                                        >
                                             <option className="bg-black">1-7 Days</option>
                                             <option className="bg-black">8-14 Days</option>
                                             <option className="bg-black">15-30 Days</option>
@@ -545,7 +580,12 @@ export default function PlanPage() {
                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Accommodation Preferred</label>
                                     <div className="flex flex-wrap gap-2">
                                         {["Boutique", "Resort", "Guesthouse"].map(type => (
-                                            <button key={type} className="px-4 py-2 rounded-xl text-[10px] font-black border border-white/10 text-white/60 hover:border-secondary hover:text-white transition-all uppercase">
+                                            <button
+                                                key={type}
+                                                type="button"
+                                                onClick={() => toggleAccommodation(type)}
+                                                className={`px-4 py-2 rounded-xl text-[10px] font-black border transition-all uppercase ${tripForm.accommodation.includes(type) ? 'border-secondary bg-secondary text-black' : 'border-white/10 text-white/60 hover:border-secondary hover:text-white'}`}
+                                            >
                                                 {type}
                                             </button>
                                         ))}
@@ -553,8 +593,12 @@ export default function PlanPage() {
                                 </div>
 
                                 <div className="space-y-2 pt-4">
-                                    <button className="w-full py-6 bg-secondary hover:bg-white text-black font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.2)]">
-                                        Start Your Journey
+                                    <button
+                                        onClick={handleTripSubmit}
+                                        disabled={isSubmitting}
+                                        className="w-full py-6 bg-secondary hover:bg-white text-black font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.2)] disabled:opacity-50"
+                                    >
+                                        {isSubmitting ? "TRANSMITTING..." : "Start Your Journey"}
                                     </button>
                                     <p className="text-center text-[9px] text-white/30 uppercase tracking-[0.2em]">Response within 12 hours guaranteed</p>
                                 </div>

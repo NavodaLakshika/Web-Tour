@@ -5,12 +5,71 @@ import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/shared/Navbar";
 import { Footer } from "@/components/shared/Footer";
-import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Send, MessageSquare, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Send, MessageSquare, Clock, CheckCircle2, AlertTriangle, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import emailjs from "@emailjs/browser";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ContactPage() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [formData, setFormData] = useState({
+        full_name: "",
+        email: "",
+        message: ""
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setStatus('idle');
+
+        try {
+            // 1. Save to Supabase (Admin Dashboard)
+            const { error: dbError } = await supabase
+                .from('contact_messages')
+                .insert([
+                    {
+                        full_name: formData.full_name,
+                        email: formData.email,
+                        message: formData.message,
+                        subject: "General Inquiry"
+                    }
+                ]);
+
+            if (dbError) throw dbError;
+
+            // 2. Send Email Alert via EmailJS
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+                {
+                    from_name: formData.full_name,
+                    from_email: formData.email,
+                    message: formData.message,
+                    to_email: "navoda991@gmail.com",
+                    subject: "New Inquiry from CEYLONTRIPS"
+                },
+                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+            );
+
+            setStatus('success');
+            setFormData({ full_name: "", email: "", message: "" });
+
+            // Revert status after 5 seconds
+            setTimeout(() => setStatus('idle'), 5000);
+
+        } catch (error: any) {
+            console.error("Submission Error:", error);
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 5000);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
     return (
         <main className="min-h-screen bg-white font-sans selection:bg-primary selection:text-white">
             <Navbar />
@@ -153,26 +212,91 @@ export default function ContactPage() {
                                     <p className="text-gray-500 text-sm font-art">Leave your details and message below.</p>
                                 </div>
 
-                                <form className="space-y-6">
+                                <form className="space-y-6" onSubmit={handleSubmit}>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 ml-1">Full Name</label>
-                                            <Input className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-4 h-auto text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all placeholder:text-black/30" placeholder="John Doe" />
+                                            <Input
+                                                required
+                                                value={formData.full_name}
+                                                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                                                className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-4 h-auto text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all placeholder:text-black/30"
+                                                placeholder="John Doe"
+                                            />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 ml-1">Email Address</label>
-                                            <Input className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-4 h-auto text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all placeholder:text-black/30" placeholder="john@example.com" />
+                                            <Input
+                                                required
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-4 h-auto text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all placeholder:text-black/30"
+                                                placeholder="john@example.com"
+                                            />
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 ml-1">Message</label>
-                                        <Textarea className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-5 min-h-[160px] text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all resize-none placeholder:text-black/30" placeholder="How can we help you plan your journey?" />
+                                        <Textarea
+                                            required
+                                            value={formData.message}
+                                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                            className="bg-white/60 backdrop-blur-sm border-white/20 rounded-2xl px-6 py-5 min-h-[160px] text-sm text-black outline-none focus:border-secondary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all resize-none placeholder:text-black/30"
+                                            placeholder="How can we help you plan your journey?"
+                                        />
                                     </div>
 
-                                    <div className="pt-4">
-                                        <button className="w-full py-6 bg-secondary hover:bg-black text-black hover:text-white font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.15)] flex items-center justify-center gap-4 focus:outline-none group">
-                                            Send Message
+                                    <div className="pt-4 space-y-4">
+                                        <AnimatePresence>
+                                            {status === 'success' && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, scale: 0.95 }}
+                                                    className="bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center gap-4 shadow-sm"
+                                                >
+                                                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center text-white shrink-0">
+                                                        <CheckCircle2 size={20} />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <p className="text-[11px] font-black text-green-900 uppercase tracking-widest">Message Dispatched</p>
+                                                        <p className="text-[10px] font-bold text-green-700/70 uppercase tracking-tight mt-0.5">Thank you! Our island experts have received your inquiry.</p>
+                                                    </div>
+                                                    <button onClick={() => setStatus('idle')} className="text-green-900/40 hover:text-green-900 transition-colors">
+                                                        <X size={14} />
+                                                    </button>
+                                                </motion.div>
+                                            )}
+
+                                            {status === 'error' && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, scale: 0.95 }}
+                                                    className="bg-orange-50 border border-orange-200 p-4 rounded-2xl flex items-center gap-4 shadow-sm"
+                                                >
+                                                    <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white shrink-0">
+                                                        <AlertTriangle size={20} />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <p className="text-[11px] font-black text-orange-900 uppercase tracking-widest">Transmission Error</p>
+                                                        <p className="text-[10px] font-bold text-orange-700/70 uppercase tracking-tight mt-0.5">Something went wrong. Please check your connection and try again.</p>
+                                                    </div>
+                                                    <button onClick={() => setStatus('idle')} className="text-orange-900/40 hover:text-orange-900 transition-colors">
+                                                        <X size={14} />
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+
+                                        <button
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                            className="w-full py-6 bg-secondary hover:bg-black text-black hover:text-white font-black uppercase tracking-[0.3em] text-xs rounded-2xl transition-all duration-500 shadow-[0_20px_40px_rgba(212,175,55,0.15)] flex items-center justify-center gap-4 focus:outline-none group disabled:opacity-50"
+                                        >
+                                            {isSubmitting ? "Sending..." : "Send Message"}
                                             <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                                         </button>
                                         <div className="flex items-center justify-center gap-4 mt-8 opacity-60">

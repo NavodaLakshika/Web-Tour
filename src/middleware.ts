@@ -2,20 +2,21 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const isLoggedIn = request.cookies.get('isLoggedIn');
+    const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true';
     const { pathname } = request.nextUrl;
 
-    // Protect /admin routes
+    // 1. Protect /admin routes
     if (pathname.startsWith('/admin')) {
         if (!isLoggedIn) {
-            // Redirect to login if not logged in
+            console.log("🔒 Middleware: Unauthorized access to /admin, redirecting...");
             return NextResponse.redirect(new URL('/login', request.url));
         }
     }
 
-    // Prevent logged in users from visiting /login
-    if (pathname === '/login') {
+    // 2. Prevent logged-in users from visiting /login again
+    if (pathname.startsWith('/login')) {
         if (isLoggedIn) {
+            console.log("🔓 Middleware: User already logged in, bypassing /login...");
             return NextResponse.redirect(new URL('/admin', request.url));
         }
     }
@@ -23,7 +24,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
+// Match /admin exactly OR any sub-path of /admin, and /login
 export const config = {
-    matcher: ['/admin/:path*', '/login'],
+    matcher: ['/admin', '/admin/:path*', '/login'],
 };

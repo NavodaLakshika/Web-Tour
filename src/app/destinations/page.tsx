@@ -16,6 +16,7 @@ import {
     Play, Pause
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 const REGIONS = ["All", "North", "South", "Central", "East", "West"];
 const INTERESTS = ["All", "Beaches", "Cultural", "Nature", "Wildlife"];
@@ -28,6 +29,28 @@ export default function DestinationsPage() {
     const ITEMS_PER_PAGE = 8;
     const [isPlaying, setIsPlaying] = useState(true);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [liveDestinations, setLiveDestinations] = useState<any[]>([]);
+
+    React.useEffect(() => {
+        const fetchLiveDestinations = async () => {
+            const { data, error } = await supabase
+                .from('destinations')
+                .select('*');
+
+            if (!error && data) {
+                // Filter out destinations that already exist in static data by slug to avoid duplicates
+                const staticSlugs = destinations.map(d => d.slug);
+                const uniqueLive = data.filter(d => !staticSlugs.includes(d.slug));
+                setLiveDestinations(uniqueLive);
+            }
+        };
+
+        fetchLiveDestinations();
+    }, []);
+
+    const allDestinations = useMemo(() => {
+        return [...destinations, ...liveDestinations];
+    }, [liveDestinations]);
 
     const togglePlayback = () => {
         if (videoRef.current) {
@@ -41,14 +64,14 @@ export default function DestinationsPage() {
     };
 
     const filteredDestinations = useMemo(() => {
-        return destinations.filter(dest => {
+        return allDestinations.filter(dest => {
             const regionMatch = selectedRegion === "All" || dest.region === selectedRegion;
             const interestMatch = selectedInterest === "All" || dest.interest === selectedInterest;
             const searchMatch = dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 dest.region.toLowerCase().includes(searchQuery.toLowerCase());
             return regionMatch && interestMatch && searchMatch;
         });
-    }, [selectedRegion, selectedInterest, searchQuery]);
+    }, [allDestinations, selectedRegion, selectedInterest, searchQuery]);
 
     const totalPages = Math.ceil(filteredDestinations.length / ITEMS_PER_PAGE);
 

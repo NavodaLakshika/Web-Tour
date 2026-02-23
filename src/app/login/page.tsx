@@ -1,188 +1,190 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, CheckCircle2 } from "lucide-react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { User, Lock, Loader2, CheckCircle2, AlertTriangle, ArrowLeft } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 import Cookies from "js-cookie";
 
 export default function LoginPage() {
-    const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
-    const [error, setError] = useState("");
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [status, setStatus] = useState<'idle' | 'success' | 'error' | 'loading'>('idle');
+    const [errorMessage, setErrorMessage] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-        if (error) setError("");
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError("");
+        setStatus('loading');
+        setErrorMessage("");
 
-        // Demo Login Logic
-        setTimeout(() => {
-            if (formData.email === "admin@ceylontrips.com" && formData.password === "admin") {
-                // Set cookie for authentication
-                Cookies.set("isLoggedIn", "true", { expires: 1 }); // Expires in 1 day
-                window.location.replace("/admin"); // Redirect to admin
-            } else {
-                setError("Invalid credentials. Try our demo login.");
-                setIsLoading(false);
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (error) throw error;
+
+            if (data.user) {
+                Cookies.set('isLoggedIn', 'true', { expires: rememberMe ? 7 : 1 });
+                setStatus('success');
+
+                setTimeout(() => {
+                    router.push('/admin');
+                }, 1500);
             }
-        }, 1500);
+        } catch (error: any) {
+            console.error("Login Error:", error);
+            setStatus('error');
+            setErrorMessage(error.message || "Invalid credentials.");
+            setTimeout(() => setStatus('idle'), 4000);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden font-sans">
-            {/* 1. BACKGROUND IMAGE */}
+        <main className="relative min-h-screen w-full flex items-center justify-center overflow-hidden font-sans">
+            {/* Background Image - Green Jungle/Coastal Vibe */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/images/nature.jpg"
-                    alt="Nature Background"
+                    src="/images/nature.jpg" // Fixed: gallery-3.jpg was missing
+                    alt="Ceylon Nature"
                     fill
-                    className="object-cover scale-105"
+                    className="object-cover brightness-50"
                     priority
                 />
-                <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
+                <div className="absolute inset-0 bg-black/20" />
             </div>
 
-            {/* 2. BACK BUTTON */}
-            <Link href="/" className="absolute top-8 left-8 z-50 flex items-center gap-2 text-white/70 hover:text-white transition-all group">
-                <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
-                    <ArrowLeft size={18} />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden md:block">Back to Explore</span>
-            </Link>
-
-            {/* 3. LOGIN CARD */}
+            {/* Glassmorphic Form Container */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="relative z-10 w-full max-w-[420px] px-6"
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative z-10 w-full max-w-[380px] mx-4"
             >
-                <div className="relative bg-white/10 backdrop-blur-2xl rounded-[2.5rem] border border-white/20 shadow-2xl overflow-hidden pt-16 pb-12 px-10">
-
-                    {/* Header Tab Style */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-12 bg-white/20 backdrop-blur-md rounded-b-3xl flex items-center justify-center border-x border-b border-white/10">
-                        <span className="text-white text-sm font-black uppercase tracking-[0.3em]">Login</span>
+                {/* The "Login" Tab Pill at the top center */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
+                    <div className="bg-[#D1D5D2] px-12 py-3 rounded-[20px] shadow-lg border border-white/50">
+                        <span className="text-black font-bold text-sm tracking-widest uppercase">Login</span>
                     </div>
+                </div>
 
-                    {/* Logo/Icon */}
-                    <div className="flex justify-center mb-10">
-                        <div className="w-16 h-16 rounded-3xl bg-white/10 border border-white/20 flex items-center justify-center shadow-inner">
-                            <User className="text-white w-8 h-8" strokeWidth={1.5} />
+                <div className="bg-white/10 backdrop-blur-[20px] border border-white/20 rounded-[24px] p-12 pt-24 pb-20 shadow-2xl relative overflow-hidden">
+
+                    {/* Return Link */}
+                    <Link href="/" className="absolute top-8 left-8 text-white/30 hover:text-white transition-colors">
+                        <ArrowLeft size={18} />
+                    </Link>
+
+                    <form onSubmit={handleLogin} className="space-y-12">
+                        {/* Username Field */}
+                        <div className="space-y-3 group">
+                            <label className="text-[12px] font-bold text-white tracking-widest ml-1">Username</label>
+                            <div className="relative border-b border-white/30 group-focus-within:border-white transition-all">
+                                <input
+                                    required
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full bg-transparent py-3 pr-10 text-white outline-none placeholder:text-white/20 text-sm"
+                                    placeholder="Enter your email"
+                                />
+                                <User className="absolute right-0 top-1/2 -translate-y-1/2 text-white/60" size={18} />
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="bg-red-500/20 border border-red-500/30 p-4 rounded-2xl text-center"
+                        {/* Password Field */}
+                        <div className="space-y-3 group">
+                            <label className="text-[12px] font-bold text-white tracking-widest ml-1">Password</label>
+                            <div className="relative border-b border-white/30 group-focus-within:border-white transition-all">
+                                <input
+                                    required
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full bg-transparent py-3 pr-10 text-white outline-none placeholder:text-white/20 text-sm"
+                                    placeholder="Enter your password"
+                                />
+                                <Lock className="absolute right-0 top-1/2 -translate-y-1/2 text-white/60" size={18} />
+                            </div>
+                        </div>
+
+                        {/* Remember Me & Forgot Password */}
+                        <div className="flex items-center justify-between text-[11px] font-bold text-white/70 tracking-wider">
+                            <label className="flex items-center gap-2 cursor-pointer group/check">
+                                <div className="relative w-4 h-4 border border-white/40 rounded bg-white/5 flex items-center justify-center transition-all group-hover/check:border-white">
+                                    <input
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                    />
+                                    {rememberMe && <div className="w-2 h-2 bg-white rounded-sm" />}
+                                </div>
+                                <span className="group-hover/check:text-white transition-colors">Remember me</span>
+                            </label>
+                            <Link href="#" className="hover:text-white transition-colors">Forgot password</Link>
+                        </div>
+
+                        {/* Action Button */}
+                        <div className="pt-6">
+                            <button
+                                type="submit"
+                                disabled={isLoading || status === 'success'}
+                                className="w-full bg-white text-black py-5 rounded-[10px] font-black uppercase tracking-[0.3em] text-[14px] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 shadow-[0_15px_40px_rgba(255,255,255,0.15)] hover:shadow-[0_20px_50px_rgba(255,255,255,0.25)] flex items-center justify-center gap-4 disabled:opacity-50"
                             >
-                                <p className="text-white text-[10px] font-bold uppercase tracking-widest leading-relaxed">
-                                    {error}
-                                </p>
+                                {isLoading ? <Loader2 className="animate-spin" size={20} /> : <span>Login</span>}
+                            </button>
+                        </div>
+
+                    </form>
+
+                    {/* Success/Error Notifications */}
+                    <AnimatePresence>
+                        {status === 'success' && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="absolute inset-0 bg-black/70 backdrop-blur-lg flex flex-col items-center justify-center p-8 text-center"
+                            >
+                                <motion.div
+                                    initial={{ y: 20 }} animate={{ y: 0 }}
+                                    className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white mb-6 shadow-2xl"
+                                >
+                                    <CheckCircle2 size={40} />
+                                </motion.div>
+                                <h3 className="text-white text-lg font-black uppercase tracking-widest mb-2">Authenticated</h3>
+                                <p className="text-white/40 text-[10px] uppercase font-black">Opening Heritage Registry...</p>
                             </motion.div>
                         )}
 
-                        {/* Email Input */}
-                        <div className="space-y-1 relative group">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-1">Email</label>
-                            <div className="relative">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-1 text-white text-sm outline-none focus:border-white transition-all placeholder:text-white/20 font-medium"
-                                    placeholder="Enter your email"
-                                    required
-                                />
-                                <Mail className="absolute right-0 top-1 text-white/30 group-focus-within:text-white transition-colors" size={18} />
-                            </div>
-                        </div>
-
-                        {/* Password Input */}
-                        <div className="space-y-1 relative group">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-1">Password</label>
-                            <div className="relative">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-1 text-white text-sm outline-none focus:border-white transition-all placeholder:text-white/20 font-medium"
-                                    placeholder="Enter your password"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-0 top-1 text-white/30 hover:text-white transition-colors"
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Lock size={18} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Options */}
-                        <div className="flex items-center justify-between">
-                            <label className="flex items-center gap-2 cursor-pointer group">
-                                <div
-                                    onClick={() => setRememberMe(!rememberMe)}
-                                    className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${rememberMe ? "bg-white border-white" : "border-white/30 group-hover:border-white"
-                                        }`}
-                                >
-                                    {rememberMe && <CheckCircle2 className="text-black w-3 h-3" />}
+                        {status === 'error' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute bottom-10 left-10 right-10 bg-red-500/80 backdrop-blur-md p-4 rounded-[20px] flex items-center gap-4 border border-white/20 shadow-xl"
+                            >
+                                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
+                                    <AlertTriangle size={18} className="text-white" />
                                 </div>
-                                <span className="text-[10px] font-bold text-white/50 group-hover:text-white transition-colors uppercase tracking-widest">Remember Me</span>
-                            </label>
-                            <Link href="#" className="text-[10px] font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest">
-                                Forgot Password?
-                            </Link>
-                        </div>
-
-                        {/* Submit Button */}
-                        <button
-                            disabled={isLoading}
-                            className="w-full py-5 bg-white text-black font-black uppercase tracking-[0.4em] text-xs rounded-2xl hover:bg-secondary transition-all duration-500 shadow-2xl shadow-black/20 overflow-hidden relative group disabled:opacity-50"
-                        >
-                            <span className="relative z-10">{isLoading ? "Verifying..." : "Login"}</span>
-                            <div className="absolute inset-0 bg-secondary translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                        </button>
-
-                        <div className="text-center">
-                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
-                                Don't have an account?{" "}
-                                <Link href="#" className="text-white hover:text-secondary transition-colors underline underline-offset-4 decoration-white/20">
-                                    Register
-                                </Link>
-                            </p>
-                        </div>
-                    </form>
+                                <div className="flex-1 overflow-hidden">
+                                    <p className="text-white text-[10px] font-black uppercase tracking-widest leading-tight">{errorMessage}</p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
-
-                {/* Footer Info */}
-                <p className="text-center mt-8 text-white/20 text-[9px] font-black uppercase tracking-[0.5em]">
-                    &copy; Tales of Ceylon Trip Management
-                </p>
             </motion.div>
-        </div>
+        </main>
     );
 }

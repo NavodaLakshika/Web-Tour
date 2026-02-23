@@ -1,214 +1,288 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-    Users,
-    MoreHorizontal,
-    ArrowUpRight,
-    TrendingUp,
-    Shield,
-    HardDrive,
-    Save,
+    MoreVertical,
+    Star,
+    Award,
+    Plus,
+    Search,
+    Filter,
+    MapPin,
+    Compass,
     Calendar,
-    ChevronDown,
+    Globe,
     Activity,
-    MousePointer2,
-    Eye
+    MessageSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { supabase } from "@/lib/supabase";
+
+const analytics = [
+    { name: "Sigiriya Heritage Site", rating: 4.8, reviews: 125, location: "Matale District", visitors: "2.4k", revenue: "$12.4k", status: "Open for Booking", verified: true, image: "/images/experience-1.jpg" },
+    { name: "Galle Fort Walk", rating: 4.9, reviews: 88, location: "Southern Province", visitors: "1.8k", revenue: "$8.9k", status: "Capacity Full" },
+    { name: "Ella Odyssey Train", rating: 5.0, reviews: 312, location: "Badulla District", visitors: "3.2k", revenue: "$15.6k", status: "Open for Booking", verified: true, image: "/images/experience-2.jpg" },
+    { name: "Anuradhapura Temple", rating: 4.7, reviews: 45, location: "North Central", visitors: "1.2k", revenue: "$4.2k", status: "Maintenance", image: "/images/experience-3.jpg" }
+];
 
 export default function AdminDashboard() {
+    const [stats, setStats] = useState({
+        bookings: 1253,
+        experiences: 245,
+        unreadAlerts: 0,
+        activeTours: 86,
+        revenue: "$42.8k"
+    });
+
+    const fetchDashboardStats = async () => {
+        const { count: msgCount } = await supabase
+            .from('contact_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'pending');
+
+        const { count: reqCount } = await supabase
+            .from('trip_requests')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'pending');
+
+        setStats(prev => ({
+            ...prev,
+            unreadAlerts: (msgCount || 0) + (reqCount || 0)
+        }));
+    };
+
+    useEffect(() => {
+        fetchDashboardStats();
+
+        // Real-time subscription for dashboard counts
+        const channel = supabase
+            .channel('dashboard-stats')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' }, () => fetchDashboardStats())
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'trip_requests' }, () => fetchDashboardStats())
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
+
     return (
-        <div className="space-y-10">
-            {/* 1. HEADER */}
-            <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Real-time Alert Banner */}
+            {stats.unreadAlerts > 0 && (
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-accent/10 border border-accent/20 p-4 rounded-2xl flex items-center justify-between shadow-xl shadow-accent/5"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-primary shadow-lg shadow-accent/20">
+                            <MessageSquare size={20} />
+                        </div>
+                        <div>
+                            <h4 className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">Priority Attention Required</h4>
+                            <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mt-0.5">You have {stats.unreadAlerts} new guest inquiries awaiting response.</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => window.location.href = '/admin/messages'}
+                        className="bg-primary text-white px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg"
+                    >
+                        View Transmissions
+                    </button>
+                </motion.div>
+            )}
+
+            {/* 1. PORTAL HEADER */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h2 className="text-2xl font-black text-slate-800 tracking-tight">Dashboard <span className="text-slate-400 font-bold ml-2 text-sm">Trip Traffic</span></h2>
+                    <h1 className="text-3xl font-heading font-black text-primary tracking-tight uppercase">Portal <span className="text-accent underline decoration-primary/10 underline-offset-8">Overview</span></h1>
+                    <div className="flex items-center gap-3 mt-3">
+                        <div className="bg-primary/5 px-3 py-1.5 rounded-md border border-primary/5 flex items-center gap-2">
+                            <Globe size={14} className="text-accent" />
+                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Global Traffic Active</span>
+                        </div>
+                        <p className="text-primary/40 font-bold text-[11px] uppercase tracking-widest">Last Synced: Just Now</p>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="flex bg-[#E6EEF8] p-1.5 rounded-2xl shadow-[-4px_-4px_10px_rgba(255,255,255,0.8),4px_4px_10px_rgba(0,0,0,0.05)]">
-                        <div className="flex items-center gap-3 px-4 py-2 border-r border-slate-200">
-                            <Calendar size={16} className="text-[#4D7CFF]" />
-                            <span className="text-[11px] font-black text-slate-600 uppercase tracking-widest">Feb 21, 2026</span>
-                            <ChevronDown size={12} className="text-slate-400" />
-                        </div>
-                        <div className="flex items-center gap-3 px-4 py-2">
-                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Custom</span>
-                            <ChevronDown size={12} className="text-slate-400" />
-                        </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-white border border-primary/5 rounded-xl shadow-sm">
+                        <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)] animate-pulse" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">Heritage Active</span>
                     </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-accent shadow-lg shadow-accent/20 rounded-xl">
+                        <Award size={14} className="text-primary" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">Premium Tier</span>
+                    </div>
+                    <button className="p-2.5 text-primary/30 hover:text-primary border border-primary/5 bg-white rounded-xl transition-all hover:shadow-md">
+                        <MoreVertical size={18} />
+                    </button>
                 </div>
-            </header>
-
-            {/* 2. TOP STATS ROW */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Blocked IPs / Destinations */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-[#E6EEF8] p-8 rounded-[2.5rem] shadow-[-6px_-6px_12px_rgba(255,255,255,0.8),6px_6px_12px_rgba(0,0,0,0.05)] hover:shadow-[-2px_-2px_5px_rgba(255,255,255,0.8),2px_2px_5px_rgba(0,0,0,0.1)] transition-all group"
-                >
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-[#4D7CFF] shadow-lg">
-                            <HardDrive size={22} />
-                        </div>
-                        <MoreHorizontal className="text-slate-300" size={18} />
-                    </div>
-                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Destinations Listed</p>
-                    <h3 className="text-4xl font-black text-slate-800 tracking-tighter">1,253</h3>
-                    <div className="flex items-center gap-2 mt-4">
-                        <span className="text-[#4D7CFF] text-[10px] font-black">20% of catalog</span>
-                        <span className="text-slate-300 text-[10px] font-bold uppercase cursor-pointer hover:text-[#4D7CFF]">View Details</span>
-                    </div>
-                </motion.div>
-
-                {/* Total Saved / Revenue */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="bg-[#E6EEF8] p-8 rounded-[2.5rem] shadow-[-6px_-6px_12px_rgba(255,255,255,0.8),6px_6px_12px_rgba(0,0,0,0.05)] hover:shadow-[-2px_-2px_5px_rgba(255,255,255,0.8),2px_2px_5px_rgba(0,0,0,0.1)] transition-all group"
-                >
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-[#4D7CFF] shadow-lg">
-                            <Save size={22} />
-                        </div>
-                        <MoreHorizontal className="text-slate-300" size={18} />
-                    </div>
-                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Total Revenue</p>
-                    <h3 className="text-4xl font-black text-slate-800 tracking-tighter">$9,450</h3>
-                    <div className="flex items-center gap-2 mt-4 text-[#4D7CFF] text-[10px] font-black italic">
-                        1200 bookings x $0.5 fee
-                    </div>
-                </motion.div>
-
-                {/* Fraud Score / Customer Stat */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="bg-[#E6EEF8] p-8 rounded-[2.5rem] shadow-[-6px_-6px_12px_rgba(255,255,255,0.8),6px_6px_12px_rgba(0,0,0,0.05)] hover:shadow-[-2px_-2px_5px_rgba(255,255,255,0.8),2px_2px_5px_rgba(0,0,0,0.1)] transition-all group"
-                >
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-[#4D7CFF] shadow-lg">
-                            <Shield size={22} className="opacity-50" />
-                        </div>
-                        <div className="w-14 h-14 relative flex items-center justify-center">
-                            <svg className="w-full h-full transform -rotate-90">
-                                <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100" />
-                                <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={150} strokeDashoffset={150 * 0.4} className="text-[#4D7CFF]" />
-                            </svg>
-                            <span className="absolute text-[10px] font-black text-slate-800">4.6</span>
-                        </div>
-                    </div>
-                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Safety Score</p>
-                    <h3 className="text-4xl font-black text-slate-800 tracking-tighter">4.6</h3>
-                    <div className="flex items-center gap-2 mt-4">
-                        <span className="text-slate-300 text-[10px] font-bold uppercase">Out of 10</span>
-                        <span className="text-slate-300 text-[10px] font-bold uppercase cursor-pointer hover:text-[#4D7CFF] ml-auto">Details</span>
-                    </div>
-                </motion.div>
             </div>
 
-            {/* 3. MAIN CHART AREA */}
-            <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-[#E6EEF8] p-10 rounded-[3rem] shadow-[-8px_-8px_16px_rgba(255,255,255,0.8),8px_8px_16px_rgba(0,0,0,0.05)]"
-            >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                    <div className="flex bg-white/40 p-1 rounded-2xl shadow-inner">
-                        {["Visitors", "Bookings", "Direct From Ads"].map((tab, i) => (
-                            <button
-                                key={tab}
-                                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${i === 1 ? "bg-white shadow-lg text-[#4D7CFF]" : "text-slate-400 hover:text-slate-600"
-                                    }`}
-                            >
-                                {tab}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Decorative Line Chart */}
-                <div className="relative h-[300px] w-full mt-10">
-                    <svg className="w-full h-full overflow-visible" viewBox="0 0 1000 300">
-                        {/* Vertical Bars Neumorphic */}
-                        {[150, 450, 250, 600, 300, 500, 400].map((h, i) => (
-                            <rect
-                                key={i}
-                                x={100 + i * 130}
-                                y={300 - (h / 3)}
-                                width="40"
-                                height={h / 3}
-                                rx="12"
-                                className="fill-white shadow-inner opacity-60"
-                            />
-                        ))}
-
-                        {/* Smooth Line */}
-                        <motion.path
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 2, ease: "easeInOut" }}
-                            d="M80,220 Q200,80 350,180 T600,100 T850,200"
-                            fill="none"
-                            stroke="#4D7CFF"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            className="drop-shadow-[0_10px_10px_rgba(77,124,255,0.2)]"
-                        />
-
-                        {/* Dots */}
-                        {[
-                            { x: 80, y: 220 }, { x: 230, y: 120 }, { x: 380, y: 160 },
-                            { x: 530, y: 140 }, { x: 680, y: 110 }, { x: 830, y: 190 }
-                        ].map((dot, i) => (
-                            <g key={i}>
-                                <circle cx={dot.x} cy={dot.y} r="8" fill="white" className="shadow-lg" />
-                                <circle cx={dot.x} cy={dot.y} r="4" fill="#4D7CFF" />
-                            </g>
-                        ))}
-                    </svg>
-                    <div className="absolute bottom-[-20px] left-0 w-full flex justify-between px-20 text-[10px] font-black text-slate-300 uppercase tracking-widest">
-                        <span>Oct 25</span>
-                        <span>Oct 26</span>
-                        <span>Oct 27</span>
-                        <span className="text-[#4D7CFF]">Oct 28</span>
-                        <span>Oct 29</span>
-                        <span>Oct 30</span>
-                        <span>Oct 31</span>
-                    </div>
-                </div>
-            </motion.div>
-
-            {/* 4. BOTTOM ROW STATS */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                {[
-                    { label: "Organic Visitors", val: "120", icon: Users },
-                    { label: "From Advertising", val: "953", icon: MousePointer2 },
-                    { label: "Growth Rate", val: "20.1%", icon: Activity },
-                    { label: "Ads Click Rate", val: "87.3%", icon: TrendingUp, primary: true }
-                ].map((stat, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 + i * 0.1 }}
-                        className={`p-6 rounded-3xl flex items-center gap-6 ${stat.primary
-                                ? "bg-[#4D7CFF] text-white shadow-[0_15px_30px_rgba(77,124,255,0.3)]"
-                                : "bg-[#E6EEF8] shadow-[-4px_-4px_10px_rgba(255,255,255,0.8),4px_4px_10px_rgba(0,0,0,0.05)]"
-                            }`}
+            {/* 2. NAVIGATION TABS - WEBSITE STYLE */}
+            <div className="flex border-b border-primary/5 overflow-x-auto scrollbar-hide">
+                {["REVENUE ANALYTICS", "DESTINATION STATS", "MANAGER PERFORMANCE"].map((tab, i) => (
+                    <button
+                        key={tab}
+                        className={`px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap ${i === 0 ? "text-primary" : "text-primary/30 hover:text-primary/60"}`}
                     >
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${stat.primary ? "bg-white/20" : "bg-white text-[#4D7CFF] shadow-md"}`}>
-                            <stat.icon size={20} />
+                        <div className="flex items-center gap-2">
+                            {tab}
                         </div>
-                        <div>
-                            <p className={`text-[9px] font-black uppercase tracking-widest leading-none mb-1 ${stat.primary ? "text-white/60" : "text-slate-400"}`}>{stat.label}</p>
-                            <p className="text-xl font-black tracking-tight leading-none">{stat.val}</p>
+                        {i === 0 && <div className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-accent rounded-t-full shadow-[0_-4px_10px_rgba(212,175,55,0.4)]" />}
+                    </button>
+                ))}
+            </div>
+
+            {/* 3. CORE ANALYTICS CARDS */}
+            <div className="bg-white rounded-[24px] border border-primary/5 shadow-xl shadow-primary/5 overflow-hidden">
+                <div className="grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-primary/5">
+                    {[
+                        { label: "TOTAL BOOKINGS", val: stats.bookings, change: "+12%" },
+                        { label: "AVG. EXPERIENCE", val: `$${stats.experiences}`, change: "+5%" },
+                        { label: "UNREAD ALERTS", val: stats.unreadAlerts, alert: true, color: stats.unreadAlerts > 0 ? "text-orange-500" : "text-primary/20", full: true },
+                        { label: "ACTIVE TOURS", val: stats.activeTours, change: "+24%" },
+                        { label: "PORTAL REVENUE", val: stats.revenue, color: "text-accent" }
+                    ].map((st, i) => (
+                        <div key={i} className={`px-6 sm:px-10 py-8 sm:py-10 ${st.full ? 'col-span-2 lg:col-span-1 border-t lg:border-t-0' : ''}`}>
+                            <div className="flex items-start justify-between mb-2">
+                                <p className={`text-2xl sm:text-3xl font-heading font-black leading-none ${st.color || 'text-primary'}`}>{st.val}</p>
+                                {st.change && <span className="text-[10px] font-black text-green-500">{st.change}</span>}
+                            </div>
+                            <p className="text-[10px] font-black text-primary/30 uppercase tracking-[0.2em]">{st.label}</p>
                         </div>
-                    </motion.div>
+                    ))}
+                </div>
+                <div className="bg-[#FAF9F6] px-6 sm:px-10 py-8 sm:py-10 border-t border-primary/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-y-8 gap-x-12">
+                    {[
+                        { label: "REPORT PERIOD", val: "Feb 01 - Feb 23, 2026", icon: Calendar },
+                        { label: "TOP REGION", val: "Central Highlands", icon: MapPin },
+                        { label: "SYSTEM STATUS", val: "99.9% Operational", icon: Activity },
+                        { label: "LICENSE NO", val: "TC-9283-HERITAGE", icon: Globe },
+                        { label: "SENIOR ADMIN", val: "Admin User", icon: Star }
+                    ].map((dt, i) => (
+                        <div key={i}>
+                            <p className="text-[10px] font-black text-primary/20 uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                                <dt.icon size={12} className="text-accent" />
+                                {dt.label}
+                            </p>
+                            <p className="text-xs font-bold text-primary tracking-wide uppercase">{dt.val}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* 4. SECTION TABS */}
+            <div className="flex flex-wrap gap-10 border-b border-primary/5 sticky top-[72px] bg-[#FAF9F6]/80 backdrop-blur-md z-30 pt-4">
+                {[
+                    { name: "ACTIVE REGISTRY", count: 124 },
+                    { name: "PENDING MODS", count: 8 },
+                    { name: "MAINTENANCE", count: 3 },
+                    { name: "USER FEEDBACK" },
+                    { name: "INVOICING" }
+                ].map((tab, i) => (
+                    <button
+                        key={tab.name}
+                        className={`pb-5 text-[11px] font-black uppercase tracking-[0.3em] transition-all relative ${i === 0 ? "text-primary" : "text-primary/30 hover:text-primary/60"}`}
+                    >
+                        <span className="flex items-center gap-3">
+                            {tab.name}
+                            {tab.count !== undefined && (
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black ${i === 0 ? "bg-primary text-accent shadow-lg" : "bg-primary/5 text-primary/20"}`}>
+                                    {tab.count}
+                                </span>
+                            )}
+                        </span>
+                        {i === 0 && <div className="absolute bottom-[-1px] left-0 right-0 h-[4px] bg-accent rounded-t-lg" />}
+                    </button>
+                ))}
+            </div>
+
+            {/* 5. SEARCH & FILTER PORTAL */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <h3 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.3em]">Signature Registry: 124 Sites Found</h3>
+                <div className="flex items-center gap-4">
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/20 group-focus-within:text-accent transition-colors" size={16} />
+                        <input
+                            type="text"
+                            placeholder="Filter heritage sites..."
+                            className="bg-white border border-primary/5 rounded-xl pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all w-72 shadow-sm"
+                        />
+                    </div>
+                    <button className="flex items-center gap-2 px-5 py-3 bg-white border border-primary/5 rounded-xl text-primary/70 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-white transition-all shadow-sm">
+                        <Filter size={16} className="text-accent" />
+                        <span>Filter Registry</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* 6. DESTINATION GRID - PREMIUM STYLE */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pb-20">
+                {analytics.map((f, i) => (
+                    <div key={i} className="bg-white rounded-[24px] border border-primary/5 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group relative">
+                        {/* Status Overlays */}
+                        <div className="absolute top-4 right-4 z-10 flex gap-2">
+                            <span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-lg ${f.status === 'Capacity Full' ? 'bg-red-500 text-white' : f.status === 'Maintenance' ? 'bg-orange-500 text-white' : 'bg-green-500 text-white'}`}>
+                                {f.status}
+                            </span>
+                        </div>
+
+                        <div className="p-8">
+                            <div className="flex items-start justify-between mb-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 rounded-2xl overflow-hidden bg-primary/5 border border-primary/5 flex-shrink-0 relative group-hover:scale-110 transition-transform duration-500">
+                                        {f.image ? (
+                                            <Image src={f.image} alt={f.name} fill className="object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-primary text-accent">
+                                                <Compass size={24} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[15px] font-heading font-black text-primary group-hover:text-accent transition-colors uppercase leading-tight">
+                                            {f.name}
+                                        </h4>
+                                        <div className="flex items-center gap-2 mt-1.5">
+                                            <div className="flex gap-0.5">
+                                                {[1, 2, 3, 4, 5].map(s => <Star key={s} size={10} className={`${s <= Math.floor(f.rating) ? 'fill-accent text-accent' : 'text-primary/10'}`} />)}
+                                            </div>
+                                            <span className="text-[10px] font-black text-primary/40 uppercase tracking-widest">{f.rating} ({f.reviews})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex divide-x divide-primary/5 py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-xl px-4">
+                                <div className="flex-1">
+                                    <p className="text-[11px] font-black text-primary leading-tight uppercase tracking-tight">{f.location}</p>
+                                    <p className="text-[9px] font-black text-primary/20 mt-1 uppercase tracking-[0.2em]">MATALE REGION</p>
+                                </div>
+                                <div className="flex-1 pl-6">
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-[11px] font-black text-primary leading-tight uppercase">{f.revenue}</p>
+                                        <span className="text-[9px] font-black text-green-500">+8%</span>
+                                    </div>
+                                    <p className="text-[9px] font-black text-primary/20 mt-1 uppercase tracking-[0.2em]">MONTHLY REV</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-4 border border-primary/10 rounded-xl text-primary/60 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary/5 transition-all">
+                                    <Activity size={14} className="text-accent" />
+                                    <span>Analytics</span>
+                                </button>
+                                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary/95 transition-all shadow-lg shadow-primary/20">
+                                    <Plus size={14} className="text-accent" />
+                                    <span>Edit Site</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 ))}
             </div>
         </div>
