@@ -30,6 +30,10 @@ export default function AdminItineraries() {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
 
+    // Delete Confirmation state
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     // Form state
     const [formData, setFormData] = useState({
         duration: "3 DAYS",
@@ -127,19 +131,23 @@ export default function AdminItineraries() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!window.confirm("Are you sure you want to delete this route? This action cannot be undone.")) return;
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
 
         try {
             const { error } = await supabase
                 .from('itineraries')
                 .delete()
-                .eq('id', id);
+                .eq('id', deleteId);
 
             if (error) throw error;
             fetchItineraries();
         } catch (error: any) {
-            alert("Error deleting entry: " + error.message);
+            alert("Error deleting route: " + error.message);
+        } finally {
+            setIsDeleting(false);
+            setDeleteId(null);
         }
     };
 
@@ -178,7 +186,7 @@ export default function AdminItineraries() {
                 <div>
                     <h1 className="text-4xl font-bold text-primary tracking-tight uppercase">Route <span className="text-accent underline decoration-primary/10 underline-offset-[12px]">Planner</span></h1>
                     <div className="flex items-center gap-4 mt-4">
-                        <div className="bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 flex items-center gap-2">
+                        <div className="bg-primary/5 px-3 py-1.5 rounded-[8px] border border-primary/5 flex items-center gap-2">
                             <Map size={14} className="text-accent" />
                             <span className="text-xs font-bold text-primary uppercase tracking-wider">Live Itineraries</span>
                         </div>
@@ -187,7 +195,7 @@ export default function AdminItineraries() {
                 </div>
                 <button
                     onClick={() => { resetForm(); setIsModalOpen(true); }}
-                    className="bg-primary text-white px-8 py-4 rounded-[2px] font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:bg-black transition-all shadow-xl shadow-primary/20 group"
+                    className="bg-primary text-white px-8 py-4 rounded-[8px] font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:bg-black transition-all shadow-xl shadow-primary/20 group"
                 >
                     <Plus size={20} className="text-accent group-hover:scale-110 transition-transform" />
                     <span>Create New Route</span>
@@ -196,7 +204,7 @@ export default function AdminItineraries() {
 
             {/* Loading State */}
             {isLoading && (
-                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-[2px] border border-primary/5 animate-pulse">
+                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-[8px] border border-primary/5 animate-pulse">
                     <div className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin" />
                     <span className="text-xs font-bold text-primary/40 uppercase tracking-wider">Syncing Routes with Supabase...</span>
                 </div>
@@ -205,11 +213,11 @@ export default function AdminItineraries() {
             {/* Itineraries List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {dbItineraries.map((route, i) => (
-                    <div key={i} className="bg-white rounded-[2px] border border-primary/5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden group relative">
+                    <div key={i} className="bg-white rounded-[8px] border border-primary/5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden group relative">
                         <div className="p-8">
                             <div className="flex items-start justify-between mb-8">
                                 <div className="flex items-center gap-4">
-                                    <div className="relative w-14 h-14 rounded-[2px] overflow-hidden flex-shrink-0 border border-primary/5 bg-primary/5">
+                                    <div className="relative w-14 h-14 rounded-[8px] overflow-hidden flex-shrink-0 border border-primary/5 bg-primary/5">
                                         <Image src={route.image} alt={route.title} fill className="object-cover" />
                                     </div>
                                     <div>
@@ -224,7 +232,7 @@ export default function AdminItineraries() {
                                 </div>
                             </div>
 
-                            <div className="py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-[2px] px-4">
+                            <div className="py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-[8px] px-4">
                                 <div className="flex items-center gap-3">
                                     <MapPin size={12} className="text-accent" />
                                     <p className="text-xs font-bold text-primary leading-tight uppercase tracking-tight">{route.route}</p>
@@ -234,14 +242,14 @@ export default function AdminItineraries() {
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => handleEdit(route)}
-                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 border border-primary/10 rounded-[2px] text-primary/60 text-xs font-bold uppercase tracking-wider hover:bg-primary/5 transition-all"
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 border border-primary/10 rounded-[8px] text-primary/60 text-xs font-bold uppercase tracking-wider hover:bg-primary/5 transition-all"
                                 >
                                     <Edit2 size={14} className="text-accent" />
                                     <span>Edit</span>
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(route.id)}
-                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-primary text-white rounded-[2px] text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-lg shadow-primary/20 group"
+                                    onClick={() => setDeleteId(route.id)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-primary text-white rounded-[8px] text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-lg shadow-primary/20 group"
                                 >
                                     <Trash2 size={14} className="text-accent group-hover:scale-110 transition-transform" />
                                     <span>Delete</span>
@@ -251,6 +259,8 @@ export default function AdminItineraries() {
                     </div>
                 ))}
             </div>
+
+
 
             {/* CREATE MODAL */}
             <AnimatePresence>
@@ -267,15 +277,14 @@ export default function AdminItineraries() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            onClick={() => { setIsModalOpen(false); setEditingId(null); }}
-                            className="fixed inset-y-10 inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-[2px] shadow-2xl z-[110] overflow-hidden flex flex-col border border-primary/5"
+                            className="fixed inset-y-10 inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-[8px] shadow-2xl z-[110] overflow-hidden flex flex-col border border-primary/5"
                         >
                             <div className="p-8 border-b border-primary/5 flex items-center justify-between bg-[#FAF9F6]">
                                 <div>
                                     <h2 className="text-2xl font-bold text-primary uppercase tracking-tight">{editingId ? 'Edit' : 'New'} <span className="text-accent underline decoration-primary/10 underline-offset-8">Route Entry</span></h2>
                                     <p className="text-xs font-bold text-primary/20 uppercase tracking-widest mt-1">{editingId ? 'Refining Itinerary Path' : 'Expanding the Journey Collection'}</p>
                                 </div>
-                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="w-10 h-10 rounded-[2px] border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary hover:bg-white transition-all">
+                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="w-10 h-10 rounded-[8px] border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary hover:bg-white transition-all">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -291,7 +300,7 @@ export default function AdminItineraries() {
                                             onChange={handleImageChange}
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         />
-                                        <div className={`w-full h-48 rounded-[2px] border-2 border-dashed transition-all flex flex-col items-center justify-center gap-3 overflow-hidden ${imagePreview ? 'border-accent bg-accent/5' : 'border-primary/10 bg-[#FAF9F6] group-hover:border-accent/40'}`}>
+                                        <div className={`w-full h-48 rounded-[8px] border-2 border-dashed transition-all flex flex-col items-center justify-center gap-3 overflow-hidden ${imagePreview ? 'border-accent bg-accent/5' : 'border-primary/10 bg-[#FAF9F6] group-hover:border-accent/40'}`}>
                                             {imagePreview ? (
                                                 <Image src={imagePreview} alt="Preview" fill className="object-cover" />
                                             ) : (
@@ -318,7 +327,7 @@ export default function AdminItineraries() {
                                             onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                                             type="text"
                                             placeholder="e.g. 7 DAYS"
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -329,7 +338,7 @@ export default function AdminItineraries() {
                                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                             type="text"
                                             placeholder="e.g. The Blue Highlands"
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                 </div>
@@ -342,7 +351,7 @@ export default function AdminItineraries() {
                                         onChange={(e) => setFormData({ ...formData, route: e.target.value })}
                                         type="text"
                                         placeholder="e.g. Colombo → Kandy → Ella"
-                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                     />
                                 </div>
 
@@ -354,7 +363,7 @@ export default function AdminItineraries() {
                                         onChange={(e) => setFormData({ ...formData, activities: e.target.value })}
                                         type="text"
                                         placeholder="e.g. Whale Watching, Surfing, Cooking"
-                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                     />
                                 </div>
 
@@ -365,19 +374,74 @@ export default function AdminItineraries() {
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         rows={4}
-                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                     />
                                 </div>
                             </form>
 
                             <div className="p-8 border-t border-primary/5 bg-[#FAF9F6] flex gap-4">
-                                <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 border border-primary/5 rounded-[2px] text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:bg-white hover:text-primary transition-all">Cancel</button>
-                                <button onClick={handleSubmit} disabled={isSubmitting} className="flex-[2] py-4 bg-primary text-white rounded-[2px] text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
+                                <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 border border-primary/5 rounded-[8px] text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:bg-white hover:text-primary transition-all">Cancel</button>
+                                <button onClick={handleSubmit} disabled={isSubmitting} className="flex-[2] py-4 bg-primary text-white rounded-[8px] text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
                                     {isSubmitting ? <div className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin" /> : <><Check size={16} className="text-accent group-hover:scale-110 transition-transform" /><span>{editingId ? 'Update Route' : 'Authorize Route'}</span></>}
                                 </button>
                             </div>
                         </motion.div>
                     </>
+                )}
+            </AnimatePresence>
+
+            {/* PREMIUM DELETE CONFIRMATION MODAL */}
+            <AnimatePresence>
+                {deleteId && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setDeleteId(null)}
+                            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                            className="bg-white w-full max-w-lg rounded-[8px] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden relative"
+                        >
+                            <div className="p-12 text-center space-y-8">
+                                <div className="relative mx-auto w-24 h-24">
+                                    <div className="absolute inset-0 bg-red-500/10 rounded-full animate-ping" />
+                                    <div className="relative w-full h-full bg-red-50 rounded-full flex items-center justify-center text-red-500 shadow-xl shadow-red-500/10">
+                                        <Trash2 size={48} strokeWidth={1.5} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <h3 className="text-3xl font-bold text-primary uppercase tracking-tight">Erase Heritage Route</h3>
+                                    <p className="text-[11px] font-bold text-primary/40 uppercase tracking-widest leading-loose max-w-sm mx-auto">
+                                        You are about to permanently DELETE this journey from the map registry.
+                                        <br /><span className="text-red-500/60 text-[9px]">CAUTION: This cryptographic action is permanent.</span>
+                                    </p>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => setDeleteId(null)}
+                                        className="flex-1 px-8 py-5 border border-primary/5 rounded-[8px] text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary transition-all"
+                                    >
+                                        CANCEL
+                                    </button>
+                                    <button
+                                        onClick={handleDelete}
+                                        disabled={isDeleting}
+                                        className="flex-1 px-8 py-5 bg-red-600 text-white rounded-[8px] text-[10px] font-bold uppercase tracking-widest shadow-2xl shadow-red-600/30 hover:bg-black transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                    >
+                                        {isDeleting ? <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" /> : <Trash2 size={16} />}
+                                        <span>{isDeleting ? "DELETING..." : "DELETE"}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </div>

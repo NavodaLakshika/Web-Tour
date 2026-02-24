@@ -24,6 +24,7 @@ import {
     Map,
     Database,
     Settings,
+    Quote,
     LogOut as LogoutIcon,
     User as UserIcon
 } from "lucide-react";
@@ -155,10 +156,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     ]
                 },
                 { name: "Inquiries", href: "/admin/messages", icon: MessageSquare, badge: msgCount > 0 ? msgCount : undefined },
+                { name: "Guest Voices", href: "/admin/testimonials", icon: Quote },
                 { name: "Heritage Managers", href: "/admin/team", icon: Users },
                 { name: "Revenue", href: "/admin/payment", icon: Wallet },
                 { name: "My Profile", href: "/admin/profile", icon: User },
-                { name: "Portal Settings", href: "/admin/settings", icon: HelpCircle },
+                { name: "Management Terminal", href: "/admin/settings", icon: Settings },
             ]
         },
         {
@@ -186,7 +188,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Logo area */}
             <div className="flex items-center justify-between px-6 py-8 pb-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                    <div className="w-10 h-10 bg-primary rounded-[8px] flex items-center justify-center shadow-lg shadow-primary/20">
                         <Compass className="text-accent" size={20} />
                     </div>
                     <div className="flex flex-col">
@@ -209,7 +211,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <input
                         type="text"
                         placeholder="Search Portal..."
-                        className="w-full bg-white border border-primary/5 rounded-lg pl-9 pr-4 py-2 text-sm outline-none placeholder:text-primary/20 font-medium"
+                        className="w-full bg-white border border-primary/5 rounded-[8px] pl-9 pr-4 py-2 text-sm outline-none placeholder:text-primary/20 font-medium"
                     />
                 </div>
             </div>
@@ -224,7 +226,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 <div key={item.name}>
                                     <Link
                                         href={item.href}
-                                        className={`flex items-center gap-3 px-6 py-3 rounded-xl text-[14px] font-semibold transition-all ${pathname === item.href ? "text-primary bg-primary/5 shadow-sm border border-primary/5" : "text-primary/70 hover:text-primary hover:bg-primary/[0.03]"}`}
+                                        className={`flex items-center gap-3 px-6 py-3 rounded-[8px] text-[14px] font-semibold transition-all ${pathname === item.href ? "text-primary bg-primary/5 shadow-sm border border-primary/5" : "text-primary/70 hover:text-primary hover:bg-primary/[0.03]"}`}
                                     >
                                         <item.icon size={17} className={pathname === item.href ? "text-accent" : "text-primary/30"} />
                                         <span>{item.name}</span>
@@ -241,9 +243,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                         <div className="ml-11 mt-1.5 space-y-1">
                                             {item.subItems.map(sub => (
                                                 <Link key={sub.name} href="#" className="flex items-center justify-between py-1 group">
-                                                    <span className={`text-xs font-bold tracking-wide uppercase ${sub.active ? "text-accent bg-primary px-3 py-1.5 rounded-md shadow-md" : "text-primary/40 group-hover:text-primary/70 px-3 py-1.5 transition-colors"}`}>{sub.name}</span>
+                                                    <span className={`text-xs font-bold tracking-wide uppercase ${sub.active ? "text-accent bg-primary px-3 py-1.5 rounded-[8px] shadow-md" : "text-primary/40 group-hover:text-primary/70 px-3 py-1.5 transition-colors"}`}>{sub.name}</span>
                                                     {sub.badge && (
-                                                        <div className="mr-4 px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-[9px] font-bold text-accent">{sub.badge}</div>
+                                                        <div className="mr-4 px-2 py-0.5 rounded-[8px] bg-accent/10 border border-accent/20 text-[9px] font-bold text-accent">{sub.badge}</div>
                                                     )}
                                                     {sub.name === "Pending" && !sub.badge && <div className="w-1 h-1 rounded-full bg-accent mr-4" />}
                                                 </Link>
@@ -261,7 +263,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="px-2 pb-8">
                 <button
                     onClick={handleLogout}
-                    className="flex items-center gap-3 px-6 py-3 rounded-xl text-[14px] font-semibold text-primary/60 hover:text-red-600 hover:bg-red-50 transition-all w-full text-left"
+                    className="flex items-center gap-3 px-6 py-3 rounded-[8px] text-[14px] font-semibold text-primary/60 hover:text-red-600 hover:bg-red-50 transition-all w-full text-left"
                 >
                     <LogOut size={18} />
                     <span>Sign Out</span>
@@ -314,7 +316,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <header className="h-[72px] px-8 flex items-center bg-white border-b border-primary/5 z-40 shrink-0">
                     <button
                         onClick={() => setIsSidebarOpen(true)}
-                        className="lg:hidden p-2 -ml-2 mr-2 text-primary/50 hover:bg-primary/5 rounded-lg transition-all"
+                        className="lg:hidden p-2 -ml-2 mr-2 text-primary/50 hover:bg-primary/5 rounded-[8px] transition-all"
                     >
                         <Menu size={20} />
                     </button>
@@ -360,7 +362,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                             <Link
                                 href="/admin/team"
-                                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/10 hover:bg-primary/5 transition-all text-primary/70 text-[11px] font-black uppercase tracking-wider"
+                                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-[8px] border border-primary/10 hover:bg-primary/5 transition-all text-primary/70 text-[11px] font-black uppercase tracking-wider"
                             >
                                 <Users size={16} className="text-accent" />
                                 <span>Registry</span>
@@ -368,7 +370,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                             <Link
                                 href="/admin/destinations"
-                                className="bg-primary text-white p-2.5 sm:px-5 sm:py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all shadow-lg shadow-primary/20"
+                                className="bg-primary text-white p-2.5 sm:px-5 sm:py-2.5 rounded-[8px] font-black text-[11px] uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all shadow-lg shadow-primary/20"
                             >
                                 <Plus size={16} className="text-accent" />
                                 <span className="hidden sm:inline">Create Entry</span>
@@ -393,7 +395,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-primary/5 overflow-hidden z-50 py-2"
+                                                className="absolute right-0 mt-3 w-64 bg-white rounded-[8px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-primary/5 overflow-hidden z-50 py-2"
                                             >
                                                 <div className="px-6 py-4 border-b border-primary/5 bg-primary/[0.02]">
                                                     <p className="text-xs font-black text-primary uppercase tracking-tighter">{adminProfile.full_name}</p>
@@ -403,7 +405,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                     <Link
                                                         href="/admin/profile"
                                                         onClick={() => setIsProfileOpen(false)}
-                                                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-primary/60 hover:text-primary hover:bg-primary/5 transition-all"
+                                                        className="flex items-center gap-3 px-4 py-3 rounded-[8px] text-xs font-bold text-primary/60 hover:text-primary hover:bg-primary/5 transition-all"
                                                     >
                                                         <UserIcon size={16} className="text-accent" />
                                                         <span>Personnel Records</span>
@@ -411,7 +413,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                     <Link
                                                         href="/admin/settings"
                                                         onClick={() => setIsProfileOpen(false)}
-                                                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-primary/60 hover:text-primary hover:bg-primary/5 transition-all"
+                                                        className="flex items-center gap-3 px-4 py-3 rounded-[8px] text-xs font-bold text-primary/60 hover:text-primary hover:bg-primary/5 transition-all"
                                                     >
                                                         <Settings size={16} className="text-accent" />
                                                         <span>System Terminal</span>
@@ -419,7 +421,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                     <div className="h-px bg-primary/5 my-2 mx-4" />
                                                     <button
                                                         onClick={handleLogout}
-                                                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-red-500 hover:bg-red-50 transition-all w-full text-left"
+                                                        className="flex items-center gap-3 px-4 py-3 rounded-[8px] text-xs font-bold text-red-500 hover:bg-red-50 transition-all w-full text-left"
                                                     >
                                                         <LogoutIcon size={16} />
                                                         <span>Terminate Session</span>

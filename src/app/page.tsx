@@ -28,6 +28,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeCategory, setActiveCategory] = useState('All Wonders');
   const [liveDestinations, setLiveDestinations] = useState<any[]>([]);
+  const [liveExperiences, setLiveExperiences] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchLiveDestinations = async () => {
@@ -43,7 +44,19 @@ export default function Home() {
       }
     };
 
+    const fetchLiveExperiences = async () => {
+      const { data, error } = await supabase
+        .from('experiences')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setLiveExperiences(data);
+      }
+    };
+
     fetchLiveDestinations();
+    fetchLiveExperiences();
   }, []);
 
   const allDestinations = useMemo(() => {
@@ -81,7 +94,12 @@ export default function Home() {
   const [expCategory, setExpCategory] = useState('All');
   const expItemsPerPage = 6;
 
-  const filteredExperiences = experiences.filter(exp => {
+  const allExperiences = useMemo(() => {
+    // Priority to live experiences from DB
+    return liveExperiences.length > 0 ? liveExperiences : experiences;
+  }, [liveExperiences]);
+
+  const filteredExperiences = allExperiences.filter(exp => {
     if (expCategory === 'All') return true;
     return exp.category === expCategory;
   });

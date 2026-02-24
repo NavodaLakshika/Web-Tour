@@ -43,7 +43,7 @@ export default function TestDBPage() {
                 {/* 1. Status Card */}
                 <div className="bg-white p-8 rounded-[24px] border border-primary/5 shadow-xl shadow-primary/5">
                     <div className="flex items-center gap-4 mb-6">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${status === "success" ? "bg-green-500 text-white" :
+                        <div className={`w-12 h-12 rounded-[8px] flex items-center justify-center ${status === "success" ? "bg-green-500 text-white" :
                                 status === "error" ? "bg-red-500 text-white" : "bg-primary text-accent"
                             }`}>
                             {status === "loading" ? <Server className="animate-bounce" size={24} /> :
@@ -61,13 +61,13 @@ export default function TestDBPage() {
                     </div>
 
                     <div className="space-y-4">
-                        <div className="p-4 bg-[#FAF9F6] rounded-xl border border-primary/5">
+                        <div className="p-4 bg-[#FAF9F6] rounded-[8px] border border-primary/5">
                             <p className="text-[10px] font-black text-primary/20 uppercase tracking-widest mb-1">Bridge URL</p>
                             <p className="text-xs font-bold text-primary truncate">https://aykbufsdffuvvpjioylq.supabase.co</p>
                         </div>
 
                         {status === "error" && (
-                            <div className="p-4 bg-red-50 rounded-xl border border-red-100">
+                            <div className="p-4 bg-red-50 rounded-[8px] border border-red-100">
                                 <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Error Diagnostics</p>
                                 <p className="text-xs font-bold text-red-600">{errorMessage}</p>
                             </div>
@@ -76,7 +76,7 @@ export default function TestDBPage() {
                         <button
                             onClick={testConnection}
                             disabled={status === "loading"}
-                            className="w-full py-4 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary/95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                            className="w-full py-4 bg-primary text-white rounded-[8px] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary/95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
                         >
                             Reconnect to Portal
                         </button>
@@ -90,7 +90,7 @@ export default function TestDBPage() {
                         <h3 className="text-xl font-heading font-black text-primary uppercase">Raw Data Feed</h3>
                     </div>
 
-                    <div className="h-[200px] overflow-y-auto scrollbar-hide bg-[#FAF9F6] rounded-xl border border-primary/5 p-4 font-mono text-[10px] text-primary/60">
+                    <div className="h-[200px] overflow-y-auto scrollbar-hide bg-[#FAF9F6] rounded-[8px] border border-primary/5 p-4 font-mono text-[10px] text-primary/60">
                         {status === "loading" ? (
                             <div className="flex items-center justify-center h-full">Fetching packet details...</div>
                         ) : status === "success" ? (

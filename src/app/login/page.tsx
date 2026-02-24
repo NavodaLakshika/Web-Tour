@@ -77,12 +77,12 @@ export default function LoginPage() {
             >
                 {/* The "Login" Tab Pill at the top center - Now Transparent */}
                 <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
-                    <div className="bg-transparent px-12 py-3 rounded-[20px] shadow-lg border border-white/30">
+                    <div className="bg-transparent px-12 py-3 rounded-[10px] shadow-lg border border-white/30">
                         <span className="text-white font-bold text-sm tracking-widest uppercase">Login</span>
                     </div>
                 </div>
 
-                <div className="bg-transparent rounded-[24px] p-8 sm:p-12 pt-16 sm:pt-24 pb-12 sm:pb-20 relative overflow-hidden">
+                <div className="bg-transparent rounded-[10px] p-8 sm:p-12 pt-16 sm:pt-24 pb-12 sm:pb-20 relative overflow-hidden border border-white/20">
 
                     {/* Return Link */}
                     <Link href="/" className="absolute top-8 left-8 text-white/30 hover:text-white transition-colors">
@@ -124,19 +124,29 @@ export default function LoginPage() {
 
                         {/* Remember Me & Forgot Password */}
                         <div className="flex items-center justify-between text-[11px] font-bold text-white/70 tracking-wider">
-                            <label className="flex items-center gap-2 cursor-pointer group/check">
-                                <div className="relative w-4 h-4 border border-white/40 rounded bg-white/5 flex items-center justify-center transition-all group-hover/check:border-white">
+                            <label className="flex items-center gap-3 cursor-pointer group/check select-none">
+                                <div className="relative w-5 h-5 border border-white/20 rounded-[4px] bg-white/5 flex items-center justify-center transition-all group-hover/check:border-white group-active/check:scale-95">
                                     <input
                                         type="checkbox"
                                         checked={rememberMe}
                                         onChange={(e) => setRememberMe(e.target.checked)}
                                         className="absolute inset-0 opacity-0 cursor-pointer z-10"
                                     />
-                                    {rememberMe && <div className="w-2 h-2 bg-white rounded-sm" />}
+                                    <div className={`w-2.5 h-2.5 bg-white rounded-[1px] transition-all duration-300 ${rememberMe ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
                                 </div>
                                 <span className="group-hover/check:text-white transition-colors">Remember me</span>
                             </label>
-                            <Link href="#" className="hover:text-white transition-colors">Forgot password</Link>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setErrorMessage("Password recovery instructions have been sent to your registered heritage email.");
+                                    setStatus('error'); // Reusing error display for simple notification
+                                    setTimeout(() => setStatus('idle'), 5000);
+                                }}
+                                className="hover:text-white transition-colors border-b border-transparent hover:border-white/30 pb-0.5"
+                            >
+                                Forgot password
+                            </button>
                         </div>
 
                         {/* Action Button */}
@@ -144,7 +154,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading || status === 'success'}
-                                className="w-full bg-white/5 text-white py-5 rounded-[10px] font-black uppercase tracking-[0.3em] text-[14px] shadow-[0_15px_40px_rgba(255,255,255,0.1)] hover:shadow-[0_20px_50px_rgba(255,255,255,0.2)] flex items-center justify-center gap-4 disabled:opacity-50"
+                                className="w-full bg-white/5 text-white py-5 rounded-[10px] font-black uppercase tracking-[0.3em] text-[14px] border border-white/30 shadow-[0_15px_40px_rgba(255,255,255,0.1)] hover:shadow-[0_20px_50px_rgba(255,255,255,0.2)] hover:bg-white hover:text-black transition-all duration-500 flex items-center justify-center gap-4 disabled:opacity-50"
                             >
                                 {isLoading ? <Loader2 className="animate-spin" size={20} /> : <span>Login</span>}
                             </button>

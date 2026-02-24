@@ -138,7 +138,7 @@ export default function ProfilePage() {
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header / Hero Section */}
-            <div className="relative h-64 w-full rounded-[2px] overflow-hidden shadow-2xl group">
+            <div className="relative h-64 w-full rounded-[8px] overflow-hidden shadow-2xl group">
                 <Image
                     src="/images/nature.jpg"
                     alt="Cover"
@@ -150,7 +150,7 @@ export default function ProfilePage() {
                 <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between">
                     <div className="flex items-center gap-6">
                         <div className="relative">
-                            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-[2px] border-4 border-white overflow-hidden shadow-2xl">
+                            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-[8px] border-4 border-white overflow-hidden shadow-2xl">
                                 <Image src={profile.avatar} alt="Avatar" fill className="object-cover" />
                                 {isUploading && (
                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                             <button
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={isUploading}
-                                className="absolute -bottom-2 -right-2 w-10 h-10 bg-accent rounded-[2px] flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-all border-4 border-white disabled:opacity-50"
+                                className="absolute -bottom-2 -right-2 w-10 h-10 bg-accent rounded-[8px] flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-all border-4 border-white disabled:opacity-50"
                             >
                                 <Camera size={18} />
                             </button>
@@ -182,7 +182,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex bg-white rounded-[2px] border border-primary/5 p-1.5 shadow-sm overflow-x-auto scrollbar-hide">
+            <div className="flex bg-white rounded-[8px] border border-primary/5 p-1.5 shadow-sm overflow-x-auto scrollbar-hide">
                 {[
                     { id: 'identity', label: 'Identity', icon: User },
                     { id: 'appearance', label: 'Dashboard Theme', icon: Palette },
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
-                        className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-[2px] text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-primary text-white shadow-lg' : 'text-primary/40 hover:bg-primary/5 hover:text-primary'}`}
+                        className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-[8px] text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-primary text-white shadow-lg' : 'text-primary/40 hover:bg-primary/5 hover:text-primary'}`}
                     >
                         <tab.icon size={14} className={activeTab === tab.id ? 'text-accent' : ''} />
                         <span className="hidden sm:inline">{tab.label}</span>
@@ -202,7 +202,7 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Content Area */}
                 <div className="lg:col-span-8">
-                    <div className="bg-white rounded-[2px] border border-primary/5 shadow-sm overflow-hidden p-10 md:p-14">
+                    <div className="bg-white rounded-[8px] border border-primary/5 shadow-sm overflow-hidden p-10 md:p-14">
                         <AnimatePresence mode="wait">
                             {activeTab === 'identity' && (
                                 <motion.div
@@ -227,7 +227,7 @@ export default function ProfilePage() {
                                                         type="text"
                                                         value={profile.full_name}
                                                         onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
                                                     />
                                                 </div>
                                             </div>
@@ -239,7 +239,7 @@ export default function ProfilePage() {
                                                         type="text"
                                                         value={profile.role}
                                                         onChange={(e) => setProfile({ ...profile, role: e.target.value })}
-                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
                                                     />
                                                 </div>
                                             </div>
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                                                 value={profile.bio}
                                                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                                                 rows={4}
-                                                className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all resize-none"
+                                                className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all resize-none"
                                             />
                                         </div>
 
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                                                         type="text"
                                                         value={profile.location}
                                                         onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
                                                     />
                                                 </div>
                                             </div>
@@ -276,7 +276,7 @@ export default function ProfilePage() {
                                                         type="text"
                                                         value={profile.website}
                                                         onChange={(e) => setProfile({ ...profile, website: e.target.value })}
-                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
+                                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] pl-14 pr-6 py-4 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-accent/10 focus:border-accent transition-all"
                                                     />
                                                 </div>
                                             </div>
@@ -306,9 +306,9 @@ export default function ProfilePage() {
                                                     <button
                                                         key={color.name}
                                                         onClick={() => setProfile({ ...profile, accent_color: color.value })}
-                                                        className={`flex flex-col gap-3 p-4 rounded-[2px] border transition-all ${profile.accent_color === color.value ? 'bg-primary border-primary shadow-xl shadow-primary/20 scale-105' : 'bg-[#FAF9F6] border-primary/5 hover:border-primary/20'}`}
+                                                        className={`flex flex-col gap-3 p-4 rounded-[8px] border transition-all ${profile.accent_color === color.value ? 'bg-primary border-primary shadow-xl shadow-primary/20 scale-105' : 'bg-[#FAF9F6] border-primary/5 hover:border-primary/20'}`}
                                                     >
-                                                        <div className="w-full h-12 rounded-[2px] shadow-inner" style={{ backgroundColor: color.value }} />
+                                                        <div className="w-full h-12 rounded-[8px] shadow-inner" style={{ backgroundColor: color.value }} />
                                                         <div className="flex items-center justify-between px-1">
                                                             <span className={`text-[9px] font-bold uppercase tracking-widest ${profile.accent_color === color.value ? 'text-white' : 'text-primary'}`}>{color.name}</span>
                                                             {profile.accent_color === color.value && <CheckCircle2 size={12} className="text-accent" />}
@@ -318,9 +318,9 @@ export default function ProfilePage() {
                                             </div>
                                         </div>
 
-                                        <div className="p-8 bg-accent/5 rounded-[2px] border border-accent/10 flex items-center justify-between gap-8">
+                                        <div className="p-8 bg-accent/5 rounded-[8px] border border-accent/10 flex items-center justify-between gap-8">
                                             <div className="flex items-center gap-6">
-                                                <div className="w-16 h-16 bg-white rounded-[2px] shadow-sm flex items-center justify-center text-accent">
+                                                <div className="w-16 h-16 bg-white rounded-[8px] shadow-sm flex items-center justify-center text-accent">
                                                     <Layout size={32} />
                                                 </div>
                                                 <div>
@@ -328,7 +328,7 @@ export default function ProfilePage() {
                                                     <p className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.2em] mt-1">Light Atmospheric (Default)</p>
                                                 </div>
                                             </div>
-                                            <button className="px-6 py-3 bg-white border border-primary/5 rounded-[2px] text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary transition-all">Change Mode</button>
+                                            <button className="px-6 py-3 bg-white border border-primary/5 rounded-[8px] text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary transition-all">Change Mode</button>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -353,9 +353,9 @@ export default function ProfilePage() {
                                             { label: "Notification Transmissions", desc: "Receive alerts for new inquiries", icon: Bell, active: true },
                                             { label: "Global Activity Log", desc: "Monitor portal login history", icon: LayoutDashboard, active: false }
                                         ].map((item, i) => (
-                                            <div key={i} className="flex items-center justify-between p-6 rounded-[2px] border border-primary/5 hover:bg-[#FAF9F6] transition-colors group">
+                                            <div key={i} className="flex items-center justify-between p-6 rounded-[8px] border border-primary/5 hover:bg-[#FAF9F6] transition-colors group">
                                                 <div className="flex items-center gap-5">
-                                                    <div className="w-12 h-12 bg-primary/5 rounded-[2px] flex items-center justify-center text-primary/30 group-hover:text-accent transition-colors">
+                                                    <div className="w-12 h-12 bg-primary/5 rounded-[8px] flex items-center justify-center text-primary/30 group-hover:text-accent transition-colors">
                                                         <item.icon size={20} />
                                                     </div>
                                                     <div>
@@ -393,7 +393,7 @@ export default function ProfilePage() {
                             <button
                                 onClick={handleSave}
                                 disabled={isLoading}
-                                className="bg-primary hover:bg-[#2A4D3F] text-white px-12 py-5 rounded-[2px] font-black uppercase tracking-widest text-[11px] transition-all flex items-center gap-4 shadow-xl shadow-primary/20 disabled:opacity-50"
+                                className="bg-primary hover:bg-[#2A4D3F] text-white px-12 py-5 rounded-[8px] font-black uppercase tracking-widest text-[11px] transition-all flex items-center gap-4 shadow-xl shadow-primary/20 disabled:opacity-50"
                             >
                                 {isLoading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
                                 <span>Save Changes</span>
@@ -405,7 +405,7 @@ export default function ProfilePage() {
                 {/* Right Sidebar - Socials & Quick Stats */}
                 <div className="lg:col-span-4 space-y-8">
                     {/* Social Hub */}
-                    <div className="bg-white rounded-[2px] border border-primary/5 shadow-sm p-8 space-y-8">
+                    <div className="bg-white rounded-[8px] border border-primary/5 shadow-sm p-8 space-y-8">
                         <h4 className="text-[11px] font-bold text-primary/30 uppercase tracking-[0.3em]">Signature Domains</h4>
                         <div className="space-y-4">
                             {[
@@ -415,7 +415,7 @@ export default function ProfilePage() {
                             ].map((social) => (
                                 <div key={social.name} className="flex items-center justify-between group cursor-pointer">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-[#FAF9F6] rounded-[2px] flex items-center justify-center text-primary/20 group-hover:text-accent group-hover:bg-primary transition-all">
+                                        <div className="w-10 h-10 bg-[#FAF9F6] rounded-[8px] flex items-center justify-center text-primary/20 group-hover:text-accent group-hover:bg-primary transition-all">
                                             <social.icon size={16} />
                                         </div>
                                         <div>
@@ -430,13 +430,13 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Registry Status */}
-                    <div className="bg-primary rounded-[2px] border border-white/10 shadow-2xl p-8 text-white relative overflow-hidden">
+                    <div className="bg-primary rounded-[8px] border border-white/10 shadow-2xl p-8 text-white relative overflow-hidden">
                         <div className="absolute -right-4 -top-4 w-32 h-32 bg-accent/20 rounded-full blur-3xl" />
                         <h4 className="text-[11px] font-bold text-white/30 uppercase tracking-[0.3em] mb-8">Heritage Authority</h4>
 
                         <div className="space-y-6">
                             <div className="flex items-center gap-5">
-                                <div className="w-12 h-12 bg-white/10 rounded-[2px] flex items-center justify-center text-accent">
+                                <div className="w-12 h-12 bg-white/10 rounded-[8px] flex items-center justify-center text-accent">
                                     <MapPin size={24} />
                                 </div>
                                 <div>

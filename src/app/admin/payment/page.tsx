@@ -50,11 +50,11 @@ export default function RevenuePage() {
                     <p className="text-primary/40 text-xs font-bold uppercase tracking-[0.2em] mt-4">Heritage Financial Records • Global Operations</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="flex items-center gap-2 px-6 py-3 bg-white border border-primary/5 rounded-xl text-primary/60 text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-all shadow-sm">
+                    <button className="flex items-center gap-2 px-6 py-3 bg-white border border-primary/5 rounded-[8px] text-primary/60 text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-all shadow-sm">
                         <Download size={16} />
                         <span>Export CSV</span>
                     </button>
-                    <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-lg shadow-primary/20">
+                    <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-[8px] text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-lg shadow-primary/20">
                         <Wallet size={16} className="text-accent" />
                         <span>Payout Now</span>
                     </button>
@@ -69,10 +69,10 @@ export default function RevenuePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
-                        className="bg-white p-6 rounded-2xl border border-primary/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group"
+                        className="bg-white p-6 rounded-[8px] border border-primary/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group"
                     >
                         <div className="flex justify-between items-start mb-4">
-                            <div className="p-3 bg-primary/5 rounded-xl text-accent group-hover:bg-primary group-hover:text-accent transition-all duration-500">
+                            <div className="p-3 bg-primary/5 rounded-[8px] text-accent group-hover:bg-primary group-hover:text-accent transition-all duration-500">
                                 <stat.icon size={20} />
                             </div>
                             <div className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-wider ${stat.trendingUp ? 'text-green-500' : 'text-red-500'}`}>
@@ -87,7 +87,7 @@ export default function RevenuePage() {
             </div>
 
             {/* Revenue Trends Chart Placeholder */}
-            <div className="bg-white p-8 rounded-2xl border border-primary/5 shadow-sm relative overflow-hidden group">
+            <div className="bg-white p-8 rounded-[8px] border border-primary/5 shadow-sm relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 -mr-32 -mt-32 rounded-full blur-3xl" />
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 relative z-10">
@@ -95,11 +95,11 @@ export default function RevenuePage() {
                         <h3 className="text-lg font-bold text-primary uppercase tracking-tight">Revenue Trajectory</h3>
                         <p className="text-[10px] font-bold text-primary/20 uppercase tracking-[0.2em] mt-1">Growth progression over time</p>
                     </div>
-                    <div className="flex items-center gap-2 bg-[#FAF9F6] p-1 rounded-xl border border-primary/5">
+                    <div className="flex items-center gap-2 bg-[#FAF9F6] p-1 rounded-[8px] border border-primary/5">
                         {["Day", "Week", "Month", "Year"].map((range) => (
                             <button
                                 key={range}
-                                className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${range === "Month" ? 'bg-primary text-white shadow-lg' : 'text-primary/30 hover:text-primary'}`}
+                                className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-[8px] transition-all ${range === "Month" ? 'bg-primary text-white shadow-lg' : 'text-primary/30 hover:text-primary'}`}
                             >
                                 {range}
                             </button>
@@ -117,7 +117,7 @@ export default function RevenuePage() {
                                 transition={{ delay: i * 0.05, duration: 1 }}
                                 className={`w-full max-w-[40px] rounded-t-lg transition-all duration-500 relative cursor-pointer ${i === 10 ? 'bg-accent' : 'bg-primary/10 group-hover/bar:bg-primary'}`}
                             >
-                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-primary text-white text-[9px] font-black py-1 px-2 rounded-md transition-transform group-hover/bar:-translate-y-1">
+                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity bg-primary text-white text-[9px] font-black py-1 px-2 rounded-[8px] transition-transform group-hover/bar:-translate-y-1">
                                     ${(val * 125).toLocaleString()}
                                 </div>
                             </motion.div>
@@ -142,13 +142,13 @@ export default function RevenuePage() {
                             <input
                                 type="text"
                                 placeholder="Search Ledger..."
-                                className="bg-white border border-primary/5 rounded-xl pl-9 pr-4 py-2 text-xs font-bold outline-none shadow-sm focus:border-accent transition-all"
+                                className="bg-white border border-primary/5 rounded-[8px] pl-9 pr-4 py-2 text-xs font-bold outline-none shadow-sm focus:border-accent transition-all"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden shadow-sm">
+                <div className="bg-white border border-primary/5 rounded-[8px] overflow-hidden shadow-sm">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-[#FAF9F6] border-b border-primary/5">
@@ -201,10 +201,10 @@ export default function RevenuePage() {
                 <div className="flex items-center justify-between pt-2">
                     <p className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">Showing 6 of 142 transmissions</p>
                     <div className="flex items-center gap-2">
-                        <button className="p-2 border border-primary/5 rounded-lg text-primary/20 hover:text-primary transition-all shadow-sm bg-white cursor-not-allowed"><ChevronRight className="rotate-180" size={16} /></button>
-                        <button className="px-4 py-2 border border-primary/5 rounded-lg text-xs font-bold bg-primary text-white shadow-lg shadow-primary/20">1</button>
-                        <button className="px-4 py-2 border border-primary/5 rounded-lg text-xs font-bold text-primary/40 hover:bg-primary/5 transition-all bg-white">2</button>
-                        <button className="p-2 border border-primary/5 rounded-lg text-primary/20 hover:text-primary transition-all shadow-sm bg-white"><ChevronRight size={16} /></button>
+                        <button className="p-2 border border-primary/5 rounded-[8px] text-primary/20 hover:text-primary transition-all shadow-sm bg-white cursor-not-allowed"><ChevronRight className="rotate-180" size={16} /></button>
+                        <button className="px-4 py-2 border border-primary/5 rounded-[8px] text-xs font-bold bg-primary text-white shadow-lg shadow-primary/20">1</button>
+                        <button className="px-4 py-2 border border-primary/5 rounded-[8px] text-xs font-bold text-primary/40 hover:bg-primary/5 transition-all bg-white">2</button>
+                        <button className="p-2 border border-primary/5 rounded-[8px] text-primary/20 hover:text-primary transition-all shadow-sm bg-white"><ChevronRight size={16} /></button>
                     </div>
                 </div>
             </div>
