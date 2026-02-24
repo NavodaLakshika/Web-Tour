@@ -75,7 +75,7 @@ export default function RegistryHelp() {
                 <div>
                     <h1 className="text-4xl font-bold text-primary tracking-tight uppercase">Registry <span className="text-accent underline decoration-primary/10 underline-offset-[12px]">Help Center</span></h1>
                     <div className="flex items-center gap-4 mt-4">
-                        <div className="bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 flex items-center gap-2">
+                        <div className="bg-primary/5 px-3 py-1.5 rounded-[8px] border border-primary/5 flex items-center gap-2">
                             <Book size={14} className="text-accent" />
                             <span className="text-xs font-bold text-primary uppercase tracking-wider">Internal Documentation</span>
                         </div>
@@ -90,7 +90,7 @@ export default function RegistryHelp() {
                 <input
                     type="text"
                     placeholder="Search manuals, guides, or system logs..."
-                    className="w-full bg-white border border-primary/5 rounded-[2px] pl-12 pr-6 py-5 text-sm font-medium outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent/30 transition-all shadow-md"
+                    className="w-full bg-white border border-primary/5 rounded-[8px] pl-12 pr-6 py-5 text-sm font-medium outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent/30 transition-all shadow-md"
                 />
             </div>
 
@@ -102,9 +102,9 @@ export default function RegistryHelp() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
-                        className="bg-white p-6 rounded-[2px] border border-primary/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+                        className="bg-white p-6 rounded-[8px] border border-primary/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
                     >
-                        <div className={`w-12 h-12 ${cat.bg} ${cat.color} rounded-[2px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                        <div className={`w-12 h-12 ${cat.bg} ${cat.color} rounded-[8px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                             <cat.icon size={24} />
                         </div>
                         <h4 className="text-sm font-bold text-primary uppercase tracking-tight mb-2">{cat.title}</h4>
@@ -125,7 +125,7 @@ export default function RegistryHelp() {
                     <h3 className="text-xs font-bold text-primary/30 uppercase tracking-[0.2em] mb-4">Registry Frequency Asked Questions</h3>
                     <div className="grid grid-cols-1 gap-4">
                         {faqs.map((faq, i) => (
-                            <div key={i} className="bg-white p-6 rounded-[2px] border border-primary/5 shadow-sm">
+                            <div key={i} className="bg-white p-6 rounded-[8px] border border-primary/5 shadow-sm">
                                 <h4 className="text-sm font-bold text-primary mb-3 flex items-start gap-3">
                                     <span className="text-accent">Q:</span>
                                     {faq.q}
@@ -141,7 +141,7 @@ export default function RegistryHelp() {
                 {/* Status & Support Card */}
                 <div className="space-y-6">
                     <h3 className="text-xs font-bold text-primary/30 uppercase tracking-[0.2em] mb-4">System Status</h3>
-                    <div className="bg-primary text-white p-8 rounded-[2px] shadow-2xl relative overflow-hidden">
+                    <div className="bg-primary text-white p-8 rounded-[8px] shadow-2xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
                             <Settings size={120} />
                         </div>
@@ -160,11 +160,11 @@ export default function RegistryHelp() {
                             </div>
 
                             <div className="space-y-3">
-                                <button className="w-full bg-white text-primary py-3 rounded-[2px] text-[10px] font-bold uppercase tracking-widest hover:bg-accent hover:text-white transition-all flex items-center justify-center gap-2 shadow-xl shadow-black/20">
+                                <button className="w-full bg-white text-primary py-3 rounded-[8px] text-[10px] font-bold uppercase tracking-widest hover:bg-accent hover:text-white transition-all flex items-center justify-center gap-2 shadow-xl shadow-black/20">
                                     <Mail size={14} />
                                     <span>Open Support Ticket</span>
                                 </button>
-                                <button className="w-full bg-white/5 border border-white/10 text-white py-3 rounded-[2px] text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                                <button className="w-full bg-white/5 border border-white/10 text-white py-3 rounded-[8px] text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
                                     <AlertCircle size={14} className="text-accent" />
                                     <span>Emergency Protocols</span>
                                 </button>
@@ -184,9 +184,9 @@ export default function RegistryHelp() {
                     </div>
 
                     {/* Documentation Link */}
-                    <div className="bg-accent/10 border border-accent/20 p-6 rounded-[2px] flex items-center justify-between group cursor-pointer hover:bg-accent/20 transition-all">
+                    <div className="bg-accent/10 border border-accent/20 p-6 rounded-[8px] flex items-center justify-between group cursor-pointer hover:bg-accent/20 transition-all">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-accent rounded-[2px] flex items-center justify-center text-primary shadow-lg shadow-accent/20">
+                            <div className="w-10 h-10 bg-accent rounded-[8px] flex items-center justify-center text-primary shadow-lg shadow-accent/20">
                                 <CheckCircle size={20} />
                             </div>
                             <div>

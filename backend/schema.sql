@@ -108,3 +108,28 @@ CREATE POLICY "Admin All Contact" ON contact_messages FOR ALL USING (true);
 ALTER TABLE newsletter_subscriptions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anon Insert Newsletter" ON newsletter_subscriptions FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admin All Newsletter" ON newsletter_subscriptions FOR ALL USING (true);
+
+-- 8. TESTIMONIALS TABLE
+CREATE TABLE IF NOT EXISTS testimonials (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name TEXT NOT NULL,
+    role TEXT,
+    text TEXT NOT NULL,
+    location TEXT,
+    rating INTEGER DEFAULT 5,
+    image TEXT,
+    status TEXT DEFAULT 'pending', -- pending, published, hidden
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Testimonials: Public read (only published), Admin read/write, Public insert (as pending)
+ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public Read Published Testimonials" ON testimonials 
+FOR SELECT USING (status = 'published');
+
+CREATE POLICY "Public Insert Testimonials" ON testimonials 
+FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Admin All Testimonials" ON testimonials 
+FOR ALL USING (true);

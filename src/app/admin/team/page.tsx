@@ -215,7 +215,7 @@ export default function HeritageManagers() {
                 <div>
                     <h1 className="text-4xl font-bold text-primary tracking-tight uppercase">Heritage <span className="text-accent underline decoration-primary/10 underline-offset-[12px]">Managers</span></h1>
                     <div className="flex items-center gap-4 mt-4">
-                        <div className="bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 flex items-center gap-2">
+                        <div className="bg-primary/5 px-3 py-1.5 rounded-[8px] border border-primary/5 flex items-center gap-2">
                             <Users size={14} className="text-accent" />
                             <span className="text-xs font-bold text-primary uppercase tracking-wider">Administrative Team</span>
                         </div>
@@ -224,7 +224,7 @@ export default function HeritageManagers() {
                 </div>
                 <button
                     onClick={() => { resetForm(); setIsModalOpen(true); }}
-                    className="bg-primary text-white px-8 py-4 rounded-[2px] font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:bg-black transition-all shadow-xl shadow-primary/20 group"
+                    className="bg-primary text-white px-8 py-4 rounded-[8px] font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:bg-black transition-all shadow-xl shadow-primary/20 group"
                 >
                     <UserPlus size={20} className="text-accent group-hover:scale-110 transition-transform" />
                     <span>Onboard Manager</span>
@@ -241,10 +241,10 @@ export default function HeritageManagers() {
                             placeholder="Find managers by name, role or region..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-white border border-primary/5 rounded-[2px] pl-10 pr-4 py-3.5 text-sm font-medium outline-none focus:ring-2 focus:ring-accent/20 transition-all w-full"
+                            className="bg-white border border-primary/5 rounded-[8px] pl-10 pr-4 py-3.5 text-sm font-medium outline-none focus:ring-2 focus:ring-accent/20 transition-all w-full"
                         />
                     </div>
-                    <button className="flex items-center gap-2 px-5 py-3.5 bg-white border border-primary/5 rounded-[2px] text-primary/70 text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-all shadow-sm">
+                    <button className="flex items-center gap-2 px-5 py-3.5 bg-white border border-primary/5 rounded-[8px] text-primary/70 text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-all shadow-sm">
                         <Filter size={16} className="text-accent" />
                         <span>Filter Roles</span>
                     </button>
@@ -259,12 +259,12 @@ export default function HeritageManagers() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className="bg-white rounded-[2px] border border-primary/5 shadow-sm hover:shadow-xl transition-all group overflow-hidden"
+                        className="bg-white rounded-[8px] border border-primary/5 shadow-sm hover:shadow-xl transition-all group overflow-hidden"
                     >
                         <div className="p-8">
                             <div className="flex items-start justify-between mb-8">
                                 <div className="flex items-center gap-6">
-                                    <div className="relative w-24 h-24 rounded-[2px] overflow-hidden border border-primary/5 bg-primary/5 group-hover:scale-105 transition-transform duration-500">
+                                    <div className="relative w-24 h-24 rounded-[8px] overflow-hidden border border-primary/5 bg-primary/5 group-hover:scale-105 transition-transform duration-500">
                                         <Image src={m.image} alt={m.name} fill className="object-cover" />
                                     </div>
                                     <div className="space-y-2">
@@ -281,19 +281,19 @@ export default function HeritageManagers() {
                                 </div>
                                 <button
                                     onClick={() => handleEdit(m)}
-                                    className="p-2 text-primary/20 hover:text-accent hover:bg-primary/5 rounded-[2px] transition-all"
+                                    className="p-2 text-primary/20 hover:text-accent hover:bg-primary/5 rounded-[8px] transition-all"
                                 >
                                     <MoreVertical size={20} />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(m.id)}
-                                    className="p-2 text-primary/20 hover:text-red-500 hover:bg-red-50 rounded-[2px] transition-all"
+                                    className="p-2 text-primary/20 hover:text-red-500 hover:bg-red-50 rounded-[8px] transition-all"
                                 >
                                     <Trash2 size={20} />
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6 py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-[2px] px-6">
+                            <div className="grid grid-cols-2 gap-6 py-6 border-y border-primary/5 mb-8 bg-[#FAF9F6]/50 rounded-[8px] px-6">
                                 <div className="space-y-1">
                                     <p className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">Office Location</p>
                                     <div className="flex items-center gap-2">
@@ -313,20 +313,20 @@ export default function HeritageManagers() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-3 text-primary/60 hover:text-primary transition-colors cursor-pointer group/link">
-                                        <div className="w-8 h-8 rounded-[2px] bg-primary/5 flex items-center justify-center group-hover/link:bg-accent/10 group-hover/link:text-accent transition-all">
+                                        <div className="w-8 h-8 rounded-[8px] bg-primary/5 flex items-center justify-center group-hover/link:bg-accent/10 group-hover/link:text-accent transition-all">
                                             <Mail size={14} />
                                         </div>
                                         <span className="text-xs font-semibold">{m.email}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-primary/60 hover:text-primary transition-colors cursor-pointer group/link">
-                                        <div className="w-8 h-8 rounded-[2px] bg-primary/5 flex items-center justify-center group-hover/link:bg-accent/10 group-hover/link:text-accent transition-all">
+                                        <div className="w-8 h-8 rounded-[8px] bg-primary/5 flex items-center justify-center group-hover/link:bg-accent/10 group-hover/link:text-accent transition-all">
                                             <Phone size={14} />
                                         </div>
                                         <span className="text-xs font-semibold">{m.phone}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-end justify-end">
-                                    <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-[2px] text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-primary/10">
+                                    <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-[8px] text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-primary/10">
                                         <span>View Activity</span>
                                         <ArrowUpRight size={14} className="text-accent" />
                                     </button>
@@ -364,14 +364,14 @@ export default function HeritageManagers() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="fixed inset-y-10 inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-[2px] shadow-2xl z-[110] overflow-hidden flex flex-col border border-primary/5"
+                            className="fixed inset-y-10 inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] bg-white rounded-[8px] shadow-2xl z-[110] overflow-hidden flex flex-col border border-primary/5"
                         >
                             <div className="p-8 border-b border-primary/5 flex items-center justify-between bg-[#FAF9F6]">
                                 <div>
                                     <h2 className="text-2xl font-bold text-primary uppercase tracking-tight">{editingId ? 'Modify' : 'Onboard'} <span className="text-accent underline decoration-primary/10 underline-offset-8">Personnel</span></h2>
                                     <p className="text-xs font-bold text-primary/20 uppercase tracking-widest mt-1">Global Heritage Management Registry</p>
                                 </div>
-                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="w-10 h-10 rounded-[2px] border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary hover:bg-white transition-all">
+                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="w-10 h-10 rounded-[8px] border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary hover:bg-white transition-all">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -383,7 +383,7 @@ export default function HeritageManagers() {
                                         <input
                                             required value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -391,7 +391,7 @@ export default function HeritageManagers() {
                                         <input
                                             required value={formData.role}
                                             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                 </div>
@@ -401,7 +401,7 @@ export default function HeritageManagers() {
                                         <input
                                             required type="email" value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -409,7 +409,7 @@ export default function HeritageManagers() {
                                         <input
                                             required value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                         />
                                     </div>
                                 </div>
@@ -418,7 +418,7 @@ export default function HeritageManagers() {
                                     <input
                                         required value={formData.location}
                                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
+                                        className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none focus:border-accent/40 transition-all"
                                     />
                                 </div>
                                 <div className="grid grid-cols-3 gap-6">
@@ -427,7 +427,7 @@ export default function HeritageManagers() {
                                         <select
                                             value={formData.level}
                                             onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none appearance-none cursor-pointer"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none appearance-none cursor-pointer"
                                         >
                                             {["Junior", "Mid Level", "Senior Level", "Expert"].map(l => <option key={l} value={l}>{l}</option>)}
                                         </select>
@@ -437,7 +437,7 @@ export default function HeritageManagers() {
                                         <input
                                             type="number" value={formData.sites}
                                             onChange={(e) => setFormData({ ...formData, sites: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none transition-all"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -445,7 +445,7 @@ export default function HeritageManagers() {
                                         <select
                                             value={formData.status}
                                             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[2px] px-5 py-3 text-xs font-bold outline-none appearance-none cursor-pointer"
+                                            className="w-full bg-[#FAF9F6] border border-primary/5 rounded-[8px] px-5 py-3 text-xs font-bold outline-none appearance-none cursor-pointer"
                                         >
                                             <option value="Active">Active</option>
                                             <option value="On Leave">On Leave</option>
@@ -456,8 +456,8 @@ export default function HeritageManagers() {
                             </form>
 
                             <div className="p-8 border-t border-primary/5 bg-[#FAF9F6] flex gap-4">
-                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="flex-1 py-4 border border-primary/5 rounded-[2px] text-xs font-bold uppercase tracking-widest text-primary/40">Cancel</button>
-                                <button onClick={handleSubmit} disabled={isSubmitting} className="flex-[2] py-4 bg-primary text-white rounded-[2px] text-xs font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
+                                <button onClick={() => { setIsModalOpen(false); setEditingId(null); }} className="flex-1 py-4 border border-primary/5 rounded-[8px] text-xs font-bold uppercase tracking-widest text-primary/40">Cancel</button>
+                                <button onClick={handleSubmit} disabled={isSubmitting} className="flex-[2] py-4 bg-primary text-white rounded-[8px] text-xs font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
                                     {isSubmitting ? <div className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin" /> : <><BadgeCheck size={16} className="text-accent group-hover:scale-110 transition-transform" /><span>{editingId ? 'Authorize Update' : 'Confirm Onboarding'}</span></>}
                                 </button>
                             </div>
