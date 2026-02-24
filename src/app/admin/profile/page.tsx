@@ -9,6 +9,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import { useRef } from "react";
 
 const colorOptions = [
     { name: "Elephant Gold", value: "#D4AF37" },
@@ -21,8 +22,10 @@ const colorOptions = [
 
 export default function ProfilePage() {
     const [isLoading, setIsLoading] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [activeTab, setActiveTab] = useState<'identity' | 'appearance' | 'account'>('identity');
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Profile State
     const [profile, setProfile] = useState({
@@ -40,41 +43,96 @@ export default function ProfilePage() {
         const fetchUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
+                const meta = user.user_metadata || {};
                 setProfile(prev => ({
                     ...prev,
                     email: user.email || "",
-                    full_name: user.user_metadata?.full_name || prev.full_name
+                    full_name: meta.full_name || prev.full_name,
+                    role: meta.role || prev.role,
+                    bio: meta.bio || prev.bio,
+                    avatar: meta.avatar || prev.avatar,
+                    location: meta.location || prev.location,
+                    website: meta.website || prev.website,
+                    accent_color: meta.accent_color || prev.accent_color
                 }));
             }
         };
         fetchUser();
 
-        // Load saved theme color
+        // Load saved theme color (fallback to localStorage if not in meta)
         const savedColor = localStorage.getItem('admin_accent_color');
         if (savedColor) {
             setProfile(prev => ({ ...prev, accent_color: savedColor }));
         }
     }, []);
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `avatars/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('media')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('media')
+                .getPublicUrl(filePath);
+
+            setProfile(prev => ({ ...prev, avatar: publicUrl }));
+            setStatus('idle');
+        } catch (error: any) {
+            console.error('Error uploading image:', error);
+            alert('Upload failed: ' + error.message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const handleSave = async () => {
         setIsLoading(true);
 
-        // Save theme color to local storage
-        localStorage.setItem('admin_accent_color', profile.accent_color);
+        try {
+            // Update User Metadata in Supabase Auth
+            const { error: authError } = await supabase.auth.updateUser({
+                data: {
+                    full_name: profile.full_name,
+                    role: profile.role,
+                    bio: profile.bio,
+                    avatar: profile.avatar,
+                    location: profile.location,
+                    website: profile.website,
+                    accent_color: profile.accent_color
+                }
+            });
 
-        // Simulate save delay for other fields
-        await new Promise(resolve => setTimeout(resolve, 1500));
+            if (authError) throw authError;
 
-        setIsLoading(false);
-        setStatus('success');
+            // Save theme color to local storage for immediate persistence
+            localStorage.setItem('admin_accent_color', profile.accent_color);
 
-        // Trigger a reload or message to update other components if needed
-        // For simplicity, we can tell user it's saved. 
-        // Real-time update would need a context.
-        setTimeout(() => {
-            setStatus('idle');
-            window.location.reload(); // Refresh to apply theme globally
-        }, 1500);
+            setStatus('success');
+
+            // Trigger a refresh to update the Layout header/sidebar
+            setTimeout(() => {
+                setStatus('idle');
+                window.location.reload();
+            }, 1000);
+
+        } catch (error: any) {
+            console.error('Error saving profile:', error);
+            setStatus('error');
+            alert('Save failed: ' + error.message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -94,8 +152,24 @@ export default function ProfilePage() {
                         <div className="relative">
                             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-[2px] border-4 border-white overflow-hidden shadow-2xl">
                                 <Image src={profile.avatar} alt="Avatar" fill className="object-cover" />
+                                {isUploading && (
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                        <Loader2 className="animate-spin text-white" size={24} />
+                                    </div>
+                                )}
                             </div>
-                            <button className="absolute -bottom-2 -right-2 w-10 h-10 bg-accent rounded-[2px] flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-all border-4 border-white">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleImageUpload}
+                                className="hidden"
+                                accept="image/*"
+                            />
+                            <button
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={isUploading}
+                                className="absolute -bottom-2 -right-2 w-10 h-10 bg-accent rounded-[2px] flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-all border-4 border-white disabled:opacity-50"
+                            >
                                 <Camera size={18} />
                             </button>
                         </div>

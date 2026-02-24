@@ -19,18 +19,23 @@ export default function AdminMessages() {
         setIsLoading(true);
         try {
             console.log("AdminMessages: Fetching from contact_messages...");
-            const { data, error } = await supabase
+
+            // First, verify connection state
+            const { data: { session } } = await supabase.auth.getSession();
+            console.log("Current session status:", session ? "Authenticated" : "Anonymous");
+
+            const { data, error, status, statusText } = await supabase
                 .from('contact_messages')
                 .select('*')
                 .order('created_at', { ascending: false });
 
             if (error) {
                 console.error("AdminMessages Fetch Error:", error);
-                setDebugInfo(`Error: ${error.message}`);
+                setDebugInfo(`Error ${status}: ${error.message} (${statusText})`);
             } else {
-                console.log(`AdminMessages: Successfully fetched ${data?.length || 0} messages`);
+                console.log(`AdminMessages: Received ${data?.length || 0} rows from DB`);
                 setMessages(data || []);
-                setDebugInfo(`Successfully loaded ${data?.length || 0} messages`);
+                setDebugInfo(`Successfully loaded ${data?.length || 0} messages. Status: ${status} (${statusText})`);
             }
         } catch (err: any) {
             console.error("Critical Fetch Error:", err);
@@ -43,19 +48,67 @@ export default function AdminMessages() {
     useEffect(() => {
         fetchMessages();
 
+        console.log("AdminMessages: Setting up real-time subscription...");
         // Real-time subscription to auto-update list
         const channel = supabase
-            .channel('admin-messages-list')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' }, () => {
-                console.log("Real-time update detected for messages!");
+            .channel('admin-messages-list-realtime')
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'public',
+                table: 'contact_messages'
+            }, (payload) => {
+                console.log("⚡ Real-time update detected!", payload);
                 fetchMessages();
+                // Play a subtle sound or trigger a browser notification if possible
+                if (typeof window !== 'undefined' && 'Notification' in window) {
+                    if (Notification.permission === 'granted') {
+                        new Notification('New Inquiry Received!', { body: 'A guest has sent a new message.' });
+                    }
+                }
             })
-            .subscribe();
+            .subscribe((status) => {
+                console.log("Real-time subscription status:", status);
+                if (status === 'SUBSCRIBED') {
+                    setDebugInfo(prev => `${prev} | Live Sync: Active`);
+                } else if (status === 'CHANNEL_ERROR') {
+                    setDebugInfo(prev => `${prev} | Live Sync: Error (Check Realtime settings)`);
+                }
+            });
+
+        // Request notification permission
+        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
 
         return () => {
+            console.log("AdminMessages: Cleaning up real-time...");
             supabase.removeChannel(channel);
         };
     }, [fetchMessages]);
+
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        try {
+            const { error } = await supabase
+                .from('contact_messages')
+                .delete()
+                .eq('id', deleteId);
+
+            if (error) throw error;
+
+            // Success: state will be updated by real-time chanels, but we can do it manually for speed
+            setMessages(prev => prev.filter(m => m.id !== deleteId));
+            setDeleteId(null);
+        } catch (err: any) {
+            alert("Deletion failed: " + err.message);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
     const updateMessageStatus = async (id: number, status: string) => {
         const { error } = await supabase
@@ -70,28 +123,13 @@ export default function AdminMessages() {
         }
     };
 
-    const deleteMessage = async (id: number) => {
-        if (!confirm("Are you sure you want to delete this transmission?")) return;
-
-        const { error } = await supabase
-            .from('contact_messages')
-            .delete()
-            .eq('id', id);
-
-        if (!error) {
-            fetchMessages();
-        } else {
-            alert("Delete failed: " + error.message);
-        }
-    };
-
     const filteredMessages = messages.filter(msg => {
         const matchesSearch =
             (msg.full_name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
             (msg.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
             (msg.message?.toLowerCase() || "").includes(searchTerm.toLowerCase());
 
-        // Handle potential case differences in status (ensure comparisons use lowercase)
+        // Handle potential case differences in status
         const matchesStatus = filterStatus === "all" ||
             (msg.status?.toLowerCase() || "pending") === filterStatus.toLowerCase();
 
@@ -165,23 +203,6 @@ export default function AdminMessages() {
                 </div>
             </div>
 
-            {/* Emergency UI: Shows if data exists but is hidden by filters */}
-            {messages.length > 0 && filteredMessages.length === 0 && (
-                <div className="bg-accent/10 border border-accent/20 p-8 rounded-[2px] animate-in fade-in zoom-in duration-500">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="w-10 h-10 bg-accent rounded-[2px] flex items-center justify-center text-primary shadow-lg shadow-accent/20">
-                            <AlertCircle size={20} />
-                        </div>
-                        <div>
-                            <h4 className="text-xs font-bold text-primary uppercase tracking-wider">Hidden Data Alert</h4>
-                            <p className="text-xs font-medium text-primary/40 uppercase tracking-wider mt-0.5">
-                                Your current filter "{filterStatus}" is hiding {messages.length} messages.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* 3. Messages List */}
             <div className="grid grid-cols-1 gap-6 pb-20">
                 {isLoading && messages.length === 0 ? (
@@ -194,17 +215,6 @@ export default function AdminMessages() {
                         <Archive className="w-12 h-12 text-primary/10 mx-auto mb-6" />
                         <h3 className="text-[13px] font-bold text-primary uppercase tracking-tight mb-2">Registry Silent</h3>
                         <p className="text-xs font-medium text-primary/30 uppercase tracking-wider max-w-[200px] mx-auto leading-loose">No inquiries match your current frequency or filters.</p>
-
-                        {/* Status Check if we expected data */}
-                        {messages.length > 0 && (
-                            <div className="mt-8 pt-6 border-t border-primary/5 max-w-xs mx-auto">
-                                <p className="text-[9px] font-black text-primary/20 uppercase tracking-widest mb-3">Filter Diagnostics:</p>
-                                <div className="flex justify-center gap-2">
-                                    <span className="px-2 py-1 bg-primary/5 rounded text-[9px] font-bold">Total: {messages.length}</span>
-                                    <span className="px-2 py-1 bg-primary/5 rounded text-[9px] font-bold">Search: "{searchTerm || 'None'}"</span>
-                                </div>
-                            </div>
-                        )}
                     </div>
                 ) : (
                     filteredMessages.map((msg, i) => (
@@ -213,33 +223,33 @@ export default function AdminMessages() {
                             initial={{ opacity: 0, scale: 0.98 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.05 }}
-                            className={`bg-white rounded-[2px] border transition-all duration-500 overflow-hidden group ${msg.status?.toLowerCase() === 'pending' ? 'border-accent shadow-xl shadow-accent/5' : 'border-primary/5 hover:border-primary/20 hover:shadow-2xl'}`}
+                            className={`bg-white rounded-[1px] border transition-all duration-500 overflow-hidden group ${msg.status?.toLowerCase() === 'pending' ? 'border-accent shadow-lg shadow-accent/5' : 'border-primary/5 hover:border-primary/20 hover:shadow-xl'}`}
                         >
-                            <div className="p-8 md:p-10">
-                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                                    <div className="flex items-start gap-6">
-                                        <div className={`w-16 h-16 rounded-[2px] flex items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover:scale-110 ${msg.status?.toLowerCase() === 'pending' ? 'bg-accent text-primary shadow-lg shadow-accent/20' : 'bg-primary/5 text-primary/20'}`}>
-                                            <Mail size={24} strokeWidth={2.5} />
+                            <div className="p-5 md:p-6">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                    <div className="flex items-start gap-4">
+                                        <div className={`w-12 h-12 rounded-[1px] flex items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover:scale-105 ${msg.status?.toLowerCase() === 'pending' ? 'bg-accent text-primary shadow-md shadow-accent/20' : 'bg-primary/5 text-primary/20'}`}>
+                                            <Mail size={18} strokeWidth={2.5} />
                                         </div>
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-4">
-                                                <h4 className="text-[18px] font-bold text-primary uppercase tracking-tight">{msg.full_name}</h4>
-                                                {msg.status?.toLowerCase() === 'pending' && <span className="px-3 py-1 bg-accent text-primary text-[8px] font-bold rounded-full uppercase tracking-widest">New Priority</span>}
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-3">
+                                                <h4 className="text-[15px] font-bold text-primary uppercase tracking-tight">{msg.full_name}</h4>
+                                                {msg.status?.toLowerCase() === 'pending' && <span className="px-2 py-0.5 bg-accent text-primary text-[7px] font-bold rounded-full uppercase tracking-widest">Priority</span>}
                                             </div>
-                                            <div className="flex flex-wrap items-center gap-4">
-                                                <p className="text-xs font-semibold text-primary/60 flex items-center gap-2 bg-primary/5 px-3 py-1.5 rounded-[2px] border border-primary/5 hover:border-accent/40 transition-colors">
-                                                    <User size={12} className="text-accent" />
+                                            <div className="flex flex-wrap items-center gap-3">
+                                                <p className="text-[10px] font-semibold text-primary/60 flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-[1px] border border-primary/5">
+                                                    <User size={10} className="text-accent" />
                                                     {msg.email}
                                                 </p>
-                                                <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 rounded-[2px] border border-primary/5">
-                                                    <Clock size={12} className="text-accent" />
-                                                    <span className="text-xs font-medium text-primary/50">{new Date(msg.created_at).toLocaleString()}</span>
+                                                <div className="flex items-center gap-1.5 px-2 py-1 bg-primary/5 rounded-[1px] border border-primary/5">
+                                                    <Clock size={10} className="text-accent" />
+                                                    <span className="text-[10px] font-medium text-primary/40">{new Date(msg.created_at).toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className={`px-5 py-2.5 rounded-[2px] border font-bold text-xs uppercase tracking-wider shadow-sm ${msg.status?.toLowerCase() === 'pending' ? 'bg-orange-50 border-orange-200 text-orange-600 animate-pulse' :
+                                    <div className={`px-4 py-1.5 rounded-[1px] border font-bold text-[9px] uppercase tracking-wider shadow-sm ${msg.status?.toLowerCase() === 'pending' ? 'bg-orange-50 border-orange-200 text-orange-600' :
                                         msg.status?.toLowerCase() === 'read' ? 'bg-blue-50 border-blue-200 text-blue-600' :
                                             'bg-green-50 border-green-200 text-green-600'
                                         }`}>
@@ -247,34 +257,33 @@ export default function AdminMessages() {
                                     </div>
                                 </div>
 
-                                <div className="mt-10 p-8 bg-[#FAF9F6] rounded-[2px] border border-primary/5 relative group-hover:bg-white transition-all duration-500">
-                                    <AlertCircle className="absolute -top-3 -left-3 text-accent w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    <p className="text-lg leading-relaxed text-primary/80 first-letter:text-4xl first-letter:font-bold first-letter:mr-2">{msg.message}</p>
+                                <div className="mt-6 p-5 bg-[#FAF9F6] rounded-[1px] border border-primary/5 relative group-hover:bg-white transition-all duration-500">
+                                    <p className="text-sm leading-relaxed text-primary/70">{msg.message}</p>
                                 </div>
 
-                                <div className="mt-10 pt-8 border-t border-primary/5 flex flex-wrap items-center justify-between gap-6">
-                                    <div className="flex gap-4">
+                                <div className="mt-6 pt-5 border-t border-primary/5 flex flex-wrap items-center justify-between gap-4">
+                                    <div className="flex gap-3">
                                         <button
                                             onClick={() => updateMessageStatus(msg.id, 'read')}
-                                            className="flex items-center gap-3 px-6 py-3.5 bg-white border border-primary/10 rounded-[2px] text-primary/70 text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm"
+                                            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-primary/10 rounded-[1px] text-primary/70 text-[9px] font-bold uppercase tracking-wider hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm"
                                         >
-                                            <Eye size={16} />
+                                            <Eye size={14} />
                                             <span>Mark as Read</span>
                                         </button>
                                         <button
                                             onClick={() => updateMessageStatus(msg.id, 'replied')}
-                                            className="flex items-center gap-3 px-6 py-3.5 bg-white border border-primary/10 rounded-[2px] text-primary/70 text-xs font-bold uppercase tracking-wider hover:bg-accent hover:text-primary hover:border-accent transition-all shadow-sm"
+                                            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-primary/10 rounded-[1px] text-primary/70 text-[9px] font-bold uppercase tracking-wider hover:bg-accent hover:text-primary hover:border-accent transition-all shadow-sm"
                                         >
-                                            <Reply size={16} />
+                                            <Reply size={14} />
                                             <span>Mark Replied</span>
                                         </button>
                                     </div>
                                     <button
-                                        onClick={() => deleteMessage(msg.id)}
-                                        className="p-4 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-[2px] transition-all border border-transparent hover:border-red-100"
+                                        onClick={() => setDeleteId(msg.id)}
+                                        className="p-3 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-[1px] transition-all border border-transparent hover:border-red-100"
                                         title="Delete Transmission"
                                     >
-                                        <Trash2 size={20} />
+                                        <Trash2 size={16} />
                                     </button>
                                 </div>
                             </div>
@@ -282,6 +291,61 @@ export default function AdminMessages() {
                     ))
                 )}
             </div>
+
+            {/* PREMIUM DELETE CONFIRMATION MODAL */}
+            <AnimatePresence>
+                {deleteId && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setDeleteId(null)}
+                            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                            className="bg-white w-full max-w-lg rounded-[2px] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden relative"
+                        >
+                            <div className="p-12 text-center space-y-8">
+                                <div className="relative mx-auto w-24 h-24">
+                                    <div className="absolute inset-0 bg-red-500/10 rounded-full animate-ping" />
+                                    <div className="relative w-full h-full bg-red-50 rounded-full flex items-center justify-center text-red-500 shadow-xl shadow-red-500/10">
+                                        <Trash2 size={48} strokeWidth={1.5} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <h3 className="text-3xl font-bold text-primary uppercase tracking-tight">Erase Submission</h3>
+                                    <p className="text-[11px] font-bold text-primary/40 uppercase tracking-widest leading-loose max-w-sm mx-auto">
+                                        You are about to permanently purge this transmission from the heritage registry.
+                                        <br /><span className="text-red-500/60 text-[9px]">CAUTION: This cryptographic action is permanent.</span>
+                                    </p>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => setDeleteId(null)}
+                                        className="flex-1 px-8 py-5 border border-primary/5 rounded-[2px] text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary transition-all"
+                                    >
+                                        Abort
+                                    </button>
+                                    <button
+                                        onClick={handleDelete}
+                                        disabled={isDeleting}
+                                        className="flex-1 px-8 py-5 bg-red-600 text-white rounded-[2px] text-[10px] font-bold uppercase tracking-widest shadow-2xl shadow-red-600/30 hover:bg-black transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                    >
+                                        {isDeleting ? <RefreshCw className="animate-spin" size={16} /> : <Trash2 size={16} />}
+                                        <span>{isDeleting ? "Purging..." : "Confirm Purge"}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
