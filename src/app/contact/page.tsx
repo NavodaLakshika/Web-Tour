@@ -28,6 +28,11 @@ export default function ContactPage() {
         setStatus('idle');
 
         try {
+            // Debug logs for Vercel
+            if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || !process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY) {
+                console.error("EmailJS credentials missing in environment variables!");
+            }
+
             // 1. Save to Supabase (Admin Dashboard)
             const { error: dbError } = await supabase
                 .from('contact_messages')
@@ -40,7 +45,10 @@ export default function ContactPage() {
                     }
                 ]);
 
-            if (dbError) throw dbError;
+            if (dbError) {
+                console.error("Supabase Error:", dbError);
+                throw dbError;
+            }
 
             // 2. Send Email Alert via EmailJS
             await emailjs.send(

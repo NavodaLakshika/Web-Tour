@@ -22,7 +22,10 @@ import {
     ChevronLeft,
     Compass,
     Map,
-    Database
+    Database,
+    Settings,
+    LogOut as LogoutIcon,
+    User as UserIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
@@ -52,20 +55,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [alertCount, setAlertCount] = useState(0);
     const [accentColor, setAccentColor] = useState("#D4AF37");
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isSearchActive, setIsSearchActive] = useState(false);
     const pathname = usePathname();
 
+    const [msgCount, setMsgCount] = useState(0);
+    const [reqCount, setReqCount] = useState(0);
+    const [adminProfile, setAdminProfile] = useState({
+        full_name: "Administrator",
+        role: "Heritage Overseer",
+        avatar: "/images/user.jpg"
+    });
+
     const fetchAlerts = async () => {
-        const { count: msgCount } = await supabase
+        const { count: mCount } = await supabase
             .from('contact_messages')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'pending');
 
-        const { count: reqCount } = await supabase
+        const { count: rCount } = await supabase
             .from('trip_requests')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'pending');
 
-        setAlertCount((msgCount || 0) + (reqCount || 0));
+        setMsgCount(mCount || 0);
+        setReqCount(rCount || 0);
+        setAlertCount((mCount || 0) + (rCount || 0));
     };
 
     useEffect(() => {
@@ -82,6 +97,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 console.warn("🔐 Unauthorized access detected. Returning to login.");
                 Cookies.remove('isLoggedIn');
                 window.location.replace('/login');
+            } else {
+                // Load profile data from metadata
+                const meta = session.user.user_metadata || {};
+                setAdminProfile({
+                    full_name: meta.full_name || "Administrator",
+                    role: meta.role || "Heritage Overseer",
+                    avatar: meta.avatar || "/images/user.jpg"
+                });
             }
         };
 
@@ -131,7 +154,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         { name: "Guest Requests", href: "/admin/requests", active: pathname === "/admin/requests", badge: alertCount > 0 ? alertCount : undefined },
                     ]
                 },
-                { name: "Inquiries", href: "/admin/messages", icon: MessageSquare, badge: alertCount > 0 ? alertCount : undefined },
+                { name: "Inquiries", href: "/admin/messages", icon: MessageSquare, badge: msgCount > 0 ? msgCount : undefined },
                 { name: "Heritage Managers", href: "/admin/team", icon: Users },
                 { name: "Revenue", href: "/admin/payment", icon: Wallet },
                 { name: "My Profile", href: "/admin/profile", icon: User },
@@ -305,22 +328,107 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                         {/* Right Side: Global Actions */}
                         <div className="flex items-center gap-2 sm:gap-5">
-                            <button className="hidden sm:block text-primary/40 hover:text-primary transition-colors"><MessageSquare size={18} /></button>
+                            <Link
+                                href="/admin/messages"
+                                className="flex text-primary/40 hover:text-primary transition-colors p-2 hover:bg-primary/5 rounded-full relative"
+                                title="Inquiry Hub"
+                            >
+                                <MessageSquare size={18} />
+                                {msgCount > 0 && (
+                                    <span className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-primary border-2 border-white text-[8px] font-black text-white flex items-center justify-center shadow-sm">
+                                        {msgCount}
+                                    </span>
+                                )}
+                            </Link>
+
                             <div className="relative">
-                                <button className="text-primary/40 hover:text-primary transition-colors"><Bell size={18} /></button>
-                                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-accent border-2 border-white text-[9px] font-black text-white flex items-center justify-center shadow-sm">2</span>
+                                <Link
+                                    href="/admin/messages"
+                                    className="flex text-primary/40 hover:text-primary transition-colors p-2 hover:bg-primary/5 rounded-full relative"
+                                    title="Notifications"
+                                >
+                                    <Bell size={18} />
+                                    {alertCount > 0 && (
+                                        <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-accent border-2 border-white text-[9px] font-black text-white flex items-center justify-center shadow-sm animate-pulse">
+                                            {alertCount}
+                                        </span>
+                                    )}
+                                </Link>
                             </div>
-                            <div className="hidden sm:block h-6 w-[1px] bg-primary/10 mx-1" />
-                            <button className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/10 hover:bg-primary/5 transition-all text-primary/70 text-[11px] font-black uppercase tracking-wider">
+
+                            <div className="h-6 w-[1px] bg-primary/10 mx-1 sm:mx-2" />
+
+                            <Link
+                                href="/admin/team"
+                                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/10 hover:bg-primary/5 transition-all text-primary/70 text-[11px] font-black uppercase tracking-wider"
+                            >
                                 <Users size={16} className="text-accent" />
                                 <span>Registry</span>
-                            </button>
-                            <button className="bg-primary text-white p-2.5 sm:px-5 sm:py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest flex items-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                            </Link>
+
+                            <Link
+                                href="/admin/destinations"
+                                className="bg-primary text-white p-2.5 sm:px-5 sm:py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all shadow-lg shadow-primary/20"
+                            >
                                 <Plus size={16} className="text-accent" />
                                 <span className="hidden sm:inline">Create Entry</span>
-                            </button>
-                            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 border-accent shadow-md cursor-pointer ml-1">
-                                <Image src="/images/user.jpg" alt="Admin" width={36} height={36} className="object-cover" />
+                            </Link>
+
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 transition-all shadow-md cursor-pointer ml-1 ${isProfileOpen ? 'border-accent scale-110 shadow-accent/20' : 'border-primary/5 hover:border-accent'}`}
+                                >
+                                    <Image src={adminProfile.avatar} alt="Admin" width={36} height={36} className="object-cover" />
+                                </button>
+
+                                <AnimatePresence>
+                                    {isProfileOpen && (
+                                        <>
+                                            <div
+                                                className="fixed inset-0 z-40"
+                                                onClick={() => setIsProfileOpen(false)}
+                                            />
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-primary/5 overflow-hidden z-50 py-2"
+                                            >
+                                                <div className="px-6 py-4 border-b border-primary/5 bg-primary/[0.02]">
+                                                    <p className="text-xs font-black text-primary uppercase tracking-tighter">{adminProfile.full_name}</p>
+                                                    <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">{adminProfile.role}</p>
+                                                </div>
+                                                <div className="p-2">
+                                                    <Link
+                                                        href="/admin/profile"
+                                                        onClick={() => setIsProfileOpen(false)}
+                                                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-primary/60 hover:text-primary hover:bg-primary/5 transition-all"
+                                                    >
+                                                        <UserIcon size={16} className="text-accent" />
+                                                        <span>Personnel Records</span>
+                                                    </Link>
+                                                    <Link
+                                                        href="/admin/settings"
+                                                        onClick={() => setIsProfileOpen(false)}
+                                                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-primary/60 hover:text-primary hover:bg-primary/5 transition-all"
+                                                    >
+                                                        <Settings size={16} className="text-accent" />
+                                                        <span>System Terminal</span>
+                                                    </Link>
+                                                    <div className="h-px bg-primary/5 my-2 mx-4" />
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-red-500 hover:bg-red-50 transition-all w-full text-left"
+                                                    >
+                                                        <LogoutIcon size={16} />
+                                                        <span>Terminate Session</span>
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        </>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </div>
                     </div>

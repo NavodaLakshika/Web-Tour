@@ -36,9 +36,10 @@ export default function LoginPage() {
                 Cookies.set('isLoggedIn', 'true', { expires: rememberMe ? 7 : 1 });
                 setStatus('success');
 
+                // Give the session time to propagate to cookies for the middleware
                 setTimeout(() => {
-                    router.push('/admin');
-                }, 1500);
+                    window.location.href = '/admin';
+                }, 1000);
             }
         } catch (error: any) {
             console.error("Login Error:", error);
