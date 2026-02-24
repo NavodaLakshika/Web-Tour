@@ -229,7 +229,7 @@ export default function DestinationsPage() {
 
             {/* 3. DESTINATION MASONRY GRID - Inspiration Style */}
             <section className="py-4 bg-white">
-                <div className="container mx-auto px-6 lg:px-16">
+                <div className="container mx-auto px-6 lg:px-16 ">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={selectedRegion + selectedInterest}
@@ -237,7 +237,7 @@ export default function DestinationsPage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             // 12-column grid for maximum flexibility
-                            className="grid grid-cols-1 md:grid-cols-12 gap-3"
+                            className="grid grid-cols-1 md:grid-cols-12 gap-3 "
                         >
                             {paginatedDestinations.map((dest, idx) => {
                                 // Logic to create varying horizontal/vertical spans like the reference
@@ -261,13 +261,13 @@ export default function DestinationsPage() {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: (idx % 3) * 0.1 }}
-                                        className={`group relative overflow-hidden bg-gray-900 ${colSpan} cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-700`}
+                                        className={`group relative overflow-hidden bg-gray-900 ${colSpan} cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-700 rounded-[8px]`}
                                     >
                                         <Image
                                             src={dest.image}
                                             alt={dest.name}
                                             fill
-                                            className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                            className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 rounded-[8px]"
                                         />
 
                                         {/* Subtle Vignette */}

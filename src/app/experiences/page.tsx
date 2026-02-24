@@ -11,7 +11,7 @@ import {
     MapPin, Calendar, Compass,
     ArrowRight, Star,
     Waves,
-    ChevronRight, Map as MapIcon,
+    ChevronLeft, ChevronRight, Map as MapIcon,
     Clock, Plane, Search, Filter,
     Play, Pause, Sparkles, Heart, Gauge
 } from "lucide-react";
@@ -24,7 +24,7 @@ export default function ExperiencesPage() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const ITEMS_PER_PAGE = 8;
+    const ITEMS_PER_PAGE = 6;
     const [isPlaying, setIsPlaying] = useState(true);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [liveExperiences, setLiveExperiences] = useState<any[]>([]);
@@ -37,10 +37,7 @@ export default function ExperiencesPage() {
                 .order('created_at', { ascending: false });
 
             if (!error && data) {
-                // Filter out experiences that already exist in static data by title to avoid duplicates
-                const staticTitles = experiences.map(e => e.title);
-                const uniqueLive = data.filter(e => !staticTitles.includes(e.title));
-                setLiveExperiences(uniqueLive);
+                setLiveExperiences(data);
             }
         };
 
@@ -48,7 +45,7 @@ export default function ExperiencesPage() {
     }, []);
 
     const allExperiences = useMemo(() => {
-        return [...experiences, ...liveExperiences];
+        return liveExperiences;
     }, [liveExperiences]);
 
     const togglePlayback = () => {
@@ -144,7 +141,7 @@ export default function ExperiencesPage() {
 
             {/* 2. SIGNATURE EXPERIENCES COLLECTION */}
             <section className="py-24 bg-white">
-                <div className="container mx-auto px-6 lg:px-16 space-y-32">
+                <div className="container mx-auto px-6 lg:px-16 space-y-32 rounded-[10px">
                     {[
                         {
                             title: "Whale Watching",
@@ -183,10 +180,10 @@ export default function ExperiencesPage() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1 }}
-                            className={`flex flex-col lg:flex-row gap-12 lg:gap-24 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
+                            className={`flex flex-col lg:flex-row gap-12  lg:gap-24 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
                         >
                             <div className="w-full lg:w-1/2">
-                                <div className="relative aspect-[4/5] md:aspect-[16/10] lg:aspect-square overflow-hidden group">
+                                <div className="relative aspect-[4/5] md:aspect-[16/10] lg:aspect-square overflow-hidden group rounded-[10px]">
                                     <Image
                                         src={item.image}
                                         alt={item.title}
@@ -201,14 +198,14 @@ export default function ExperiencesPage() {
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-4">
                                         <div className="h-px w-8 bg-secondary" />
-                                        <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px]">
+                                        <span className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] ">
                                             {item.tag}
                                         </span>
                                     </div>
-                                    <h2 className="font-heading text-4xl md:text-6xl font-black text-black uppercase tracking-tighter leading-none">
+                                    <h2 className="font-heading text-4xl md:text-6xl font-black text-black uppercase tracking-tighter leading-none ">
                                         {item.title}
                                     </h2>
-                                    <p className="text-gray-500 text-lg font-art leading-relaxed">
+                                    <p className="text-gray-500 text-lg font-art leading-relaxed ">
                                         {item.desc}
                                     </p>
                                 </div>
@@ -241,66 +238,99 @@ export default function ExperiencesPage() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {allExperiences
-                                .filter(exp => ![
-                                    "Whale Watching",
-                                    "Wildlife Safari",
-                                    "Diving and Snorkelling",
-                                    "Surfing in Sri Lanka",
-                                    "Ayurveda",
-                                    "Leopard Safari in Yala" // Exclude duplicates/similar
-                                ].includes(exp.title))
-                                .map((exp, idx) => (
-                                    <motion.div
-                                        key={exp.id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: (idx % 3) * 0.1 }}
-                                        className="group bg-white overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
-                                    >
-                                        <div className="relative h-64 overflow-hidden">
-                                            <Image
-                                                src={exp.image}
-                                                alt={exp.title}
-                                                fill
-                                                className="object-cover"
-                                            />
-                                            <div className="absolute top-4 left-4">
-                                                <span className="bg-white/90 backdrop-blur-md px-3 py-1 text-[9px] font-black uppercase tracking-widest text-black">
-                                                    {exp.category}
-                                                </span>
-                                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 ">
+                            {paginatedExperiences.map((exp, idx) => (
+                                <motion.div
+                                    key={exp.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: (idx % 3) * 0.1 }}
+                                    className="group bg-white overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 rounded-[10px]"
+                                >
+                                    <div className="relative h-64 overflow-hidden ">
+                                        <Image
+                                            src={exp.image}
+                                            alt={exp.title}
+                                            fill
+                                            className="object-cover transition-transform duration-1000 group-hover:scale-110 rounded-[10px]"
+                                        />
+                                        <div className="absolute top-4 left-4">
+                                            <span className="bg-white/90 backdrop-blur-md px-3 py-1 text-[9px] font-black uppercase tracking-widest text-black rounded-[1px]">
+                                                {exp.category}
+                                            </span>
                                         </div>
-                                        <div className="p-8 space-y-4">
-                                            <div className="space-y-2">
-                                                <div className="flex items-center gap-2 text-secondary">
-                                                    <MapPin className="w-3 h-3" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">{exp.location}</span>
-                                                </div>
-                                                <h3 className="font-heading text-xl font-black text-black uppercase group-hover:text-secondary transition-colors">
-                                                    {exp.title}
-                                                </h3>
+                                    </div>
+                                    <div className="p-8 space-y-4">
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-secondary">
+                                                <MapPin className="w-3 h-3" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">{exp.location}</span>
                                             </div>
-                                            <p className="text-gray-500 text-sm font-art line-clamp-2">
-                                                {exp.description}
-                                            </p>
-                                            <div className="pt-4 flex items-center justify-between border-t border-gray-100">
-                                                <div className="flex items-center gap-4 text-gray-400">
-                                                    <div className="flex items-center gap-2">
-                                                        <Clock className="w-3 h-3" />
-                                                        <span className="text-[10px] font-black">{exp.duration}</span>
-                                                    </div>
-                                                </div>
-                                                <Link href="/contact" className="text-[10px] font-black uppercase tracking-widest text-black hover:text-secondary transition-colors">
-                                                    Inquire
-                                                </Link>
-                                            </div>
+                                            <h3 className="font-heading text-xl font-black text-black uppercase group-hover:text-secondary transition-colors line-clamp-1">
+                                                {exp.title}
+                                            </h3>
                                         </div>
-                                    </motion.div>
-                                ))}
+                                        <p className="text-gray-500 text-sm font-art line-clamp-2 min-h-[40px]">
+                                            {exp.description}
+                                        </p>
+                                        <div className="pt-4 flex items-center justify-between border-t border-gray-100">
+                                            <div className="flex items-center gap-4 text-gray-400">
+                                                <div className="flex items-center gap-2">
+                                                    <Clock className="w-3 h-3" />
+                                                    <span className="text-[10px] font-black">{exp.duration}</span>
+                                                </div>
+                                            </div>
+                                            <Link href="/contact" className="text-[10px] font-black uppercase tracking-widest text-black hover:text-secondary transition-colors underline underline-offset-4 decoration-secondary/30">
+                                                Inquire
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
+
+                        {/* Numeric Pagination */}
+                        {totalPages > 1 && (
+                            <div className="mt-20 flex justify-center items-center gap-4">
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                    disabled={currentPage === 1}
+                                    className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${currentPage === 1
+                                        ? 'border-black/5 text-black/20 cursor-not-allowed'
+                                        : 'border-black/10 text-black hover:border-black hover:bg-black hover:text-white'
+                                        }`}
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+
+                                <div className="flex items-center gap-2">
+                                    {[...Array(totalPages)].map((_, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => setCurrentPage(i + 1)}
+                                            className={`w-10 h-10 text-[11px] font-black transition-all ${currentPage === i + 1
+                                                ? 'text-black border-b-2 border-secondary'
+                                                : 'text-black/30 hover:text-black'
+                                                }`}
+                                        >
+                                            {(i + 1).toString().padStart(2, '0')}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                    disabled={currentPage === totalPages}
+                                    className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${currentPage === totalPages
+                                        ? 'border-black/5 text-black/20 cursor-not-allowed'
+                                        : 'border-black/10 text-black hover:border-black hover:bg-black hover:text-white'
+                                        }`}
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>

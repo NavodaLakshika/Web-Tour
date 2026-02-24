@@ -615,5 +615,31 @@ export const experiences = [
         bestTime: "Nov – April",
         description: "The island of Sri Lanka is surrounded by a number of sites that are great for scuba diving and snorkelling. From historic shipwrecks to vibrant coral reefs, PADI diving centres can assist you in making the most of your underwater adventures.",
         highlights: ["Shipwreck Diving", "Coral Reefs", "Marine Life"]
+    },
+    {
+        id: 14,
+        title: "Little ADM Speak",
+        category: "Adventure",
+        location: "Ella",
+        image: "/images/nine-arch-bridge.jpg",
+        price: "$10",
+        duration: "1.5 Hours",
+        difficulty: "Easy",
+        bestTime: "Year-round",
+        description: "Engage with the charming tales and stories of Little ADM Speak, where visitors can explore local culture, history, and community traditions in an interactive and immersive way.",
+        highlights: ["Local Culture", "Heritage Stories", "Interactive Experience"]
+    },
+    {
+        id: 15,
+        title: "Colombo City Panorama",
+        category: "Adventure",
+        location: "Colombo",
+        image: "/images/lotus-tower.png",
+        price: "$20",
+        duration: "2 Hours",
+        difficulty: "Easy",
+        bestTime: "Year-round",
+        description: "Experience breathtaking 360-degree views of Colombo's skyline and the Indian Ocean from the observation deck of the iconic Lotus Tower.",
+        highlights: ["City Views", "Observation Deck", "Lotus Tower"]
     }
 ];

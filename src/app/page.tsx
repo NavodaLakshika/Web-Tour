@@ -92,7 +92,7 @@ export default function Home() {
   // EXPERIENCE SECTION LOGIC
   const [expPage, setExpPage] = useState(1);
   const [expCategory, setExpCategory] = useState('All');
-  const expItemsPerPage = 6;
+  const expItemsPerPage = 5;
 
   const allExperiences = useMemo(() => {
     // Priority to live experiences from DB
@@ -605,13 +605,13 @@ export default function Home() {
           <div className="relative h-[650px] overflow-hidden group/container bg-white shadow-2xl rounded-3xl">
             <AnimatePresence mode="wait">
               <motion.div
-                key={expCategory}
+                key={`${expCategory}-${expPage}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="flex flex-col md:flex-row h-full gap-0 md:gap-[2px]"
               >
-                {filteredExperiences.slice(0, 6).map((exp, i) => (
+                {paginatedExperiences.map((exp, i) => (
                   <motion.div
                     key={exp.id}
                     initial={{ flex: 1 }}
@@ -636,7 +636,7 @@ export default function Home() {
                     <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                       <div className="space-y-2">
                         <span className="text-[12px] font-black opacity-60 block leading-none tracking-tighter drop-shadow-lg">
-                          {String(i + 1).padStart(2, '0')}.
+                          {String((expPage - 1) * expItemsPerPage + i + 1).padStart(2, '0')}.
                         </span>
                         <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight leading-none drop-shadow-xl max-w-[200px]">
                           {exp.title}
@@ -673,10 +673,54 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          <div className="mt-12 flex justify-between items-center text-gray-400">
-            <span className="text-[10px] font-bold tracking-widest uppercase">Select an experience to explore more</span>
-            <div className="flex gap-4">
-              <div className="h-[2px] w-24 bg-black/5 relative overflow-hidden">
+          <div className="mt-10 flex flex-col md:flex-row justify-between items-end gap-8">
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40 block">Select an experience to explore more</span>
+
+              {totalExpPages > 1 && (
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={() => setExpPage(prev => Math.max(1, prev - 1))}
+                    disabled={expPage === 1}
+                    className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${expPage === 1
+                      ? 'border-black/5 text-black/20 cursor-not-allowed'
+                      : 'border-black/10 text-black hover:border-black hover:bg-black hover:text-white'
+                      }`}
+                  >
+                    <ChevronRight size={20} className="rotate-180" />
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {[...Array(totalExpPages)].map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setExpPage(i + 1)}
+                        className={`w-10 h-10 text-[11px] font-black transition-all ${expPage === i + 1
+                          ? 'text-black border-b-2 border-secondary'
+                          : 'text-black/30 hover:text-black'
+                          }`}
+                      >
+                        {(i + 1).toString().padStart(2, '0')}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setExpPage(prev => Math.min(totalExpPages, prev + 1))}
+                    disabled={expPage === totalExpPages}
+                    className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${expPage === totalExpPages
+                      ? 'border-black/5 text-black/20 cursor-not-allowed'
+                      : 'border-black/10 text-black hover:border-black hover:bg-black hover:text-white'
+                      }`}
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="h-[2px] w-32 bg-black/5 relative overflow-hidden">
                 <motion.div
                   initial={{ x: '-100%' }}
                   animate={{ x: '0%' }}
