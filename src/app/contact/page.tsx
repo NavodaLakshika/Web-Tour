@@ -309,7 +309,7 @@ export default function ContactPage() {
                                         </button>
                                         <div className="flex items-center justify-center gap-4 mt-8 opacity-60">
                                             <Clock className="w-3 h-3 text-secondary" />
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-black/50">Average response: 6 hours</span>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-black/50">Average response: 7 hours</span>
                                         </div>
                                     </div>
                                 </form>
